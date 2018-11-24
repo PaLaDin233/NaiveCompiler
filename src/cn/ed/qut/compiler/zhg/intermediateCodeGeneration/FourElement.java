@@ -1,4 +1,4 @@
-package cn.ed.qut.compiler.base.intermediateCodeGeneration;
+package cn.ed.qut.compiler.zhg.intermediateCodeGeneration;
 
 import java.io.Serializable;
 
@@ -12,7 +12,6 @@ public class FourElement implements Serializable{
     private String arg1;//第一个操作数
     private String arg2;//第二个操作数
     private Object result;//结果
-    private int codeBlockNum;//四元式所在代码块号
     public FourElement(){
 
     }
@@ -22,14 +21,6 @@ public class FourElement implements Serializable{
         this.setArg1(arg1);
         this.setArg2(arg2);
         this.setResult(result);
-    }
-    public FourElement(int id,String op,String arg1,String arg2,String result,int codeBlockNum){
-        this.setId(id);
-        this.setOp(op);
-        this.setArg1(arg1);
-        this.setArg2(arg2);
-        this.setResult(result);
-        this.setCodeBlockNum(codeBlockNum);
     }
 	/**
 	 * @return result
@@ -90,17 +81,5 @@ public class FourElement implements Serializable{
 	 */
 	public void setArg2(String arg2) {
 		this.arg2 = arg2;
-	}
-	/**
-	 * @return codeBlockNum
-	 */
-	public int getCodeBlockNum() {
-		return codeBlockNum;
-	}
-	/**
-	 * @param codeBlockNum 要设置的 codeBlockNum
-	 */
-	public void setCodeBlockNum(int codeBlockNum) {
-		this.codeBlockNum = codeBlockNum;
 	}
 }
