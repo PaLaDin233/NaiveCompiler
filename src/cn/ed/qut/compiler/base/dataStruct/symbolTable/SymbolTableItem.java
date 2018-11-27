@@ -13,8 +13,9 @@ public class SymbolTableItem {
 	private int type;//类型
 	private String name;//名称
 	private int value;//常量的值,或者是参数的index
-	private SymbolTable symbolTable;//如果是方法，方法对应的局部符号表
-	
+	private TempSymbolTable symbolTable;//如果是方法，方法对应的局部符号表
+	private boolean waitUse=false;
+	private boolean active=false;
 	//下面是符号表项类型 常量声明
 	/**
 	 * 主函数
@@ -59,6 +60,21 @@ public class SymbolTableItem {
 	public static final int STRUCT=12;//结构体
 	private SymbolTableItem(){}
 	
+	/**
+	 * 
+	 * @param type 符号类型：有0-12，推荐使用类似<code>SymbolTableItem.INT</code>传递
+	 * @param name 符号名
+	 * @param value 符号的值,是常量的值,或者是参数的index，其他请输入0
+	 * @param procSymbolTable 如果是方法，这里写上方法的方法符号表（表内标识符只有在方法内有效）
+	 */
+	public SymbolTableItem(int type, String name, int value, TempSymbolTable procSymbolTable) {
+		super();
+		this.type = type;
+		this.name = name;
+		this.value = value;
+		this.symbolTable = symbolTable;
+	}
+
 	//工厂模式（笑
 	/**
 	 * 获取一个无返回值的方法符号表项实例（对象）<br>
@@ -66,7 +82,7 @@ public class SymbolTableItem {
 	 * @return
 	 */
 	public static SymbolTableItem getReturnVoidFuncItem(String name){
-		SymbolTableItem item=getFuncItemNoType(name);
+		SymbolTableItem item=getProcItemNoType(name);
 		item.setType(VOID_PROC);
 		return item;
 	}
@@ -76,7 +92,7 @@ public class SymbolTableItem {
 	 * @return
 	 */
 	public static SymbolTableItem getFuncItem(String name){
-		SymbolTableItem item=getFuncItemNoType(name);
+		SymbolTableItem item=getProcItemNoType(name);
 		item.setType(PROC);
 		return item;
 	}
@@ -98,7 +114,7 @@ public class SymbolTableItem {
 	 * @param name 方法名
 	 * @return
 	 */
-	private static SymbolTableItem getFuncItemNoType(String name){
+	private static SymbolTableItem getProcItemNoType(String name){
 		SymbolTableItem item=getItemNoType(name);
 		//为方法设置局部符号表
 		item.setTempSymbolTable(new TempSymbolTable() );
@@ -133,7 +149,7 @@ public class SymbolTableItem {
 	 * @return
 	 */
 	public static SymbolTableItem getMainProcItem(){
-		SymbolTableItem item=getFuncItemNoType("main");
+		SymbolTableItem item=getProcItemNoType("main");
 		item.setType(MAIN_PROC);		
 		return item;
 	}
@@ -149,7 +165,7 @@ public class SymbolTableItem {
 		
 		int i=0;
 		for (String name : names) {
-			SymbolTableItem item=getFuncItemNoType(name);
+			SymbolTableItem item=getProcItemNoType(name);
 			item.setType(PARA);
 			item.setValue(i++);
 			items.add(item);
@@ -188,11 +204,40 @@ public class SymbolTableItem {
 		this.value = value;
 	}
 
-	public SymbolTable getSymbolTable() {
+	public TempSymbolTable getSymbolTable() {
 		return symbolTable;
 	}
-	public void setTempSymbolTable(SymbolTable symbolTable) {
+	public void setTempSymbolTable(TempSymbolTable symbolTable) {
 		this.symbolTable = symbolTable;
+	}
+
+	/**
+	 * @return waitUse
+	 */
+	public boolean isWaitUse() {
+		return waitUse;
+	}
+
+	/**
+	 * 将待用信息取反
+	 * 
+	 */
+	public void changeWaitUse() {
+		waitUse = !waitUse;
+	}
+
+	/**
+	 * @return active
+	 */
+	public boolean isActive() {
+		return active;
+	}
+
+	/**
+	 * 将是否活跃信息取反
+	 */
+	public void changeActive() {
+		active = !active;
 	}
 	
 	
