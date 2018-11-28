@@ -64,7 +64,14 @@ public MIPSGenerator(String fileName)throws Exception{
 	}
 }
 
-
+/**
+ * 根据四元式生成指定文件名的生成器
+ */
+public MIPSGenerator(String fileName, ArrayList<FourElement> fourElements) {
+		super();
+		this.fileName = fileName;
+		this.fourElements = fourElements;
+	}
 /**
  * 四元式定义
  *（+，OP1，op2，res） res=OP1+OP2

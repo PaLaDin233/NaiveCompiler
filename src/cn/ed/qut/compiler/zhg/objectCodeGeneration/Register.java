@@ -3,7 +3,7 @@ package cn.ed.qut.compiler.zhg.objectCodeGeneration;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.ed.qut.compiler.zhg.objectCodeGeneration.concrete.Variate;
+import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.Variate;
 
 public abstract class Register {
 	protected int id;
@@ -75,6 +75,9 @@ public abstract class Register {
 		this.id = id;
 	}*/
 
+	public String getName(int id){
+		return regNameList.get(id);
+	}
 	/**
 	 * 获取寄存器分配的变量列表
 	 * 返回的size为0时表示没有分配变量
@@ -88,9 +91,9 @@ public abstract class Register {
 		return allocatVar.size()==0;
 	}
 	
-	public void setAllocatVar(List<Variate> allocatVar) {
+	/*public void setAllocatVar(List<Variate> allocatVar) {
 		this.allocatVar = allocatVar;
-	}
+	}*/
 	
 	
 }

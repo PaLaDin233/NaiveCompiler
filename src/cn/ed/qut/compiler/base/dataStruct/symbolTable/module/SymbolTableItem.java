@@ -1,9 +1,9 @@
-package cn.ed.qut.compiler.base.dataStruct.symbolTable;
+package cn.ed.qut.compiler.base.dataStruct.symbolTable.module;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.ed.qut.compiler.base.dataStruct.symbolTable.abstruct.SymbolTable;
+import cn.ed.qut.compiler.base.dataStruct.symbolTable.ProcSymbolTable;
 
 public class SymbolTableItem {
 	
@@ -13,9 +13,9 @@ public class SymbolTableItem {
 	private int type;//类型
 	private String name;//名称
 	private int value;//常量的值,或者是参数的index
-	private TempSymbolTable symbolTable;//如果是方法，方法对应的局部符号表
-	private boolean waitUse=false;
-	private boolean active=false;
+	private ProcSymbolTable symbolTable;//如果是方法，方法对应的局部符号表
+	private Variate variate;//如果是变量，和变量相关的变量信息
+
 	//下面是符号表项类型 常量声明
 	/**
 	 * 主函数
@@ -67,7 +67,7 @@ public class SymbolTableItem {
 	 * @param value 符号的值,是常量的值,或者是参数的index，其他请输入0
 	 * @param procSymbolTable 如果是方法，这里写上方法的方法符号表（表内标识符只有在方法内有效）
 	 */
-	public SymbolTableItem(int type, String name, int value, TempSymbolTable procSymbolTable) {
+	public SymbolTableItem(int type, String name, int value, ProcSymbolTable procSymbolTable) {
 		super();
 		this.type = type;
 		this.name = name;
@@ -117,7 +117,17 @@ public class SymbolTableItem {
 	private static SymbolTableItem getProcItemNoType(String name){
 		SymbolTableItem item=getItemNoType(name);
 		//为方法设置局部符号表
-		item.setTempSymbolTable(new TempSymbolTable() );
+		item.setTempSymbolTable(new ProcSymbolTable() );
+		return item;
+	}
+	/**
+	 * 获取一个无类型的变量
+	 * @param name 变量名
+	 * @return
+	 */
+	private static SymbolTableItem getVarNoType(String name){
+		SymbolTableItem item=getItemNoType(name);
+		item.setVariate(new Variate());
 		return item;
 	}
 	
@@ -127,7 +137,7 @@ public class SymbolTableItem {
 	 * @return
 	 */
 	public static SymbolTableItem getIntItem(String name){
-		SymbolTableItem item=getItemNoType(name);
+		SymbolTableItem item=getVarNoType(name);
 		item.setType(INT);		
 		return item;
 	}
@@ -153,6 +163,14 @@ public class SymbolTableItem {
 		item.setType(MAIN_PROC);		
 		return item;
 	}
+	public Variate getVariate() {
+		return variate;
+	}
+
+	public void setVariate(Variate variate) {
+		this.variate = variate;
+	}
+
 	
 	/**
 	 * 根据参数名列表获得一个参数项列表
@@ -180,7 +198,7 @@ public class SymbolTableItem {
 	 * @return
 	 */
 	public static SymbolTableItem getStringItem(String name){
-		SymbolTableItem item=getItemNoType(name);
+		SymbolTableItem item=getVarNoType(name);
 		item.setType(STRING);		
 		return item;
 	}
@@ -204,41 +222,13 @@ public class SymbolTableItem {
 		this.value = value;
 	}
 
-	public TempSymbolTable getSymbolTable() {
+	public ProcSymbolTable getSymbolTable() {
 		return symbolTable;
 	}
-	public void setTempSymbolTable(TempSymbolTable symbolTable) {
+	public void setTempSymbolTable(ProcSymbolTable symbolTable) {
 		this.symbolTable = symbolTable;
 	}
 
-	/**
-	 * @return waitUse
-	 */
-	public boolean isWaitUse() {
-		return waitUse;
-	}
-
-	/**
-	 * 将待用信息取反
-	 * 
-	 */
-	public void changeWaitUse() {
-		waitUse = !waitUse;
-	}
-
-	/**
-	 * @return active
-	 */
-	public boolean isActive() {
-		return active;
-	}
-
-	/**
-	 * 将是否活跃信息取反
-	 */
-	public void changeActive() {
-		active = !active;
-	}
 	
 	
 	

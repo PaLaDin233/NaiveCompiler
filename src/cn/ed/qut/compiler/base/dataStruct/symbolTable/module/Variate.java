@@ -1,4 +1,4 @@
-package cn.ed.qut.compiler.zhg.objectCodeGeneration.concrete;
+package cn.ed.qut.compiler.base.dataStruct.symbolTable.module;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,20 +11,22 @@ import cn.ed.qut.compiler.zhg.objectCodeGeneration.Register;
  * 
  */
 public class Variate {
-	private String name;//变量名
+//	private String name;//变量名
+	private boolean waitUse=false;
+	private boolean active=false;
+	
 	/**
 	 * 变量存放的位置，寄存器或者是内存，寄存器的话是哪个寄存器<br>
 	 * 值是-1时表示存放在内存中
 	 */
-	
 	private List<Integer> location=new ArrayList<>();//
 
-	private SymbolTable symbolTable;//变量所在的符号表
+//	private SymbolTable symbolTable;//变量所在的符号表
 	
 	public Variate() {
 	
 	}
-	public Variate(String name) {
+	/*public Variate(String name) {
 		this.name = name;
 	}
 	
@@ -32,7 +34,7 @@ public class Variate {
 		super();
 		this.name = name;
 		this.symbolTable = symbolTable;
-	}
+	}*/
 	/**
 	 * 为变量添加存放位置
 	 * @param register
@@ -54,13 +56,13 @@ public class Variate {
 		
 	}
 	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
+//	public String getName() {
+//		return name;
+//	}
+//
+//	public void setName(String name) {
+//		this.name = name;
+//	}
 
 	
 	/**
@@ -73,6 +75,34 @@ public class Variate {
 				location.remove(i);
 			}
 		}
+	}
+	/**
+	 * @return waitUse
+	 */
+	public boolean isWaitUse() {
+		return waitUse;
+	}
+
+	/**
+	 * 将待用信息取反
+	 * 
+	 */
+	public void changeWaitUse() {
+		waitUse = !waitUse;
+	}
+
+	/**
+	 * @return active
+	 */
+	public boolean isActive() {
+		return active;
+	}
+
+	/**
+	 * 将是否活跃信息取反
+	 */
+	public void changeActive() {
+		active = !active;
 	}
 	
 	@Override

@@ -2,7 +2,7 @@ package cn.ed.qut.compiler.base.dataStruct.symbolTable.abstruct;
 
 import java.util.HashMap;
 
-import cn.ed.qut.compiler.base.dataStruct.symbolTable.SymbolTableItem;
+import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolTableItem;
 
 /**
  * 使用HashMap实现的符号表

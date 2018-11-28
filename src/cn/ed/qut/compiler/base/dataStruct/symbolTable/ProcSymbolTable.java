@@ -4,13 +4,14 @@ import java.util.Map;
 
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.abstruct.HashSymbolTable;
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.abstruct.SymbolTable;
+import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolTableItem;
 
 /**
- * 临时符号表,存储临时的标识符，如局部变量
+ * 方法符号表,存储方法中的标识符
  * @author 清居
  *
  */
-public class TempSymbolTable extends HashSymbolTable{
+public class ProcSymbolTable extends HashSymbolTable{
 	/**
 	 * 是否是参数
 	 * @param name
@@ -36,10 +37,10 @@ public class TempSymbolTable extends HashSymbolTable{
 	 */
 	public int getParaNum(String name){
 		//获取name对应的方法
-		TempSymbolTable item=(TempSymbolTable) getProc(name).getSymbolTable();
+		ProcSymbolTable item=(ProcSymbolTable) getProc(name).getSymbolTable();
 		//存在方法则返回方法对应的符号表中参数的个数
-		if(item!=null&&item instanceof TempSymbolTable){
-			return ((TempSymbolTable)item).getParaNum();
+		if(item!=null&&item instanceof ProcSymbolTable){
+			return ((ProcSymbolTable)item).getParaNum();
 		}
 		return -1;	
 	}

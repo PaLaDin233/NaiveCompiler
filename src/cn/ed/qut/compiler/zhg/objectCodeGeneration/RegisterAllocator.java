@@ -37,6 +37,11 @@ public abstract class RegisterAllocator {
 	 */
 	public abstract String getRegister(String source);
 
+	public String getRegister(FourElement element) {
+		// TODO 自动生成的方法存根
+		return null;
+	}
+
 
 	
 	
