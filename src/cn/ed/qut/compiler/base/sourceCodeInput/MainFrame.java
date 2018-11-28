@@ -18,8 +18,8 @@ import cn.ed.qut.compiler.base.parsing.Parser;
 
 public class MainFrame extends JFrame {
 
-	TextArea sourseFile;//ç”¨æ¥æ˜¾ç¤ºæºæ–‡ä»¶çš„æ–‡æœ¬æ¡†
-	String soursePath;// æºæ–‡ä»¶è·¯å¾„
+	TextArea sourseFile;//ÓÃÀ´ÏÔÊ¾Ô´ÎÄ¼şµÄÎÄ±¾¿ò
+	String soursePath;// Ô´ÎÄ¼şÂ·¾¶
 	String LL1Path;
 	String wordListPath;
 	String fourElementPath;
@@ -34,7 +34,7 @@ public class MainFrame extends JFrame {
 
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Dimension screen = toolkit.getScreenSize();
-		setTitle("Cè¯­è¨€å°å‹ç¼–è¯‘å™¨");
+		setTitle("CÓïÑÔĞ¡ĞÍ±àÒëÆ÷");
 		setSize(750, 480);
 		super.setResizable(false);
 		super.setLocation(screen.width / 2 - this.getWidth() / 2, screen.height
@@ -53,9 +53,9 @@ public class MainFrame extends JFrame {
 
 	private Component createUpPane() {
 		JPanel p = new JPanel(new FlowLayout());
-		final FilePanel fp = new FilePanel("é€‰æ‹©å¾…åˆ†ææ–‡ä»¶");
+		final FilePanel fp = new FilePanel("Ñ¡Ôñ´ı·ÖÎöÎÄ¼ş");
 		//final FilePanel fp1 = new FilePanel("xiang");
-		JButton button = new JButton("ç¡®å®š");
+		JButton button = new JButton("È·¶¨");
 		button.addActionListener(new ActionListener() {
 		
 			@Override
@@ -80,7 +80,7 @@ public class MainFrame extends JFrame {
 
 	private Component createcCenterPane() {
 		JPanel p = new JPanel(new BorderLayout());
-		JLabel label = new JLabel("æºæ–‡ä»¶å¦‚ä¸‹ï¼š");
+		JLabel label = new JLabel("Ô´ÎÄ¼şÈçÏÂ£º");
 		sourseFile = new TextArea();
 		sourseFile.setText("");
 		p.add(BorderLayout.NORTH, label);
@@ -90,10 +90,10 @@ public class MainFrame extends JFrame {
 
 	private Component creatBottomPane() {
 		JPanel p = new JPanel(new FlowLayout());
-		JButton bt1 = new JButton("è¯æ³•åˆ†æ");
-		JButton bt2 = new JButton("è¯­æ³•åˆ†æ");
-		JButton bt4 = new JButton("ä¸­é—´ä»£ç ç”Ÿæˆ");
-		JButton bt5 = new JButton("ç›®æ ‡ä»£ç ç”Ÿæˆ");
+		JButton bt1 = new JButton("´Ê·¨·ÖÎö");
+		JButton bt2 = new JButton("Óï·¨·ÖÎö");
+		JButton bt4 = new JButton("ÖĞ¼ä´úÂëÉú³É");
+		JButton bt5 = new JButton("Ä¿±ê´úÂëÉú³É");
 		bt1.addActionListener(new ActionListener() {
 
 			@Override
@@ -105,7 +105,7 @@ public class MainFrame extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				InfoFrame inf = new InfoFrame("è¯æ³•åˆ†æ", wordListPath);
+				InfoFrame inf = new InfoFrame("´Ê·¨·ÖÎö", wordListPath);
 
 				inf.setVisible(true);
 			}
@@ -123,7 +123,7 @@ public class MainFrame extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				InfoFrame inf = new InfoFrame("è¯­æ³•åˆ†æ", LL1Path);
+				InfoFrame inf = new InfoFrame("Óï·¨·ÖÎö", LL1Path);
 				inf.setVisible(true);
 			}
 		});
@@ -141,7 +141,7 @@ public class MainFrame extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				InfoFrame inf = new InfoFrame("ä¸­é—´ä»£ç ç”Ÿæˆ", fourElementPath);
+				InfoFrame inf = new InfoFrame("ÖĞ¼ä´úÂëÉú³É", fourElementPath);
 				inf.setVisible(true);
 			}
 		});
@@ -158,7 +158,7 @@ public class MainFrame extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				huibian inf = new huibian("ç›®æ ‡ä»£ç ç”Ÿæˆ", fourElementPath);
+				huibian inf = new huibian("Ä¿±ê´úÂëÉú³É", fourElementPath);
 				inf.setVisible(true);
 			}
 		});
@@ -198,7 +198,7 @@ class FilePanel extends JPanel {
 	FilePanel(String str) {
 		JLabel label = new JLabel(str);
 		JTextField fileText = new JTextField(35);
-		JButton chooseButton = new JButton("æµè§ˆ...");
+		JButton chooseButton = new JButton("ä¯ÀÀ...");
 		this.add(label);
 		this.add(fileText);
 		this.add(chooseButton);
@@ -211,7 +211,7 @@ class FilePanel extends JPanel {
 		return jtf.getText();    
 	}
 
-	// æŒ‰é’®å“åº”å‡½æ•°
+	// °´Å¥ÏìÓ¦º¯Êı
 	private class clickAction implements ActionListener {
 		private Component cmpt;
 
@@ -225,7 +225,7 @@ class FilePanel extends JPanel {
 			int ret = chooser.showOpenDialog(cmpt);
 			if (ret == JFileChooser.APPROVE_OPTION) {
 				JPanel jp = (JPanel) cmpt;
-				JTextField jtf = (JTextField) jp.getComponent(1);//è·å–zujian
+				JTextField jtf = (JTextField) jp.getComponent(1);//»ñÈ¡zujian
 				jtf.setText(chooser.getSelectedFile().getPath());
 			}
 		}

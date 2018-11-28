@@ -13,7 +13,7 @@ import cn.ed.qut.compiler.base.intermediateCodeGeneration.FourElement;
 import cn.ed.qut.compiler.base.wordSegmenter.Word;
 import cn.ed.qut.compiler.base.sourceCodeInput.Error;
 /**
- * è¯­æ³•åˆ†æå™¨
+ * Óï·¨·ÖÎöÆ÷
  * @author xxz
  *
  */
@@ -23,28 +23,28 @@ public class Parser {
 	 * @param args
 	 */
 
-	private LexAnalyse lexAnalyse ;//è¯æ³•åˆ†æå™¨
-	ArrayList<Word>wordList=new ArrayList<Word>();//å•è¯è¡¨
-	Stack<AnalyseNode>analyseStack=new Stack<AnalyseNode>();//åˆ†ææ ˆ
-	Stack<String>semanticStack=new Stack<String>();//è¯­ä¹‰æ ˆ
-	ArrayList<FourElement>fourElemList=new ArrayList<FourElement>();//å››å…ƒå¼åˆ—è¡¨
-	ArrayList<Error>errorList=new ArrayList<Error>();//é”™è¯¯ä¿¡æ¯åˆ—è¡¨
-	StringBuffer bf;//åˆ†ææ ˆç¼“å†²æµ
-	int errorCount=0;//ç»Ÿè®¡é”™è¯¯ä¸ªæ•°
-	boolean graErrorFlag=false;//è¯­æ³•åˆ†æå‡ºé”™æ ‡å¿—
-	int tempCount=0;//ç”¨äºç”Ÿæˆä¸´æ—¶å˜é‡
-	int fourElemCount=0;//ç»Ÿè®¡å››å…ƒå¼ä¸ªæ•°
+	private LexAnalyse lexAnalyse ;//´Ê·¨·ÖÎöÆ÷
+	ArrayList<Word>wordList=new ArrayList<Word>();//µ¥´Ê±í
+	Stack<AnalyseNode>analyseStack=new Stack<AnalyseNode>();//·ÖÎöÕ»
+	Stack<String>semanticStack=new Stack<String>();//ÓïÒåÕ»
+	ArrayList<FourElement>fourElemList=new ArrayList<FourElement>();//ËÄÔªÊ½ÁĞ±í
+	ArrayList<Error>errorList=new ArrayList<Error>();//´íÎóĞÅÏ¢ÁĞ±í
+	StringBuffer bf;//·ÖÎöÕ»»º³åÁ÷
+	int errorCount=0;//Í³¼Æ´íÎó¸öÊı
+	boolean graErrorFlag=false;//Óï·¨·ÖÎö³ö´í±êÖ¾
+	int tempCount=0;//ÓÃÓÚÉú³ÉÁÙÊ±±äÁ¿
+	int fourElemCount=0;//Í³¼ÆËÄÔªÊ½¸öÊı
 	AnalyseNode S,B,A,C,X,Y,R,Z,Z1,U,U1,E,E1,H,H1,G,M,D,L,L1,T,T1,F,O,P,Q;
 	AnalyseNode ADD_SUB,DIV_MUL,ADD,SUB,DIV,MUL,ASS_F,ASS_R,ASS_Q,ASS_U,TRAN_LF;
 	AnalyseNode SINGLE,SINGLE_OP,EQ,EQ_U1,COMPARE,COMPARE_OP,IF_FJ,IF_RJ,IF_BACKPATCH_FJ,IF_BACKPATCH_RJ;
 	AnalyseNode WHILE_FJ,WHILE_RJ,WHILE_BACKPATCH_FJ,FOR_FJ,FOR_RJ,FOR_BACKPATCH_FJ;
-	AnalyseNode top;//å½“å‰æ ˆé¡¶å…ƒç´ 
-	Word firstWord;//å¾…åˆ†æå•è¯
+	AnalyseNode top;//µ±Ç°Õ»¶¥ÔªËØ
+	Word firstWord;//´ı·ÖÎöµ¥´Ê
 	String OP=null;
 	String ARG1,ARG2,RES;
 	Error error;
 	//int if_fj,if_rj,while_fj,while_rj,for_fj,for_rj;
-	Stack<Integer>if_fj,if_rj,while_fj,while_rj,for_fj,for_rj;//if while for è·³è½¬åœ°å€æ ˆ
+	Stack<Integer>if_fj,if_rj,while_fj,while_rj,for_fj,for_rj;//if while for Ìø×ªµØÖ·Õ»
 	Stack<String>for_op=new Stack<String>();
 
 	public Parser(){
@@ -120,8 +120,8 @@ public class Parser {
 		for_rj=new Stack<Integer>();
 
 	}
-	public void grammerAnalyse(){//LL1åˆ†ææ–¹æ³•è¿›è¡Œè¯­æ³•åˆ†æ
-		if(lexAnalyse.isFail())javax.swing.JOptionPane.showMessageDialog(null, "è¯æ³•åˆ†ææœªé€šè¿‡ï¼Œä¸èƒ½è¿›è¡Œè¯­æ³•åˆ†æ");
+	public void grammerAnalyse(){//LL1·ÖÎö·½·¨½øĞĞÓï·¨·ÖÎö
+		if(lexAnalyse.isFail())javax.swing.JOptionPane.showMessageDialog(null, "´Ê·¨·ÖÎöÎ´Í¨¹ı£¬²»ÄÜ½øĞĞÓï·¨·ÖÎö");
 		bf=new StringBuffer();
 		int gcount=0;
 		error=null;
@@ -131,14 +131,14 @@ public class Parser {
 		while(!analyseStack.empty()&&!wordList.isEmpty()){
 			//System.out.println(fourElemCount);
 			bf.append('\n');
-			bf.append("æ­¥éª¤"+gcount+"\t");
+			bf.append("²½Öè"+gcount+"\t");
 			if(gcount++>10000){
 				graErrorFlag=true;
 				break;
 			}
-			top=analyseStack.get(0);//å½“å‰æ ˆé¡¶å…ƒç´ 
-			firstWord=wordList.get(0);//å¾…åˆ†æå•è¯
-			if(firstWord.getValue().equals("#")//æ­£å¸¸ç»“æŸ
+			top=analyseStack.get(0);//µ±Ç°Õ»¶¥ÔªËØ
+			firstWord=wordList.get(0);//´ı·ÖÎöµ¥´Ê
+			if(firstWord.getValue().equals("#")//Õı³£½áÊø
 					&&top.name.equals("#")){
 				bf.append("\n");
 				analyseStack.remove(0);
@@ -151,24 +151,24 @@ public class Parser {
 				break;
 
 			}
-			else if(AnalyseNode.isTerm(top)){//ç»ˆæç¬¦æ—¶çš„å¤„ç†
+			else if(AnalyseNode.isTerm(top)){//ÖÕ¼«·ûÊ±µÄ´¦Àí
 				termOP(top.name);
 			}else if(AnalyseNode.isNonterm(top)){
 				nonTermOP(top.name);	
-			}else if(top.type.equals(AnalyseNode.ACTIONSIGN)){//æ ˆé¡¶æ˜¯åŠ¨ä½œç¬¦å·æ—¶çš„å¤„ç†
+			}else if(top.type.equals(AnalyseNode.ACTIONSIGN)){//Õ»¶¥ÊÇ¶¯×÷·ûºÅÊ±µÄ´¦Àí
 				actionSignOP();
 			}
 
-			bf.append("å½“å‰åˆ†ææ ˆ:");
+			bf.append("µ±Ç°·ÖÎöÕ»:");
 			for(int i=0;i<analyseStack.size();i++){
 				bf.append(analyseStack.get(i).name);
 				//System.out.println(analyseStack.get(i).name);
 			}
-			bf.append("\t").append("ä½™ç•™ç¬¦å·ä¸²ï¼š");
+			bf.append("\t").append("ÓàÁô·ûºÅ´®£º");
 			for(int j=0;j<wordList.size();j++){
 				bf.append(wordList.get(j).getValue());
 			}
-			bf.append("\t").append("è¯­ä¹‰æ ˆ:");
+			bf.append("\t").append("ÓïÒåÕ»:");
 			for(int k=semanticStack.size()-1;k>=0;k--){
 				bf.append(semanticStack.get(k));
 			}
@@ -186,7 +186,7 @@ public class Parser {
 			errorCount++;
 			analyseStack.remove(0);
 			wordList.remove(0);
-			error=new Error(errorCount,"è¯­æ³•é”™è¯¯",firstWord.getLine(),firstWord);
+			error=new Error(errorCount,"Óï·¨´íÎó",firstWord.getLine(),firstWord);
 			errorList.add(error);
 			graErrorFlag=true;
 		}	
@@ -199,8 +199,8 @@ public class Parser {
 		if(nonTerm.equals("H'"))nonTerm="4";
 		if(nonTerm.equals("L'"))nonTerm="5";
 		if(nonTerm.equals("T'"))nonTerm="6";
-		switch(nonTerm.charAt(0)){//æ ˆé¡¶ä¸ºéç»ˆç»“ç¬¦å¤„ç†
-		//N:S,B,A,C,,X,R,Z,Zâ€™,U,Uâ€™,E,Eâ€™,H,Hâ€™,G,M,D,L,Lâ€™,T,Tâ€™,F,O,P,Q
+		switch(nonTerm.charAt(0)){//Õ»¶¥Îª·ÇÖÕ½á·û´¦Àí
+		//N:S,B,A,C,,X,R,Z,Z¡¯,U,U¡¯,E,E¡¯,H,H¡¯,G,M,D,L,L¡¯,T,T¡¯,F,O,P,Q
 		case 'S':
 			if(firstWord.getValue().equals("void")){
 				analyseStack.remove(0);
@@ -215,7 +215,7 @@ public class Parser {
 				errorCount++;
 				analyseStack.remove(0);
 				wordList.remove(0);
-				error=new Error(errorCount,"ä¸»å‡½æ•°æ²¡æœ‰è¿”å›å€¼",firstWord.getLine(),firstWord);
+				error=new Error(errorCount,"Ö÷º¯ÊıÃ»ÓĞ·µ»ØÖµ",firstWord.getLine(),firstWord);
 				errorList.add(error);	
 				graErrorFlag=true;
 			}
@@ -369,7 +369,7 @@ public class Parser {
 				errorCount++;
 				analyseStack.remove(0);
 				wordList.remove(0);
-				error=new Error(errorCount,"éæ³•æ•°æ®ç±»å‹",firstWord.getLine(),firstWord);
+				error=new Error(errorCount,"·Ç·¨Êı¾İÀàĞÍ",firstWord.getLine(),firstWord);
 				errorList.add(error);	
 				graErrorFlag=true;
 			}
@@ -384,7 +384,7 @@ public class Parser {
 				errorCount++;
 				analyseStack.remove(0);
 				wordList.remove(0);
-				error=new Error(errorCount,"éæ³•æ ‡è¯†ç¬¦",firstWord.getLine(),firstWord);
+				error=new Error(errorCount,"·Ç·¨±êÊ¶·û",firstWord.getLine(),firstWord);
 				errorList.add(error);
 				graErrorFlag=true;
 			}
@@ -410,7 +410,7 @@ public class Parser {
 				errorCount++;
 				analyseStack.remove(0);
 				wordList.remove(0);
-				error=new Error(errorCount,"éæ³•æ ‡è¯†ç¬¦",firstWord.getLine(),firstWord);
+				error=new Error(errorCount,"·Ç·¨±êÊ¶·û",firstWord.getLine(),firstWord);
 				errorList.add(error);
 				graErrorFlag=true;
 			}
@@ -455,7 +455,7 @@ public class Parser {
 				errorCount++;
 				analyseStack.remove(0);
 				wordList.remove(0);
-				error=new Error(errorCount,"ä¸èƒ½è¾“å‡ºçš„æ•°æ®ç±»å‹",firstWord.getLine(),firstWord);
+				error=new Error(errorCount,"²»ÄÜÊä³öµÄÊı¾İÀàĞÍ",firstWord.getLine(),firstWord);
 				errorList.add(error);	
 				graErrorFlag=true;
 			}
@@ -478,7 +478,7 @@ public class Parser {
 				errorCount++;
 				analyseStack.remove(0);
 				wordList.remove(0);
-				error=new Error(errorCount,"ä¸èƒ½è¿›è¡Œç®—æœ¯è¿ç®—çš„æ•°æ®ç±»å‹",firstWord.getLine(),firstWord);
+				error=new Error(errorCount,"²»ÄÜ½øĞĞËãÊõÔËËãµÄÊı¾İÀàĞÍ",firstWord.getLine(),firstWord);
 				errorList.add(error);	
 				graErrorFlag=true;
 			}
@@ -510,7 +510,7 @@ public class Parser {
 				errorCount++;
 				analyseStack.remove(0);
 				wordList.remove(0);
-				error=new Error(errorCount,"ä¸èƒ½è¿›è¡Œç®—æœ¯è¿ç®—çš„æ•°æ®ç±»å‹",firstWord.getLine(),firstWord);
+				error=new Error(errorCount,"²»ÄÜ½øĞĞËãÊõÔËËãµÄÊı¾İÀàĞÍ",firstWord.getLine(),firstWord);
 				errorList.add(error);	
 				graErrorFlag=true;
 			}
@@ -547,7 +547,7 @@ public class Parser {
 				errorCount++;
 				analyseStack.remove(0);
 				wordList.remove(0);
-				error=new Error(errorCount,"éæ³•è¿ç®—ç¬¦",firstWord.getLine(),firstWord);
+				error=new Error(errorCount,"·Ç·¨ÔËËã·û",firstWord.getLine(),firstWord);
 				errorList.add(error);	
 				graErrorFlag=true;
 			}
@@ -581,7 +581,7 @@ public class Parser {
 				errorCount++;
 				analyseStack.remove(0);
 				wordList.remove(0);
-				error=new Error(errorCount,"ä¸èƒ½è¿›è¡Œç®—æœ¯è¿ç®—çš„æ•°æ®ç±»å‹æˆ–æ‹¬å·ä¸åŒ¹é…",firstWord.getLine(),firstWord);
+				error=new Error(errorCount,"²»ÄÜ½øĞĞËãÊõÔËËãµÄÊı¾İÀàĞÍ»òÀ¨ºÅ²»Æ¥Åä",firstWord.getLine(),firstWord);
 				errorList.add(error);
 				graErrorFlag=true;
 			}
@@ -608,7 +608,7 @@ public class Parser {
 				errorCount++;
 				analyseStack.remove(0);
 				wordList.remove(0);
-				error=new Error(errorCount,"ä¸èƒ½è¿›è¡Œç®—æœ¯è¿ç®—çš„æ•°æ®ç±»å‹æˆ–æ‹¬å·ä¸åŒ¹é…",firstWord.getLine(),firstWord);
+				error=new Error(errorCount,"²»ÄÜ½øĞĞËãÊõÔËËãµÄÊı¾İÀàĞÍ»òÀ¨ºÅ²»Æ¥Åä",firstWord.getLine(),firstWord);
 				errorList.add(error);
 				graErrorFlag=true;
 			}
@@ -652,7 +652,7 @@ public class Parser {
 				errorCount++;
 				analyseStack.remove(0);
 				wordList.remove(0);
-				error=new Error(errorCount,"ä¸èƒ½è¿›è¡Œç®—æœ¯è¿ç®—çš„æ•°æ®ç±»å‹",firstWord.getLine(),firstWord);
+				error=new Error(errorCount,"²»ÄÜ½øĞĞËãÊõÔËËãµÄÊı¾İÀàĞÍ",firstWord.getLine(),firstWord);
 				errorList.add(error);	
 				graErrorFlag=true;
 			}
@@ -692,7 +692,7 @@ public class Parser {
 				//errorCount++;
 				analyseStack.remove(0);
 				//	wordList.remove(0);
-				//error=new Error(errorCount,"ä¸èƒ½è¿›è¡Œç®—æœ¯è¿ç®—çš„æ•°æ®ç±»å‹",firstWord.line,firstWord);
+				//error=new Error(errorCount,"²»ÄÜ½øĞĞËãÊõÔËËãµÄÊı¾İÀàĞÍ",firstWord.line,firstWord);
 				//errorList.add(error);
 				//graErrorFlag=true;
 			}
@@ -907,7 +907,7 @@ public class Parser {
 		File file=new File("./output/");
 		if(!file.exists()){
 			file.mkdirs();
-			file.createNewFile();//å¦‚æœè¿™ä¸ªæ–‡ä»¶ä¸å­˜åœ¨å°±åˆ›å»ºå®ƒ
+			file.createNewFile();//Èç¹ûÕâ¸öÎÄ¼ş²»´æÔÚ¾Í´´½¨Ëü
 		}
 		String path=file.getAbsolutePath();
 		FileOutputStream fos=new FileOutputStream(path+"/LL1.txt");  
@@ -918,15 +918,15 @@ public class Parser {
 		bf.delete(0, bf.length());
 		if(graErrorFlag){
 			Error error;
-			pw1.println("é”™è¯¯ä¿¡æ¯å¦‚ä¸‹ï¼š");
+			pw1.println("´íÎóĞÅÏ¢ÈçÏÂ£º");
 
-			pw1.println("é”™è¯¯åºå·\té”™è¯¯ä¿¡æ¯\té”™è¯¯æ‰€åœ¨è¡Œ \té”™è¯¯å•è¯");
+			pw1.println("´íÎóĞòºÅ\t´íÎóĞÅÏ¢\t´íÎóËùÔÚĞĞ \t´íÎóµ¥´Ê");
 			for(int i=0;i<errorList.size();i++){
 				error=errorList.get(i);
 				pw1.println(error.getId()+"\t"+error.getInfo()+"\t\t"+error.getLine()+"\t"+error.getWord().getValue());
 			}
 		}else {
-			pw1.println("è¯­æ³•åˆ†æé€šè¿‡ï¼š");
+			pw1.println("Óï·¨·ÖÎöÍ¨¹ı£º");
 		}
 		pw1.close();
 		return path+"/LL1.txt";
@@ -936,15 +936,15 @@ public class Parser {
 		File file=new File("./output/");
 		if(!file.exists()){
 			file.mkdirs();
-			file.createNewFile();//å¦‚æœè¿™ä¸ªæ–‡ä»¶ä¸å­˜åœ¨å°±åˆ›å»ºå®ƒ
+			file.createNewFile();//Èç¹ûÕâ¸öÎÄ¼ş²»´æÔÚ¾Í´´½¨Ëü
 		}
 		String path=file.getAbsolutePath();
 		FileOutputStream fos=new FileOutputStream(path+"/FourElement.txt");  
 		BufferedOutputStream bos=new BufferedOutputStream(fos); 
 		OutputStreamWriter osw1=new OutputStreamWriter(bos,"utf-8");
 		PrintWriter pw1=new PrintWriter(osw1);
-		pw1.println("ç”Ÿæˆçš„å››å…ƒå¼å¦‚ä¸‹");
-		pw1.println("åºå·ï¼ˆOP,ARG1ï¼ŒARG2ï¼ŒRESULTï¼‰");
+		pw1.println("Éú³ÉµÄËÄÔªÊ½ÈçÏÂ");
+		pw1.println("ĞòºÅ£¨OP,ARG1£¬ARG2£¬RESULT£©");
 		FourElement temp;
 		for(int i=0;i<fourElemList.size();i++){
 			temp=fourElemList.get(i);

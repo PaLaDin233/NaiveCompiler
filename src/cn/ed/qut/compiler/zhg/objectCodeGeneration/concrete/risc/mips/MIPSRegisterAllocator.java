@@ -2,14 +2,16 @@ package cn.ed.qut.compiler.zhg.objectCodeGeneration.concrete.risc.mips;
 
 import java.util.ArrayList;
 
+import cn.ed.qut.compiler.base.dataStruct.symbolTable.abstruct.SymbolTable;
+import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.Variate;
 import cn.ed.qut.compiler.base.intermediateCodeGeneration.FourElement;
 import cn.ed.qut.compiler.zhg.objectCodeGeneration.Register;
 import cn.ed.qut.compiler.zhg.objectCodeGeneration.RegisterAllocator;
-import cn.ed.qut.compiler.zhg.objectCodeGeneration.concrete.Variate;
+import cn.ed.qut.compiler.zhg.objectCodeGeneration.SymbolTableStack;
 
 /**
- * MIPSæŒ‡ä»¤é›†ä¸‹çš„å¯„å­˜å™¨åˆ†é…å™¨
- * @author æ¸…å±…
+ * MIPSÖ¸Áî¼¯ÏÂµÄ¼Ä´æÆ÷·ÖÅäÆ÷
+ * @author Çå¾Ó
  *
  */
 
@@ -24,22 +26,60 @@ public class MIPSRegisterAllocator extends RegisterAllocator {
 		
 	}
 	
+
+	/**
+	 * element:(i:A=B op C)
+	 * GETREG(i:A=B op C)
+	 */
+	
+	@Override
+	public String getRegister(FourElement element) {
+		String arg1=element.getArg1();
+		String arg2=element.getArg2();
+		String res=(String) element.getResult();
+		
+		//»ñÈ¡µ±Ç°·ûºÅ±í
+		SymbolTable symbolTable=SymbolTableStack.peek();
+		//TODO element:(i:A=B op C)
+		//(1)Èç¹ûBµÄÏÖĞĞÖµÔÚ¼Ä´æÆ÷RÖĞ£¬ÇÒ¸Ã¼Ä´æÆ÷Ö»°üº¬BµÄÖµ£¬
+		//   »òÕßBºÍAÊÇÍ¬Ò»±êÊ¶·û£¬»òÕßBÔÚËÄÔªÊ½Ö®ºó²»ÔÙ±»ÒıÓÃ£¬ÔòÑ¡È¡RiÎªËùĞè¼Ä´æÆ÷£¬×ª£¨4£©
+		
+		
+		//(2)ÈçÓĞÉĞÎ´·ÖÅäµÄ¼Ä´æÆ÷£¬Ôò´ÓÖĞÑ¡È¡Ò»¸öRi,ÎªËùĞè¼Ä´æÆ÷,×ª(4)
+		
+		//(3)´ÓÒÑ·ÖÅäµÄ¼Ä´æÆ÷ÖĞÑ¡È¡Ò»¸öRi×÷ÎªËùĞèµÄ¼Ä´æÆ÷R£¬Ñ¡È¡Ô­ÔòÎª£¬Õ¼ÓÃRiµÄ±äÁ¿µÄÖµÒ²Í¬Ê±´æ·ÅÔÚÖ÷´æÖĞ
+		//	»òÕßÔÚ»ù±¾¿éÖĞÒªÔÚ×îÔ¶µÄÎ»ÖÃ²Å»áÒıÓÃµ½¡£ÕâÑù£¬¶Ô¼Ä´æÆ÷RiËùº¬±äÁ¿×öÈçÏÂµ÷Õû
+		//		¶ÔRVALUE[R]£¨R¼Ä´æÆ÷·ÖÅäµÄ±äÁ¿ÁĞ±í£©ÖĞµÄÃ¿Ò»¸ö±äÁ¿M,Èç¹ûM²»ÊÇAÇÒAVALUE[M]
+		//	(±äÁ¿MËùÔÚµÄÎ»ÖÃ)£¬²»º¬M¡£Ôò
+		//  1.Éú³ÉÄ¿±ê´úÂëST Ri£¬M£¨½«¼Ä´æÆ÷RiµÄÄÚÈİÈ¡µ½M£©
+		//  2.Èç¹ûMÊÇB£¬ÔòÁîAVALUE[M]={M,Ri}·ñÔòÁîAVALUE[M]={M}
+		//	3.É¾³ıRVALUE[Ri]ÖĞµÄM
+		//	4.¸ø³öR£¬·µ»Ø
+		return null;
+	}
+	
 	@Override
 	public String getRegister(String source, FourElement element) {
+		//»ñÈ¡µ±Ç°·ûºÅ±í
+		SymbolTable symbolTable=SymbolTableStack.peek();
+		//»ñÈ¡²Ù×÷Êı1µÄ´æ·ÅÎ»ÖÃ
+		//»ñÈ¡²Ù×÷Êı2µÄ´æ·ÅÎ»ÖÃ
 		
 		return null;
 	}
 
+
+	//¸ù¾İ¸ø³öµÄ±äÁ¿»ñµÃÒ»¸ö¼Ä´æÆ÷
 	@Override
 	public String getRegister(String source) {
-		for (int i=16;i<24;i++) {	
-			if(registerList.get(i).isFree()){
-				registerList.get(i).add(new Variate(source));
-				return MIPSRegister.regNameList.get(i);
-			}
-		}
+		// TODO ×Ô¶¯Éú³ÉµÄ·½·¨´æ¸ù
 		return null;
 	}
+
+
+	
+
+	
 
 	
 

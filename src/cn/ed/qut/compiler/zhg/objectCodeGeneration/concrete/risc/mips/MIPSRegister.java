@@ -3,8 +3,8 @@ package cn.ed.qut.compiler.zhg.objectCodeGeneration.concrete.risc.mips;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.Variate;
 import cn.ed.qut.compiler.zhg.objectCodeGeneration.Register;
-import cn.ed.qut.compiler.zhg.objectCodeGeneration.concrete.Variate;
 
 public class MIPSRegister extends Register{
 
@@ -34,6 +34,8 @@ public class MIPSRegister extends Register{
 		for(int i=0;i<8;i++){
 			regNameList.add("$s"+i);
 		}
+		regNameList.add("$t8");
+		regNameList.add("$t9");
 		regNameList.add("$k0");
 		regNameList.add("$k1");
 		regNameList.add("$gp");

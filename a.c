@@ -1,6 +1,6 @@
 void main()
 {
-  int sum=0,a=5,b=4,c;
+  int sum=0,a=5,b=4,c,a;
   for(int i=1;i<11;i++){
   sum=sum+i;
   for(int i=1;i<11;i++){

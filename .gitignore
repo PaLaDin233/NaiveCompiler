@@ -27,4 +27,4 @@ Thumbs.db
 
 #only this project
 /output
-!*.java
+/test

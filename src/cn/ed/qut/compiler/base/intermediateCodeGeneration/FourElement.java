@@ -3,16 +3,16 @@ package cn.ed.qut.compiler.base.intermediateCodeGeneration;
 import java.io.Serializable;
 
 /**
- * å››å…ƒå¼ç±»å®šä¹‰
+ * ËÄÔªÊ½Àà¶¨Òå
  */
 
 public class FourElement implements Serializable{
-    private int id;//å››å…ƒå¼åºå·ï¼Œä¸ºç¼–ç¨‹æ–¹ä¾¿
-    private String op;//æ“ä½œç¬¦
-    private String arg1;//ç¬¬ä¸€ä¸ªæ“ä½œæ•°
-    private String arg2;//ç¬¬äºŒä¸ªæ“ä½œæ•°
-    private Object result;//ç»“æœ
-    private int codeBlockNum;//å››å…ƒå¼æ‰€åœ¨ä»£ç å—å·
+    private int id;//ËÄÔªÊ½ĞòºÅ£¬Îª±à³Ì·½±ã
+    private String op;//²Ù×÷·û
+    private String arg1;//µÚÒ»¸ö²Ù×÷Êı
+    private String arg2;//µÚ¶ş¸ö²Ù×÷Êı
+    private Object result;//½á¹û
+    private int codeBlockNum;//ËÄÔªÊ½ËùÔÚ´úÂë¿éºÅ
     public FourElement(){
 
     }
@@ -38,7 +38,7 @@ public class FourElement implements Serializable{
 		return result;
 	}
 	/**
-	 * @param result è¦è®¾ç½®çš„ result
+	 * @param result ÒªÉèÖÃµÄ result
 	 */
 	public void setResult(Object result) {
 		this.result = result;
@@ -50,7 +50,7 @@ public class FourElement implements Serializable{
 		return id;
 	}
 	/**
-	 * @param id è¦è®¾ç½®çš„ id
+	 * @param id ÒªÉèÖÃµÄ id
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -62,7 +62,7 @@ public class FourElement implements Serializable{
 		return op;
 	}
 	/**
-	 * @param op è¦è®¾ç½®çš„ op
+	 * @param op ÒªÉèÖÃµÄ op
 	 */
 	public void setOp(String op) {
 		this.op = op;
@@ -74,7 +74,7 @@ public class FourElement implements Serializable{
 		return arg1;
 	}
 	/**
-	 * @param arg1 è¦è®¾ç½®çš„ arg1
+	 * @param arg1 ÒªÉèÖÃµÄ arg1
 	 */
 	public void setArg1(String arg1) {
 		this.arg1 = arg1;
@@ -86,7 +86,7 @@ public class FourElement implements Serializable{
 		return arg2;
 	}
 	/**
-	 * @param arg2 è¦è®¾ç½®çš„ arg2
+	 * @param arg2 ÒªÉèÖÃµÄ arg2
 	 */
 	public void setArg2(String arg2) {
 		this.arg2 = arg2;
@@ -98,7 +98,7 @@ public class FourElement implements Serializable{
 		return codeBlockNum;
 	}
 	/**
-	 * @param codeBlockNum è¦è®¾ç½®çš„ codeBlockNum
+	 * @param codeBlockNum ÒªÉèÖÃµÄ codeBlockNum
 	 */
 	public void setCodeBlockNum(int codeBlockNum) {
 		this.codeBlockNum = codeBlockNum;
