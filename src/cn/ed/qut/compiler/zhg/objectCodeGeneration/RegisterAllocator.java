@@ -5,13 +5,13 @@ import java.util.List;
 import cn.ed.qut.compiler.base.intermediateCodeGeneration.FourElement;
 
 /**
- * åˆ†é…å¯„å­˜å™¨æŠ½è±¡ç±»
- * å­ç±»åŠŸèƒ½ï¼šå¯¹å…·ä½“æŒ‡ä»¤é›†ä¸‹çš„å¯„å­˜å™¨è¿›è¡Œåˆ†é…
- * @author æ¸…å±…
+ * ·ÖÅä¼Ä´æÆ÷³éÏóÀà
+ * ×ÓÀà¹¦ÄÜ£º¶Ô¾ßÌåÖ¸Áî¼¯ÏÂµÄ¼Ä´æÆ÷½øĞĞ·ÖÅä
+ * @author Çå¾Ó
  *
  */
 public abstract class RegisterAllocator {
-	protected List<Register> registerList=new ArrayList<>();//å¯„å­˜å™¨åˆ—è¡¨
+	protected List<Register> registerList=new ArrayList<>();//¼Ä´æÆ÷ÁĞ±í
 	
 	
 	public RegisterAllocator() {
@@ -19,26 +19,26 @@ public abstract class RegisterAllocator {
 	}
 	
 	/**
-	 * å¯¹åˆ†é…å™¨è¿›è¡Œåˆå§‹åŒ–ï¼Œæ·»åŠ å¯„å­˜å™¨
+	 * ¶Ô·ÖÅäÆ÷½øĞĞ³õÊ¼»¯£¬Ìí¼Ó¼Ä´æÆ÷
 	 */
 	protected abstract void init();
 	
 	/**
 	 * 
-	 * @param source åˆ†é…çš„æ¥æº
-	 * @param element å››å…ƒå¼
-	 * @return åˆ†é…çš„å¯„å­˜å™¨
+	 * @param source ·ÖÅäµÄÀ´Ô´
+	 * @param element ËÄÔªÊ½
+	 * @return ·ÖÅäµÄ¼Ä´æÆ÷
 	 */
 	public abstract String getRegister(String source,FourElement element);
 	
 	/**
 	 * 
-	 * @return æœªè¢«ä½¿ç”¨çš„é€šç”¨å¯„å­˜å™¨çš„å¯„å­˜å™¨åç§°,å¦‚MIPSä¸‹çš„$s0
+	 * @return Î´±»Ê¹ÓÃµÄÍ¨ÓÃ¼Ä´æÆ÷µÄ¼Ä´æÆ÷Ãû³Æ,ÈçMIPSÏÂµÄ$s0
 	 */
 	public abstract String getRegister(String source);
 
 	public String getRegister(FourElement element) {
-		// TODO è‡ªåŠ¨ç”Ÿæˆçš„æ–¹æ³•å­˜æ ¹
+		// TODO ×Ô¶¯Éú³ÉµÄ·½·¨´æ¸ù
 		return null;
 	}
 

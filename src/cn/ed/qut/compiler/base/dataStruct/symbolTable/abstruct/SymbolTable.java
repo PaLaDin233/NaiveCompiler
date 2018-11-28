@@ -1,24 +1,29 @@
 /**
- * æŠ½è±¡çš„ç¬¦å·è¡¨
- * @author æ¸…å±…
+ * ³éÏóµÄ·ûºÅ±í
+ * @author Çå¾Ó
  *
  */
 package cn.ed.qut.compiler.base.dataStruct.symbolTable.abstruct;
 
 import java.util.Map;
 
+import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.DataType;
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolTableItem;
+import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolType;
 
 
 public abstract class SymbolTable {
-	
+
 	//protected Map<SymbolItemIndex,SymbolTableItem> sMap;
-	
+
 	/**
-	 * sMapçš„ç´¢å¼•æ˜¯ç¬¦å·è¡¨é¡¹çš„type
-	 * è·å¾—çš„å€¼æ˜¯ä¸€ä¸ªä»¥ç¬¦å·è¡¨é¡¹nameä¸ºç´¢å¼•çš„Map
+	 * sMapµÄË÷ÒıÊÇ·ûºÅµÄÃû³Æname
+	 * 
 	 */
-	protected Map<Integer,Map<String,SymbolTableItem>> sMap;
+	protected Map<String,SymbolTableItem> sMap;
+	protected int intNum=0;//int±äÁ¿µÄÊıÁ¿
+	protected int stringNum=0;//string±äÁ¿µÄÊıÁ¿
+
 
 	public SymbolTable() {
 		init();
@@ -27,146 +32,184 @@ public abstract class SymbolTable {
 	/**
 	 * @return table
 	 */
-	
+
 	/**
-	 * åˆ¤æ–­è¯¥åå­—æ˜¯å¦æ˜¯è¦æ±‚çš„ç±»å‹
-	 * @param è¦åˆ¤æ–­çš„åå­—
-	 * @param ç±»å‹çš„å€¼ï¼Œè§ç±»å‹å¸¸é‡å®šä¹‰è¡¨
+	 * ÅĞ¶Ï¸ø¶¨µÄÃû×ÖÊÇ·ñÊÇÂú×ãÌõ¼şµÄ·ûºÅÀàĞÍ£¨·½·¨£¬³£Á¿£¬±äÁ¿£¬²ÎÊı)
+	 * @param symbolType
+	 * @param name
+	 * @return
 	 */
-	public boolean isType(int type,String name){
-		SymbolTableItem item=getSymbolTableItem(type, name);
-		
-		if(item!=null){
-			return true;
+	protected boolean isType(SymbolType symbolType,String name){
+		SymbolTableItem item=getSymbolTableItem(name);	
+		if(item==null){
+			return false;
 		}
-		
-		return false;
+		return item.getSymbolType()==symbolType;
 	}
-	
-	public boolean isFunction(String name){
-		return isType(SymbolTableItem.PROC, name)||isType(SymbolTableItem.VOID_PROC, name);
+
+	/**
+	 * ÅĞ¶Ï¸ø¶¨µÄ±êÊ¶·ûÊÇ·ñÊÇ¸ø¶¨µÄÊı¾İÀàĞÍ
+	 * @param dataType
+	 * @param name
+	 * @return
+	 */
+	protected boolean isType(DataType dataType,String name){
+		SymbolTableItem item=getSymbolTableItem(name);	
+		if(item==null){
+			return false;
+		}
+		return item.getDataType()==dataType;
 	}
-	
+
+	/**
+	 * ÅĞ¶Ï¸ÃÃû×ÖÊÇ·ñÊÇÒªÇóµÄÀàĞÍ£¨ÅĞ¶ÏnameÊÇ·ñÊÇdataTypeÀàĞÍµÄsymbolType£©
+	 * @param symbolType ·ûºÅÀàĞÍ
+	 * @param dataType Êı¾İÀàĞÍ
+	 * @param name ÒªÅĞ¶ÏµÄÃû×Ö
+	 */
+	protected boolean isType(SymbolType symbolType,DataType dataType,String name){
+		return isType(dataType, name)&&isType(dataType, name);
+	}
+
+	public boolean isProc(String name){
+		return isType(SymbolType.PROC, name);
+	}
+	public boolean isVar(String name){
+		return isType(SymbolType.VAR, name);
+	}
+	public boolean isConst(String name){
+		return isType(SymbolType.CONST, name);
+	}
+
 	public boolean isInt(String name){
-		return isType(SymbolTableItem.INT, name);
+		return isType(SymbolType.VAR,DataType.INT, name);
 	}
 	public boolean isString(String name){
-		return isType(SymbolTableItem.STRING, name);
+		return isType(SymbolType.VAR,DataType.STRING, name);
 	}
-	
-	//******************ä¸‹é¢å…¨éƒ¨æ˜¯æ‰©å±•ç”¨çš„*************
+
+	//******************ÏÂÃæÈ«²¿ÊÇÀ©Õ¹ÓÃµÄ*************
 	public boolean isFloat(String name){
-		return isType(SymbolTableItem.FLOAT, name);
+		return isType(DataType.FLOAT, name);
 	}
 	public boolean isDouble(String name){
-		return isType(SymbolTableItem.DOUBLE, name);
+		return isType(DataType.DOUBLE, name);
 	}
 
 	public boolean isShort(String name){
-		return isType(SymbolTableItem.SHORT, name);
+		return isType(DataType.SHORT, name);
 	}
 	public boolean isByte(String name){
-		return isType(SymbolTableItem.BYTE, name);
+		return isType(DataType.BYTE, name);
 	}
 	public boolean isLong(String name){
-		return isType(SymbolTableItem.LONG, name);
+		return isType(DataType.LONG, name);
 	}
 	public boolean isStruct(String name){
-		return isType(SymbolTableItem.STRUCT, name);
+		return isType(DataType.STRUCT, name);
 	}
 	//**********************************************
-	
-	public boolean isVar(String name){
-		return 
-				isInt(name)||isString(name)||
-				isByte(name)||isDouble(name)||
-				isFloat(name)||isShort(name)||
-				isLong(name)||isStruct(name);
-	}
-	
-	public boolean isConst(String name){
-		return isType(SymbolTableItem.CONST, name);
-	}
-	
-	public boolean isMainProc(String name){
-		return isType(SymbolTableItem.MAIN_PROC, name);
-	}
-	
-	
+
+
+
+
 	/**
-	 * è·å–ç¬¦å·è¡¨ä¸­çš„é¡¹
-	 * @param name é¡¹çš„åå­—
-	 * @param type é¡¹çš„ç±»å‹
+	 * »ñÈ¡·ûºÅ±íÖĞµÄÏî
+	 * @param name ÏîµÄÃû×Ö
 	 * @return
 	 */
-	public SymbolTableItem getSymbolTableItem(int type,String name){
-		SymbolTableItem item=null;
-		Map<String,SymbolTableItem> map=sMap.get(type);
-		item=map.get(name);
-		
-		return item;
+	public SymbolTableItem getSymbolTableItem(String name){
+		return sMap.get(name);
 	}
-	
-	public SymbolTableItem getProc(String name){
+
+	/*	public SymbolTableItem getProc(String name){
 		SymbolTableItem item=null;
-		Map<String,SymbolTableItem> map=sMap.get(SymbolTableItem.PROC);
-		item=map.get(name);
+
+		item=smap.get(name);
 		if(item==null){
 			map=sMap.get(SymbolTableItem.VOID_PROC);
+			if(map==null)return null;
 			item=map.get(name);
 		}
 		return item;
-	}
-	
+	}*/
+
 	/**
-	 * è·å–è¯¥è¡¨ä¸­æ•´å‹å˜é‡çš„ä¸ªæ•°
+	 * »ñÈ¡¸Ã±íÖĞÕûĞÍ±äÁ¿µÄ¸öÊı
 	 * @return
 	 */
 	public int getIntNum(){
-		return sMap.get(SymbolTableItem.INT).size();//è·å–æ‰€æœ‰æ•´å‹å˜é‡çš„Map,è¿”å›Mapçš„size
+		return this.intNum;//»ñÈ¡ËùÓĞÕûĞÍ±äÁ¿µÄMap,·µ»ØMapµÄsize
 	}
 	public int getStringNum(){
-		return sMap.get(SymbolTableItem.STRING).size();//è·å–å­—ç¬¦ä¸²å˜é‡çš„Map,è¿”å›Mapçš„size
+		return this.stringNum;//»ñÈ¡×Ö·û´®±äÁ¿µÄMap,·µ»ØMapµÄsize
 	}
 	public int getVarNum(){
 		return getIntNum()+getStringNum();
 	}
-	
-	
+
+
 	/**
-	 * è·å–æ–¹æ³•ä¸­å±€éƒ¨å˜é‡çš„ä¸ªæ•°
-	 * @param funcName æ–¹æ³•å
-	 * @return æ–¹æ³•ä¸­æ•´å‹å±€éƒ¨å˜é‡çš„ä¸ªæ•°,ä¸æ˜¯æ–¹æ³•åˆ™è¿”å›-1
+	 * »ñÈ¡·½·¨ÖĞ¾Ö²¿±äÁ¿µÄ¸öÊı
+	 * @param funcName ·½·¨Ãû
+	 * @return ·½·¨ÖĞÕûĞÍ¾Ö²¿±äÁ¿µÄ¸öÊı,²»ÊÇ·½·¨Ôò·µ»Ø-1
 	 */
 	public int getIntNum(String name){
-		
-		//è·å–è¯¥æ–¹æ³•çš„é¡¹
-		SymbolTableItem item=getProc(name);
-		if(item==null){//è¯¥ç¬¦å·ä¸æ˜¯æ–¹æ³•
+
+		//»ñÈ¡¸Ã·½·¨µÄÏî
+		SymbolTableItem item=getSymbolTableItem(name);
+		if(item==null){//¸Ã·ûºÅ²»ÊÇ·½·¨
 			return -1;
 		}
-		//è·å–æ–¹æ³•æŒ‡å‘çš„ç¬¦å·è¡¨
+		//»ñÈ¡·½·¨Ö¸ÏòµÄ·ûºÅ±í
 		SymbolTable table=item.getSymbolTable();
-		//è·å–ç¬¦å·è¡¨ä¸­çš„å˜é‡ä¸ªæ•°
+		//»ñÈ¡·ûºÅ±íÖĞµÄ±äÁ¿¸öÊı
 		return table.getIntNum();
 	}
-	
 
-	
-	
+
+
+
+
+	/**
+	 * ½«Ò»¸ö·ûºÅ±íÏî²åÈë·ûºÅ±í
+	 * @param item Òª²åÈëµÄÏî
+	 * @return
+	 */
+	public boolean insert(SymbolTableItem item){
+		//»ñÈ¡·ûºÅ±íÖĞÊÇ·ñ´æÔÚ
+		if(!exist(item.getName())){
+			//¸ù¾İÑ¹ÈëÏîµÄÀàĞÍ¾ö¶¨²»Í¬µÄ²Ù×÷
+			if(item.getSymbolType()==SymbolType.VAR){//µ±²åÈëµÄÊÇÒ»¸ö±äÁ¿Ê±
+				if(item.getDataType()==DataType.INT){//²åÈëµÄÊÇÕûĞÍ±äÁ¿Ê±
+					intNum++;
+				}
+			}
+			if(item.getDataType()==DataType.STRING){
+				stringNum++;
+			}
+			spacialInsert(item);
+			sMap.put(item.getName(), item);
+			return true;
+		}
+		return false;
+	}
 	
 	/**
-	 * å°†ä¸€ä¸ªç¬¦å·è¡¨é¡¹æ’å…¥ç¬¦å·è¡¨
+	 * ×ÓÀà²åÈë×ÓÀàÌØÓĞÏîÊ±½øĞĞµÄ²Ù×÷
 	 * @param item
 	 * @return
 	 */
-	public abstract boolean insert(SymbolTableItem item);
+	public abstract void spacialInsert(SymbolTableItem item);
 	
-	public boolean exist(SymbolTableItem item){
-		if(sMap.get(item.getType())==null)return false;
-		
-		return sMap.get(item.getType()).get(item.getName())!=null;
+	/**
+	 * ÅĞ¶ÏÖ¸¶¨Ãû×ÖµÄ±êÊ¶·ûµÄÃû×ÖÊÇ·ñÔÚ·ûºÅ±íÖĞ´æÔÚ
+	 * @param name Ö¸¶¨µÄ±êÊ¶·û
+	 * @return
+	 */
+	public boolean exist(String name){		
+		return sMap.get(name)!=null;
 	}
-	
-	
+
+
 }

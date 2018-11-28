@@ -1,19 +1,19 @@
 package cn.ed.qut.compiler.zhg.objectCodeGeneration.concrete.risc.mips;
 /**
- * MIPSçš„å…¨å±€å˜é‡åŒº
+ * MIPSµÄÈ«¾Ö±äÁ¿Çø
  * @author minecraft
- * åœ¨asmæ–‡ä»¶ä¸­çš„è¡¨ç¤ºæ–¹å¼
+ * ÔÚasmÎÄ¼şÖĞµÄ±íÊ¾·½Ê½
  * 
  * .data
- * 		var1:	.word	3	# å£°æ˜ä¸€ä¸ª word ç±»å‹çš„å˜é‡ var1, åŒæ—¶ç»™å…¶èµ‹å€¼ä¸º 3
- * 		array1:	.byte	'a','b'	# å£°æ˜ä¸€ä¸ªå­˜å‚¨2ä¸ªå­—ç¬¦çš„æ•°ç»„ array1ï¼Œå¹¶èµ‹å€¼ 'a', 'b'
- * 		array2:	.space	40	# ä¸ºå˜é‡ array2 åˆ†é… 40å­—èŠ‚ï¼ˆbytes)æœªä½¿ç”¨çš„è¿ç»­ç©ºé—´
+ * 		var1:	.word	3	# ÉùÃ÷Ò»¸ö word ÀàĞÍµÄ±äÁ¿ var1, Í¬Ê±¸øÆä¸³ÖµÎª 3
+ * 		array1:	.byte	'a','b'	# ÉùÃ÷Ò»¸ö´æ´¢2¸ö×Ö·ûµÄÊı×é array1£¬²¢¸³Öµ 'a', 'b'
+ * 		array2:	.space	40	# Îª±äÁ¿ array2 ·ÖÅä 40×Ö½Ú£¨bytes)Î´Ê¹ÓÃµÄÁ¬Ğø¿Õ¼ä
  */
 
 public class MIPSData {
-	private String name;//æ•°æ®å
-	private String type;//æ•°æ®ç±»å‹
-	private String value;//æ•°æ®å€¼
+	private String name;//Êı¾İÃû
+	private String type;//Êı¾İÀàĞÍ
+	private String value;//Êı¾İÖµ
 	
 	private static final String BYTE=".byte";
 	private static final String SPACE=".space";
@@ -25,14 +25,14 @@ public class MIPSData {
 	}
 	/**
 	 * 
-	 * @param name	æ•°æ®å
-	 * @param type	æ•°æ®ç±»å‹
-	 * @param value	æ•°æ®å€¼
+	 * @param name	Êı¾İÃû
+	 * @param type	Êı¾İÀàĞÍ
+	 * @param value	Êı¾İÖµ
 	 * @example
-	 * new MIPSData("var1",".word","3");	#å£°æ˜ä¸€ä¸ª word ç±»å‹çš„å˜é‡ var1, åŒæ—¶ç»™å…¶èµ‹å€¼ä¸º 3<br>
+	 * new MIPSData("var1",".word","3");	#ÉùÃ÷Ò»¸ö word ÀàĞÍµÄ±äÁ¿ var1, Í¬Ê±¸øÆä¸³ÖµÎª 3<br>
 	 * new MIPSData("var2",".word","4,5");<br>
-	 * new MIPSData("array1",".byte","\'a\',\'b\'");	# å£°æ˜ä¸€ä¸ªå­˜å‚¨2ä¸ªå­—ç¬¦çš„æ•°ç»„ array1ï¼Œå¹¶èµ‹å€¼ 'a', 'b'<br>
-	 * new MIPSData("array2",".space","40");	#ä¸ºå˜é‡ array2 åˆ†é… 40å­—èŠ‚ï¼ˆbytes)æœªä½¿ç”¨çš„è¿ç»­ç©ºé—´<br>
+	 * new MIPSData("array1",".byte","\'a\',\'b\'");	# ÉùÃ÷Ò»¸ö´æ´¢2¸ö×Ö·ûµÄÊı×é array1£¬²¢¸³Öµ 'a', 'b'<br>
+	 * new MIPSData("array2",".space","40");	#Îª±äÁ¿ array2 ·ÖÅä 40×Ö½Ú£¨bytes)Î´Ê¹ÓÃµÄÁ¬Ğø¿Õ¼ä<br>
 	 */
 	public MIPSData(String name,String type,String value){
 		setName(name);
@@ -64,9 +64,9 @@ public class MIPSData {
 	}
 	
 	/**
-	 * åˆ¤æ–­å‚æ•°æ˜¯å¦æ˜¯ä¸€ç§æ•°æ®ç±»å‹
-	 * @param arg è¦åˆ¤æ–­çš„å­—ç¬¦ä¸²
-	 * @return	æ˜¯å·²ç»å®šä¹‰çš„æ•°æ®ç±»å‹è¿”å›çœŸï¼Œå¦åˆ™è¿”å›å‡
+	 * ÅĞ¶Ï²ÎÊıÊÇ·ñÊÇÒ»ÖÖÊı¾İÀàĞÍ
+	 * @param arg ÒªÅĞ¶ÏµÄ×Ö·û´®
+	 * @return	ÊÇÒÑ¾­¶¨ÒåµÄÊı¾İÀàĞÍ·µ»ØÕæ£¬·ñÔò·µ»Ø¼Ù
 	 */
 	private boolean islegalArgument(String arg){
 		arg=arg.trim();

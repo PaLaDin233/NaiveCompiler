@@ -36,13 +36,13 @@ public abstract class Register {
 
 
 	/**
-	 * å¯„å­˜å™¨çš„åˆå§‹åŒ–,è®¾ç½®å¯¹äºå…·ä½“æŒ‡ä»¤é›†çš„å¯„å­˜å™¨çš„æ•°é‡ï¼Œåå­—ç­‰ç­‰
-	 * ä¸»è¦æ˜¯åˆå§‹åŒ–é™æ€æˆå‘˜å˜é‡regNameList;
+	 * ¼Ä´æÆ÷µÄ³õÊ¼»¯,ÉèÖÃ¶ÔÓÚ¾ßÌåÖ¸Áî¼¯µÄ¼Ä´æÆ÷µÄÊıÁ¿£¬Ãû×ÖµÈµÈ
+	 * Ö÷ÒªÊÇ³õÊ¼»¯¾²Ì¬³ÉÔ±±äÁ¿regNameList;
 	 */
 	public abstract void init();
 	
 	/**
-	 * æ¸…ç©ºè¯¥å¯„å­˜å™¨
+	 * Çå¿Õ¸Ã¼Ä´æÆ÷
 	 */
 	public void clear(){
 		for (Variate variate : allocatVar) {
@@ -52,19 +52,19 @@ public abstract class Register {
 	}
 	
 	/**
-	 * ä¸ºå¯„å­˜å™¨åˆ†é…å˜é‡variate
+	 * Îª¼Ä´æÆ÷·ÖÅä±äÁ¿variate
 	 * @return
 	 */
 	public void allotVariate(Variate variate){
-		//å°†å˜é‡åŠ å…¥"å¯„å­˜å™¨åˆ†é…å˜é‡åˆ—è¡¨"
+		//½«±äÁ¿¼ÓÈë"¼Ä´æÆ÷·ÖÅä±äÁ¿ÁĞ±í"
 		add(variate);
-		//å‘å˜é‡çš„å­˜å‚¨ä½ç½®æ·»åŠ è¿™ä¸ªå¯„å­˜å™¨
+		//Ïò±äÁ¿µÄ´æ´¢Î»ÖÃÌí¼ÓÕâ¸ö¼Ä´æÆ÷
 		variate.addLocation(this);
 		
 	}
 
 	public void add(Variate variate){
-		allocatVar.add(variate);//å°†å˜é‡åŠ å…¥åˆ†é…åˆ—è¡¨	
+		allocatVar.add(variate);//½«±äÁ¿¼ÓÈë·ÖÅäÁĞ±í	
 	}
 	
 	public int getId() {
@@ -79,8 +79,8 @@ public abstract class Register {
 		return regNameList.get(id);
 	}
 	/**
-	 * è·å–å¯„å­˜å™¨åˆ†é…çš„å˜é‡åˆ—è¡¨
-	 * è¿”å›çš„sizeä¸º0æ—¶è¡¨ç¤ºæ²¡æœ‰åˆ†é…å˜é‡
+	 * »ñÈ¡¼Ä´æÆ÷·ÖÅäµÄ±äÁ¿ÁĞ±í
+	 * ·µ»ØµÄsizeÎª0Ê±±íÊ¾Ã»ÓĞ·ÖÅä±äÁ¿
 	 * @return
 	 */
 	public List<Variate> getAllocatVar() {

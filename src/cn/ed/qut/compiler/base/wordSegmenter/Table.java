@@ -3,9 +3,9 @@ package cn.ed.qut.compiler.base.wordSegmenter;
 import java.util.ArrayList;
 
 public class Table {
-	//N:S,B,A,C,,X,R,Z,Zâ€™,U,Uâ€™,E,Eâ€™,H,Hâ€™,G,M,D,L,Lâ€™,T,Tâ€™,F,O,P,Q
+	//N:S,B,A,C,,X,R,Z,Z¡¯,U,U¡¯,E,E¡¯,H,H¡¯,G,M,D,L,L¡¯,T,T¡¯,F,O,P,Q
 	/**
-	 * éžç»ˆç»“ç¬¦ï¼šN:S,B,A,C,,X,R,Z,Zâ€™,U,Uâ€™,E,Eâ€™,H,Hâ€™,G,M,D,L,Lâ€™,T,Tâ€™,F,O,P,Q
+	 * ·ÇÖÕ½á·û£ºN:S,B,A,C,,X,R,Z,Z¡¯,U,U¡¯,E,E¡¯,H,H¡¯,G,M,D,L,L¡¯,T,T¡¯,F,O,P,Q
 	 */
 	public final static int S=0;
 	public final static int A=1;
@@ -32,7 +32,7 @@ public class Table {
 	public final static int O=22;
 	public final static int Q=23;
 	/**
-	 * ç»ˆç»“ç¬¦ï¼šmain	printf	scanf	void	int 	char	bool	id(è‡ªå®šä¹‰å˜é‡)	numï¼ˆintå¸¸é‡ï¼‰	ch(charå¸¸é‡)
+	 * ÖÕ½á·û£ºmain	printf	scanf	void	int 	char	bool	id(×Ô¶¨Òå±äÁ¿)	num£¨int³£Á¿£©	ch(char³£Á¿)
 	 * if	else	while	for	;	,(	)	{	}	=	== !=	>	<	+	-	*	/	&&	||	!	++	--	#
 	 */
 	public final static int MAIN=0;
@@ -71,7 +71,7 @@ public class Table {
 	public final static int END=33;
 
 	/**
-	 * äº§ç”Ÿå¼PRO:S,B,A,C,,X,R,Z,Zâ€™,U,Uâ€™,E,Eâ€™,H,Hâ€™,G,M,D,L,Lâ€™,T,Tâ€™,F,O,P,Q
+	 * ²úÉúÊ½PRO:S,B,A,C,,X,R,Z,Z¡¯,U,U¡¯,E,E¡¯,H,H¡¯,G,M,D,L,L¡¯,T,T¡¯,F,O,P,Q
 	 */
 	String [] PRO_S={"void","main","(",")","{","A","}"};
 	String [] PRO_X={"Y","Z"};

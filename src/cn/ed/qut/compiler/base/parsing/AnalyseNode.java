@@ -5,20 +5,20 @@ import cn.ed.qut.compiler.base.wordSegmenter.Word;
 import cn.ed.qut.compiler.base.sourceCodeInput.Error;;
 
 /**
- * åˆ†ææ ˆèŠ‚ç‚¹ç±»
- *	String type;//èŠ‚ç‚¹ç±»å‹
-	String name;//èŠ‚ç‚¹å
-	Object value;//èŠ‚ç‚¹å€¼
+ * ·ÖÎöÕ»½ÚµãÀà
+ *	String type;//½ÚµãÀàĞÍ
+	String name;//½ÚµãÃû
+	Object value;//½ÚµãÖµ
  */
 public class AnalyseNode {
-	public final static String NONTERMINAL="éç»ˆç»“ç¬¦";
-	public final static String TERMINAL="ç»ˆç»“ç¬¦";
-	public final static String ACTIONSIGN="åŠ¨ä½œç¬¦";
-	public final static String END="ç»“æŸç¬¦";
-	static ArrayList<String>nonterminal=new ArrayList<String>();//éç»ˆç»“ç¬¦é›†åˆ
-	static ArrayList<String>actionSign=new ArrayList<String>();//åŠ¨ä½œç¬¦é›†åˆ
+	public final static String NONTERMINAL="·ÇÖÕ½á·û";
+	public final static String TERMINAL="ÖÕ½á·û";
+	public final static String ACTIONSIGN="¶¯×÷·û";
+	public final static String END="½áÊø·û";
+	static ArrayList<String>nonterminal=new ArrayList<String>();//·ÇÖÕ½á·û¼¯ºÏ
+	static ArrayList<String>actionSign=new ArrayList<String>();//¶¯×÷·û¼¯ºÏ
 	static{
-		//N:S,B,A,C,,X,R,Z,Zâ€™,U,Uâ€™,E,Eâ€™,H,Hâ€™,G,M,D,L,Lâ€™,T,Tâ€™,F,O,P,Q
+		//N:S,B,A,C,,X,R,Z,Z¡¯,U,U¡¯,E,E¡¯,H,H¡¯,G,M,D,L,L¡¯,T,T¡¯,F,O,P,Q
 		nonterminal.add("S");
 		nonterminal.add("A");
 		nonterminal.add("B");
@@ -60,9 +60,9 @@ public class AnalyseNode {
 		actionSign.add("@EQ");
 	}
 	
-	String type;//èŠ‚ç‚¹ç±»å‹
-	String name;//èŠ‚ç‚¹å
-	String value;//èŠ‚ç‚¹å€¼
+	String type;//½ÚµãÀàĞÍ
+	String name;//½ÚµãÃû
+	String value;//½ÚµãÖµ
 	
 	public static boolean isNonterm(cn.ed.qut.compiler.base.parsing.AnalyseNode node){
 		return nonterminal.contains(node.name);
@@ -84,22 +84,22 @@ public AnalyseNode(String type,String name,String value){
 	}
 
 /**
- * è¯æ³•åˆ†æå™¨
+ * ´Ê·¨·ÖÎöÆ÷
  *
  * @author KB
  *
  */
 public static class LexAnalyse {
 
-	ArrayList<Word> wordList = new ArrayList<Word>();// å•è¯è¡¨
-	ArrayList<Error> errorList = new ArrayList<Error>();// é”™è¯¯ä¿¡æ¯åˆ—è¡¨
-	int wordCount = 0;// ç»Ÿè®¡å•è¯ä¸ªæ•°
-	int errorCount = 0;// ç»Ÿè®¡é”™è¯¯ä¸ªæ•°
-	boolean noteFlag = false;// å¤šè¡Œæ³¨é‡Šæ ‡å¿—
-	boolean lexErrorFlag = false;// è¯æ³•åˆ†æå‡ºé”™æ ‡å¿—
+	ArrayList<Word> wordList = new ArrayList<Word>();// µ¥´Ê±í
+	ArrayList<Error> errorList = new ArrayList<Error>();// ´íÎóĞÅÏ¢ÁĞ±í
+	int wordCount = 0;// Í³¼Æµ¥´Ê¸öÊı
+	int errorCount = 0;// Í³¼Æ´íÎó¸öÊı
+	boolean noteFlag = false;// ¶àĞĞ×¢ÊÍ±êÖ¾
+	boolean lexErrorFlag = false;// ´Ê·¨·ÖÎö³ö´í±êÖ¾
 
 	/**
-	 * æ•°å­—å­—ç¬¦åˆ¤æ–­
+	 * Êı×Ö×Ö·ûÅĞ¶Ï
 	 *
 	 * @param ch
 	 * @return
@@ -112,7 +112,7 @@ public static class LexAnalyse {
 	}
 
 	/**
-	 * åˆ¤æ–­å•è¯æ˜¯å¦ä¸ºintå¸¸é‡
+	 * ÅĞ¶Ïµ¥´ÊÊÇ·ñÎªint³£Á¿
 	 *
 	 * @param string
 	 * @return
@@ -134,7 +134,7 @@ public static class LexAnalyse {
 	}
 
 	/**
-	 * åˆ¤æ–­å•è¯æ˜¯å¦ä¸ºcharå¸¸é‡
+	 * ÅĞ¶Ïµ¥´ÊÊÇ·ñÎªchar³£Á¿
 	 *
 	 * @param word
 	 * @return
@@ -160,7 +160,7 @@ public static class LexAnalyse {
 	}
 
 	/**
-	 * åˆ¤æ–­å­—ç¬¦æ˜¯å¦ä¸ºå­—æ¯
+	 * ÅĞ¶Ï×Ö·ûÊÇ·ñÎª×ÖÄ¸
 	 *
 	 * @param ch
 	 * @return
@@ -173,7 +173,7 @@ public static class LexAnalyse {
 	}
 
 	/**
-	 * åˆ¤æ–­å•è¯æ˜¯å¦ä¸ºåˆæ³•æ ‡è¯†ç¬¦
+	 * ÅĞ¶Ïµ¥´ÊÊÇ·ñÎªºÏ·¨±êÊ¶·û
 	 *
 	 * @param word
 	 * @return
@@ -201,7 +201,7 @@ public static class LexAnalyse {
 	}
 
 	/**
-	 * åˆ¤æ–­è¯æ³•åˆ†ææ˜¯å¦é€šè¿‡
+	 * ÅĞ¶Ï´Ê·¨·ÖÎöÊÇ·ñÍ¨¹ı
 	 *
 	 */
 	public boolean isFail() {
@@ -220,7 +220,7 @@ public static class LexAnalyse {
 		while (index < length) {
 			temp = str.charAt(index);
 			if (!noteFlag) {
-				if (isLetter(temp) || temp == '_') {// åˆ¤æ–­æ˜¯ä¸æ˜¯æ ‡å¿—ç¬¦
+				if (isLetter(temp) || temp == '_') {// ÅĞ¶ÏÊÇ²»ÊÇ±êÖ¾·û
 					beginIndex = index;
 					index++;
 					// temp=str.charAt(index);
@@ -250,13 +250,13 @@ public static class LexAnalyse {
 						word.setType(Word.UNIDEF);
 						word.setFlag(false);
 						errorCount++;
-						error = new Error(errorCount, "éæ³•æ ‡è¯†ç¬¦", word.getLine(), word);
+						error = new Error(errorCount, "·Ç·¨±êÊ¶·û", word.getLine(), word);
 						errorList.add(error);
 						lexErrorFlag = true;
 					}
 					index--;
 
-				} else if (isDigit(temp)) {// åˆ¤æ–­æ˜¯ä¸æ˜¯intå¸¸æ•°
+				} else if (isDigit(temp)) {// ÅĞ¶ÏÊÇ²»ÊÇint³£Êı
 
 					beginIndex = index;
 					index++;
@@ -285,12 +285,12 @@ public static class LexAnalyse {
 						word.setType(Word.UNIDEF);
 						word.setFlag(false);
 						errorCount++;
-						error = new Error(errorCount, "éæ³•æ ‡è¯†ç¬¦", word.getLine(), word);
+						error = new Error(errorCount, "·Ç·¨±êÊ¶·û", word.getLine(), word);
 						errorList.add(error);
 						lexErrorFlag = true;
 					}
 					index--;
-				} else if (String.valueOf(str.charAt(index)).equals("'")) {// å­—ç¬¦å¸¸é‡
+				} else if (String.valueOf(str.charAt(index)).equals("'")) {// ×Ö·û³£Á¿
 					// flag=true;
 					beginIndex = index;
 					index++;
@@ -322,7 +322,7 @@ public static class LexAnalyse {
 						word.setType(Word.UNIDEF);
 						word.setFlag(false);
 						errorCount++;
-						error = new Error(errorCount, "éæ³•æ ‡è¯†ç¬¦", word.getLine(), word);
+						error = new Error(errorCount, "·Ç·¨±êÊ¶·û", word.getLine(), word);
 						errorList.add(error);
 						lexErrorFlag = true;
 						index--;
@@ -473,7 +473,7 @@ public static class LexAnalyse {
 						word.setType(Word.OPERATOR);
 					}
 					index--;
-				} else {// ä¸æ˜¯æ ‡è¯†ç¬¦ã€æ•°å­—å¸¸é‡ã€å­—ç¬¦ä¸²å¸¸é‡
+				} else {// ²»ÊÇ±êÊ¶·û¡¢Êı×Ö³£Á¿¡¢×Ö·û´®³£Á¿
 
 					switch (temp) {
 					case ' ':
@@ -481,7 +481,7 @@ public static class LexAnalyse {
 					case '\r':
 					case '\n':
 						word = null;
-						break;// è¿‡æ»¤ç©ºç™½å­—ç¬¦
+						break;// ¹ıÂË¿Õ°××Ö·û
 					case '[':
 					case ']':
 					case '(':
@@ -521,7 +521,7 @@ public static class LexAnalyse {
 						word.setType(Word.UNIDEF);
 						word.setFlag(false);
 						errorCount++;
-						error = new Error(errorCount, "éæ³•æ ‡è¯†ç¬¦", word.getLine(), word);
+						error = new Error(errorCount, "·Ç·¨±êÊ¶·û", word.getLine(), word);
 						errorList.add(error);
 						lexErrorFlag = true;
 					}
@@ -584,14 +584,14 @@ public static class LexAnalyse {
 		File file = new File("./output/");
 		if (!file.exists()) {
 			file.mkdirs();
-			file.createNewFile();// å¦‚æœè¿™ä¸ªæ–‡ä»¶ä¸å­˜åœ¨å°±åˆ›å»ºå®ƒ
+			file.createNewFile();// Èç¹ûÕâ¸öÎÄ¼ş²»´æÔÚ¾Í´´½¨Ëü
 		}
 		String path = file.getAbsolutePath();
 		FileOutputStream fos = new FileOutputStream(path + "/wordList.txt");
 		BufferedOutputStream bos = new BufferedOutputStream(fos);
 		OutputStreamWriter osw1 = new OutputStreamWriter(bos, "utf-8");
 		PrintWriter pw1 = new PrintWriter(osw1);
-		pw1.println("å•è¯åºå·\tå•è¯çš„å€¼\t\tå•è¯ç±»å‹\t\tå•è¯æ‰€åœ¨è¡Œ \tå•è¯æ˜¯å¦åˆæ³•");
+		pw1.println("µ¥´ÊĞòºÅ\tµ¥´ÊµÄÖµ\t\tµ¥´ÊÀàĞÍ\t\tµ¥´ÊËùÔÚĞĞ \tµ¥´ÊÊÇ·ñºÏ·¨");
 		Word word;
 		for (int i = 0; i < wordList.size(); i++) {
 			word = wordList.get(i);
@@ -600,16 +600,16 @@ public static class LexAnalyse {
 		}
 		if (lexErrorFlag) {
 			Error error;
-			pw1.println("é”™è¯¯ä¿¡æ¯å¦‚ä¸‹ï¼š");
+			pw1.println("´íÎóĞÅÏ¢ÈçÏÂ£º");
 
-			pw1.println("é”™è¯¯åºå·\té”™è¯¯ä¿¡æ¯\té”™è¯¯æ‰€åœ¨è¡Œ \té”™è¯¯å•è¯");
+			pw1.println("´íÎóĞòºÅ\t´íÎóĞÅÏ¢\t´íÎóËùÔÚĞĞ \t´íÎóµ¥´Ê");
 			for (int i = 0; i < errorList.size(); i++) {
 				error = errorList.get(i);
 				pw1.println(error.getId() + "\t" + error.getInfo() + "\t\t" + error.getLine()
 						+ "\t" + error.getWord().getValue());
 			}
 		} else {
-			pw1.println("è¯æ³•åˆ†æé€šè¿‡ï¼š");
+			pw1.println("´Ê·¨·ÖÎöÍ¨¹ı£º");
 		}
 		pw1.close();
 		return path + "/wordList.txt";

@@ -1,85 +1,59 @@
 package cn.ed.qut.compiler.base.dataStruct.symbolTable;
 
-import java.util.Map;
-
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.abstruct.HashSymbolTable;
-import cn.ed.qut.compiler.base.dataStruct.symbolTable.abstruct.SymbolTable;
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolTableItem;
+import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolType;
 
 /**
- * 方法符号表,存储方法中的标识符
- * @author 清居
+ * �������ű�,�洢�����еı�ʶ��
+ * @author ���
  *
  */
 public class ProcSymbolTable extends HashSymbolTable{
+	private int paraNum=0;
 	/**
-	 * 是否是参数
+	 * �Ƿ��ǲ���
 	 * @param name
 	 * @return
 	 */
 	public boolean isPara(String name){
-		return isType(SymbolTableItem.PARA, name);
+		return isType(SymbolType.PARA, name);
 	}
 	/**
-	 * 获取该符号表中参数的个数
+	 * ��ȡ�÷��ű��в����ĸ���
 	 * @return
 	 */
 	public int getParaNum(){
-		return sMap.get(SymbolTableItem.PARA).size();//获取所有变量的Map,返回Map的size
+		return paraNum;
 	}
 	
 	
 	
-	/**
-	 * 根据函数名获取函数的参数个数
-	 * @param name
-	 * @return 如果不是方法，返回-1
-	 */
-	public int getParaNum(String name){
-		//获取name对应的方法
-		ProcSymbolTable item=(ProcSymbolTable) getProc(name).getSymbolTable();
-		//存在方法则返回方法对应的符号表中参数的个数
-		if(item!=null&&item instanceof ProcSymbolTable){
-			return ((ProcSymbolTable)item).getParaNum();
-		}
-		return -1;	
-	}
+
 	
 	
 	/**
-	 * 获取第index个参数的符号表项
-	 * @param index 参数的index
-	 * @return 参数这个符号表项
+	 * ��ȡ��index�������ķ��ű���
+	 * @param index ������index
+	 * @return ����������ű���
 	 */
 	public SymbolTableItem getPara(int index){
-		//获取所有参数的Map
-		Map<String,SymbolTableItem>map=sMap.get(SymbolTableItem.PARA);
-		//遍历每一个参数，查看它的值是否是index
-		SymbolTableItem item=null;
-		for (String key: map.keySet()) {
-			if(map.get(key).getValue()==index){
-				item=map.get(key);
-				break;
-			}
-			
+		//����ÿһ���������鿴����ֵ�Ƿ���index
+		for (String key: sMap.keySet()) {
+			SymbolTableItem temp=sMap.get(key);
+			if(temp.getSymbolType()==SymbolType.PARA){
+				if(temp.getValue().equals(index)){
+					return temp;
+				}
+			}	
 		}
-		return item;
+		return null;
 	}
 	
-	/**
-	 * 获取方法funcName第index个参数的符号表项
-	 * @param index 参数的index
-	 * @param funName 方法的name
-	 * @return
-	 */
-	public SymbolTableItem getPara(int index,String funName){
-		//获取方法项
-		SymbolTableItem func=getProc(funName);
-		if(func==null)return null;
-
-		//获取方法项的符号表,再获取参数
-		return func.getSymbolTable().getPara(index);
-
+	public void spacialInsert(SymbolTableItem item) {
+		if(item.getSymbolType()==SymbolType.PARA){
+			paraNum++;
+		}
 	}
 
 }
