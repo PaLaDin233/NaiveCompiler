@@ -1,6 +1,6 @@
 /**
- * ³éÏóµÄ·ûºÅ±í
- * @author Çå¾Ó
+ * æŠ½è±¡çš„ç¬¦å·è¡¨
+ * @author æ¸…å±…
  *
  */
 package cn.ed.qut.compiler.base.dataStruct.symbolTable.abstruct;
@@ -17,12 +17,12 @@ public abstract class SymbolTable {
 	//protected Map<SymbolItemIndex,SymbolTableItem> sMap;
 
 	/**
-	 * sMapµÄË÷ÒıÊÇ·ûºÅµÄÃû³Æname
+	 * sMapçš„ç´¢å¼•æ˜¯ç¬¦å·çš„åç§°name
 	 * 
 	 */
 	protected Map<String,SymbolTableItem> sMap;
-	protected int intNum=0;//int±äÁ¿µÄÊıÁ¿
-	protected int stringNum=0;//string±äÁ¿µÄÊıÁ¿
+	protected int intNum=0;//intå˜é‡çš„æ•°é‡
+	protected int stringNum=0;//stringå˜é‡çš„æ•°é‡
 
 
 	public SymbolTable() {
@@ -34,7 +34,7 @@ public abstract class SymbolTable {
 	 */
 
 	/**
-	 * ÅĞ¶Ï¸ø¶¨µÄÃû×ÖÊÇ·ñÊÇÂú×ãÌõ¼şµÄ·ûºÅÀàĞÍ£¨·½·¨£¬³£Á¿£¬±äÁ¿£¬²ÎÊı)
+	 * åˆ¤æ–­ç»™å®šçš„åå­—æ˜¯å¦æ˜¯æ»¡è¶³æ¡ä»¶çš„ç¬¦å·ç±»å‹ï¼ˆæ–¹æ³•ï¼Œå¸¸é‡ï¼Œå˜é‡ï¼Œå‚æ•°)
 	 * @param symbolType
 	 * @param name
 	 * @return
@@ -48,7 +48,7 @@ public abstract class SymbolTable {
 	}
 
 	/**
-	 * ÅĞ¶Ï¸ø¶¨µÄ±êÊ¶·ûÊÇ·ñÊÇ¸ø¶¨µÄÊı¾İÀàĞÍ
+	 * åˆ¤æ–­ç»™å®šçš„æ ‡è¯†ç¬¦æ˜¯å¦æ˜¯ç»™å®šçš„æ•°æ®ç±»å‹
 	 * @param dataType
 	 * @param name
 	 * @return
@@ -62,10 +62,10 @@ public abstract class SymbolTable {
 	}
 
 	/**
-	 * ÅĞ¶Ï¸ÃÃû×ÖÊÇ·ñÊÇÒªÇóµÄÀàĞÍ£¨ÅĞ¶ÏnameÊÇ·ñÊÇdataTypeÀàĞÍµÄsymbolType£©
-	 * @param symbolType ·ûºÅÀàĞÍ
-	 * @param dataType Êı¾İÀàĞÍ
-	 * @param name ÒªÅĞ¶ÏµÄÃû×Ö
+	 * åˆ¤æ–­è¯¥åå­—æ˜¯å¦æ˜¯è¦æ±‚çš„ç±»å‹ï¼ˆåˆ¤æ–­nameæ˜¯å¦æ˜¯dataTypeç±»å‹çš„symbolTypeï¼‰
+	 * @param symbolType ç¬¦å·ç±»å‹
+	 * @param dataType æ•°æ®ç±»å‹
+	 * @param name è¦åˆ¤æ–­çš„åå­—
 	 */
 	protected boolean isType(SymbolType symbolType,DataType dataType,String name){
 		return isType(dataType, name)&&isType(dataType, name);
@@ -88,7 +88,7 @@ public abstract class SymbolTable {
 		return isType(SymbolType.VAR,DataType.STRING, name);
 	}
 
-	//******************ÏÂÃæÈ«²¿ÊÇÀ©Õ¹ÓÃµÄ*************
+	//******************ä¸‹é¢å…¨éƒ¨æ˜¯æ‰©å±•ç”¨çš„*************
 	public boolean isFloat(String name){
 		return isType(DataType.FLOAT, name);
 	}
@@ -114,8 +114,8 @@ public abstract class SymbolTable {
 
 
 	/**
-	 * »ñÈ¡·ûºÅ±íÖĞµÄÏî
-	 * @param name ÏîµÄÃû×Ö
+	 * è·å–ç¬¦å·è¡¨ä¸­çš„é¡¹
+	 * @param name é¡¹çš„åå­—
 	 * @return
 	 */
 	public SymbolTableItem getSymbolTableItem(String name){
@@ -135,14 +135,14 @@ public abstract class SymbolTable {
 	}*/
 
 	/**
-	 * »ñÈ¡¸Ã±íÖĞÕûĞÍ±äÁ¿µÄ¸öÊı
+	 * è·å–è¯¥è¡¨ä¸­æ•´å‹å˜é‡çš„ä¸ªæ•°
 	 * @return
 	 */
 	public int getIntNum(){
-		return this.intNum;//»ñÈ¡ËùÓĞÕûĞÍ±äÁ¿µÄMap,·µ»ØMapµÄsize
+		return this.intNum;//è·å–æ‰€æœ‰æ•´å‹å˜é‡çš„Map,è¿”å›Mapçš„size
 	}
 	public int getStringNum(){
-		return this.stringNum;//»ñÈ¡×Ö·û´®±äÁ¿µÄMap,·µ»ØMapµÄsize
+		return this.stringNum;//è·å–å­—ç¬¦ä¸²å˜é‡çš„Map,è¿”å›Mapçš„size
 	}
 	public int getVarNum(){
 		return getIntNum()+getStringNum();
@@ -150,20 +150,20 @@ public abstract class SymbolTable {
 
 
 	/**
-	 * »ñÈ¡·½·¨ÖĞ¾Ö²¿±äÁ¿µÄ¸öÊı
-	 * @param funcName ·½·¨Ãû
-	 * @return ·½·¨ÖĞÕûĞÍ¾Ö²¿±äÁ¿µÄ¸öÊı,²»ÊÇ·½·¨Ôò·µ»Ø-1
+	 * è·å–æ–¹æ³•ä¸­å±€éƒ¨å˜é‡çš„ä¸ªæ•°
+	 * @param funcName æ–¹æ³•å
+	 * @return æ–¹æ³•ä¸­æ•´å‹å±€éƒ¨å˜é‡çš„ä¸ªæ•°,ä¸æ˜¯æ–¹æ³•åˆ™è¿”å›-1
 	 */
 	public int getIntNum(String name){
 
-		//»ñÈ¡¸Ã·½·¨µÄÏî
+		//è·å–è¯¥æ–¹æ³•çš„é¡¹
 		SymbolTableItem item=getSymbolTableItem(name);
-		if(item==null){//¸Ã·ûºÅ²»ÊÇ·½·¨
+		if(item==null){//è¯¥ç¬¦å·ä¸æ˜¯æ–¹æ³•
 			return -1;
 		}
-		//»ñÈ¡·½·¨Ö¸ÏòµÄ·ûºÅ±í
+		//è·å–æ–¹æ³•æŒ‡å‘çš„ç¬¦å·è¡¨
 		SymbolTable table=item.getSymbolTable();
-		//»ñÈ¡·ûºÅ±íÖĞµÄ±äÁ¿¸öÊı
+		//è·å–ç¬¦å·è¡¨ä¸­çš„å˜é‡ä¸ªæ•°
 		return table.getIntNum();
 	}
 
@@ -172,16 +172,16 @@ public abstract class SymbolTable {
 
 
 	/**
-	 * ½«Ò»¸ö·ûºÅ±íÏî²åÈë·ûºÅ±í
-	 * @param item Òª²åÈëµÄÏî
+	 * å°†ä¸€ä¸ªç¬¦å·è¡¨é¡¹æ’å…¥ç¬¦å·è¡¨
+	 * @param item è¦æ’å…¥çš„é¡¹
 	 * @return
 	 */
 	public boolean insert(SymbolTableItem item){
-		//»ñÈ¡·ûºÅ±íÖĞÊÇ·ñ´æÔÚ
+		//è·å–ç¬¦å·è¡¨ä¸­æ˜¯å¦å­˜åœ¨
 		if(!exist(item.getName())){
-			//¸ù¾İÑ¹ÈëÏîµÄÀàĞÍ¾ö¶¨²»Í¬µÄ²Ù×÷
-			if(item.getSymbolType()==SymbolType.VAR){//µ±²åÈëµÄÊÇÒ»¸ö±äÁ¿Ê±
-				if(item.getDataType()==DataType.INT){//²åÈëµÄÊÇÕûĞÍ±äÁ¿Ê±
+			//æ ¹æ®å‹å…¥é¡¹çš„ç±»å‹å†³å®šä¸åŒçš„æ“ä½œ
+			if(item.getSymbolType()==SymbolType.VAR){//å½“æ’å…¥çš„æ˜¯ä¸€ä¸ªå˜é‡æ—¶
+				if(item.getDataType()==DataType.INT){//æ’å…¥çš„æ˜¯æ•´å‹å˜é‡æ—¶
 					intNum++;
 				}
 			}
@@ -196,15 +196,15 @@ public abstract class SymbolTable {
 	}
 	
 	/**
-	 * ×ÓÀà²åÈë×ÓÀàÌØÓĞÏîÊ±½øĞĞµÄ²Ù×÷
+	 * å­ç±»æ’å…¥å­ç±»ç‰¹æœ‰é¡¹æ—¶è¿›è¡Œçš„æ“ä½œ
 	 * @param item
 	 * @return
 	 */
 	public abstract void spacialInsert(SymbolTableItem item);
 	
 	/**
-	 * ÅĞ¶ÏÖ¸¶¨Ãû×ÖµÄ±êÊ¶·ûµÄÃû×ÖÊÇ·ñÔÚ·ûºÅ±íÖĞ´æÔÚ
-	 * @param name Ö¸¶¨µÄ±êÊ¶·û
+	 * åˆ¤æ–­æŒ‡å®šåå­—çš„æ ‡è¯†ç¬¦çš„åå­—æ˜¯å¦åœ¨ç¬¦å·è¡¨ä¸­å­˜åœ¨
+	 * @param name æŒ‡å®šçš„æ ‡è¯†ç¬¦
 	 * @return
 	 */
 	public boolean exist(String name){		

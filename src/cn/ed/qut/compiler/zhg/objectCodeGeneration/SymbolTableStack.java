@@ -10,12 +10,12 @@ import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolType;
 public class SymbolTableStack {
 	private static Stack<SymbolTable> tableStack=new Stack<>();
 	private SymbolTableStack(){
-		//½«È«¾Ö·ûºÅ±í·ÅÈëÕ»ÖĞ
+		//å°†å…¨å±€ç¬¦å·è¡¨æ”¾å…¥æ ˆä¸­
 		tableStack.push(GlobalSymbolTable.getSymbolTable());
 	}
 	
 	/**
-	 * »ñÈ¡Õ»¶¥·ûºÅ±í£¬²»µ¯Õ»
+	 * è·å–æ ˆé¡¶ç¬¦å·è¡¨ï¼Œä¸å¼¹æ ˆ
 	 * @return
 	 */
 	public static SymbolTable peek(){
@@ -23,15 +23,15 @@ public class SymbolTableStack {
 	}
 	
 	/**
-	 * ½«·ûºÅ±íÑ¹ÈëÕ»
-	 * @param symbolTable ĞèÒªÑ¹ÈëµÄ·ûºÅ±í
+	 * å°†ç¬¦å·è¡¨å‹å…¥æ ˆ
+	 * @param symbolTable éœ€è¦å‹å…¥çš„ç¬¦å·è¡¨
 	 */
 	public static void push(SymbolTable symbolTable){
 		tableStack.push(symbolTable);
 	}
 	
 	/**
-	 * ´ÓÕ»¶¥µ¯³öÒ»¸ö·ûºÅ±í£¬µ±Õ»ÖĞÖ»Ê£Ò»¸ö·ûºÅ±íÊ±£¬²»½øĞĞµ¯Õ»
+	 * ä»æ ˆé¡¶å¼¹å‡ºä¸€ä¸ªç¬¦å·è¡¨ï¼Œå½“æ ˆä¸­åªå‰©ä¸€ä¸ªç¬¦å·è¡¨æ—¶ï¼Œä¸è¿›è¡Œå¼¹æ ˆ
 	 * @return
 	 */
 	public static SymbolTable pop(){
@@ -40,12 +40,12 @@ public class SymbolTableStack {
 		else return tableStack.peek();
 	}
 	/**
-	 * ¸ù¾İ±êÊ¶·ûÃû»ñÈ¡±êÊ¶·ûÔÚ·ûºÅ±íÖĞµÄ·ûºÅ±íÏî
-	 * @param name ±êÊ¶·ûµÄÃû³Æ
-	 * @return
+	 * æ ¹æ®æ ‡è¯†ç¬¦åè·å–æ ‡è¯†ç¬¦åœ¨ç¬¦å·è¡¨ä¸­çš„ç¬¦å·è¡¨é¡¹
+	 * @param name æ ‡è¯†ç¬¦çš„åç§°
+	 * @return å¦‚æœä¸å­˜åœ¨ï¼Œè¿”å›ç©º
 	 */
 	public static SymbolTableItem getItem(String name){
-		for(int i=tableStack.size()-1;i>=0;i--){//´ÓÕ»¶¥ÏòÏÂÕÒ,µ±´æÔÚÂú×ãÒªÇóµÄ±êÊ¶·ûÊ±£¬·µ»Ø¸Ä·ûºÅ±íÏî£¬·ñÔò¼ÌĞøÍùÉÏ²ã·ûºÅ±íÕÒ
+		for(int i=tableStack.size()-1;i>=0;i--){//ä»æ ˆé¡¶å‘ä¸‹æ‰¾,å½“å­˜åœ¨æ»¡è¶³è¦æ±‚çš„æ ‡è¯†ç¬¦æ—¶ï¼Œè¿”å›æ”¹ç¬¦å·è¡¨é¡¹ï¼Œå¦åˆ™ç»§ç»­å¾€ä¸Šå±‚ç¬¦å·è¡¨æ‰¾
 			SymbolTableItem tem=tableStack.get(i).getSymbolTableItem(name);
 			if(tem!=null&&tem.getSymbolType()==SymbolType.VAR){
 				return tableStack.get(i).getSymbolTableItem(name);

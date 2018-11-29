@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import java.awt.*;
 
 /**
- * »ã±à´úÂëÉú³ÉÆ÷
+ * æ±‡ç¼–ä»£ç ç”Ÿæˆå™¨
  */
 public class huibian extends JFrame {
 

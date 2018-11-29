@@ -10,17 +10,17 @@ public class SymbolTableItem {
 	
 	
 	
-	private SymbolType type;//·ûºÅÀàĞÍ£ºÓĞËÄÖÖÈ¡Öµ£¬³£Á¿£¬±äÁ¿£¬¹ı³Ì,²ÎÊı
-	private String name;//Ãû³Æ
-	private Object value;//³£Á¿µÄÖµ,»òÕßÊÇ²ÎÊıµÄindex
-	private DataType dataType;//²Î±äÁ¿²ÎÊıµÄÊı¾İÀàĞÍ£¨º¯Êı·µ»ØÖµÀàĞÍ£©£¬int,char,string,short....
-	private ProcSymbolTable symbolTable;//Èç¹ûÊÇ·½·¨£¬·½·¨¶ÔÓ¦µÄ¾Ö²¿·ûºÅ±í
-	private Variate variate;//Èç¹ûÊÇ±äÁ¿£¬ºÍ±äÁ¿Ïà¹ØµÄ±äÁ¿ĞÅÏ¢
+	private SymbolType type;//ç¬¦å·ç±»å‹ï¼šæœ‰å››ç§å–å€¼ï¼Œå¸¸é‡ï¼Œå˜é‡ï¼Œè¿‡ç¨‹,å‚æ•°
+	private String name;//åç§°
+	private Object value;//å¸¸é‡çš„å€¼,æˆ–è€…æ˜¯å‚æ•°çš„index
+	private DataType dataType;//å‚å˜é‡å‚æ•°çš„æ•°æ®ç±»å‹ï¼ˆå‡½æ•°è¿”å›å€¼ç±»å‹ï¼‰ï¼Œint,char,string,short....
+	private ProcSymbolTable symbolTable;//å¦‚æœæ˜¯æ–¹æ³•ï¼Œæ–¹æ³•å¯¹åº”çš„å±€éƒ¨ç¬¦å·è¡¨
+	private Variate variate;//å¦‚æœæ˜¯å˜é‡ï¼Œå’Œå˜é‡ç›¸å…³çš„å˜é‡ä¿¡æ¯
 
 	private SymbolTableItem(){}
 	
 	/**
-	 * ²»½¨ÒéÊ¹ÓÃ¸Ã¹¹Ôì·½·¨
+	 * ä¸å»ºè®®ä½¿ç”¨è¯¥æ„é€ æ–¹æ³•
 	 * @param type
 	 * @param name
 	 * @param value
@@ -35,14 +35,14 @@ public class SymbolTableItem {
 	}
 
 
-	//¹¤³§Ä£Ê½£¨Ğ¦
+	//å·¥å‚æ¨¡å¼ï¼ˆç¬‘
 	
 	
 	
 	/**
-	 * »ñÈ¡Ò»¸ö³õÊ¼µÄ·ûºÅ±íÏî£¬Ö»Îª¸ÃÏîÃüÃû
-	 * ·µ»ØÒ»¸ö¹æ¶¨nameµÄ²»´øÀàĞÍµÄ·ûºÅ±íÏî
-	 * @param name ·ûºÅÃû³Æ
+	 * è·å–ä¸€ä¸ªåˆå§‹çš„ç¬¦å·è¡¨é¡¹ï¼Œåªä¸ºè¯¥é¡¹å‘½å
+	 * è¿”å›ä¸€ä¸ªè§„å®šnameçš„ä¸å¸¦ç±»å‹çš„ç¬¦å·è¡¨é¡¹
+	 * @param name ç¬¦å·åç§°
 	 * @return
 	 */
 	private static SymbolTableItem getItemNoType(String name){
@@ -54,26 +54,26 @@ public class SymbolTableItem {
 	
 	
 	/**
-	 * »ñÈ¡Ò»¸ö³õÊ¼»¯µÄ·½·¨Ïî£¬·µ»ØÖµÀàĞÍ»¹Î´ÉèÖÃ
-	 * Îª·½·¨ÏîÉèÖÃ¾Ö²¿·ûºÅ±í
-	 * @param name ·½·¨Ãû
+	 * è·å–ä¸€ä¸ªåˆå§‹åŒ–çš„æ–¹æ³•é¡¹ï¼Œè¿”å›å€¼ç±»å‹è¿˜æœªè®¾ç½®
+	 * ä¸ºæ–¹æ³•é¡¹è®¾ç½®å±€éƒ¨ç¬¦å·è¡¨
+	 * @param name æ–¹æ³•å
 	 * @return
 	 */
 	private static SymbolTableItem getProcItemNoReturnType(String name){
 		SymbolTableItem item=getItemNoType(name);
-		//ÕâÊÇÏîµÄÀàĞÍÊÇ·½·¨
+		//è¿™æ˜¯é¡¹çš„ç±»å‹æ˜¯æ–¹æ³•
 		item.setSymbolType(SymbolType.PROC);
-		//Îª·½·¨ÉèÖÃ¾Ö²¿·ûºÅ±í
+		//ä¸ºæ–¹æ³•è®¾ç½®å±€éƒ¨ç¬¦å·è¡¨
 		item.setTempSymbolTable(new ProcSymbolTable() );
 		return item;
 	}
 	
 	
 	/**
-	 * »ñÈ¡Ò»¸ö¹æ¶¨·µ»ØÖµµÄ·½·¨·ûºÅ±íÏîÊµÀı£¨¶ÔÏó£©<br>
-	 * @param name ·½·¨Ãû
-	 * @param dataType ·µ»ØµÄÊı¾İÀàĞÍ
-	 * @return Éú³ÉµÄ·ûºÅ±íÏî
+	 * è·å–ä¸€ä¸ªè§„å®šè¿”å›å€¼çš„æ–¹æ³•ç¬¦å·è¡¨é¡¹å®ä¾‹ï¼ˆå¯¹è±¡ï¼‰<br>
+	 * @param name æ–¹æ³•å
+	 * @param dataType è¿”å›çš„æ•°æ®ç±»å‹
+	 * @return ç”Ÿæˆçš„ç¬¦å·è¡¨é¡¹
 	 */
 	public static SymbolTableItem getProcItemWithDataType(String name,DataType dataType){
 		SymbolTableItem item=getProcItemNoReturnType(name);
@@ -83,8 +83,8 @@ public class SymbolTableItem {
 	
 	
 	/**
-	 * »ñÈ¡Ò»¸öÎŞÀàĞÍµÄ±äÁ¿
-	 * @param name ±äÁ¿Ãû
+	 * è·å–ä¸€ä¸ªæ— ç±»å‹çš„å˜é‡
+	 * @param name å˜é‡å
 	 * @return
 	 */
 	private static SymbolTableItem getVar(String name){
@@ -95,7 +95,7 @@ public class SymbolTableItem {
 	}
 	
 	/**
-	 * »ñÈ¡Ò»¸öÖ¸¶¨Êı¾İÀàĞÍµÄ±äÁ¿
+	 * è·å–ä¸€ä¸ªæŒ‡å®šæ•°æ®ç±»å‹çš„å˜é‡
 	 * @param name
 	 * @return
 	 */
@@ -106,8 +106,8 @@ public class SymbolTableItem {
 	}
 	
 	/**
-	 * »ñÈ¡Ò»¸öÕûĞÍ±äÁ¿·ûºÅ±íÏîµÄÊµÀı»¯¶ÔÏó
-	 * @param name ±äÁ¿Ãû
+	 * è·å–ä¸€ä¸ªæ•´å‹å˜é‡ç¬¦å·è¡¨é¡¹çš„å®ä¾‹åŒ–å¯¹è±¡
+	 * @param name å˜é‡å
 	 * @return
 	 */
 	public static SymbolTableItem getIntVar(String name){
@@ -115,9 +115,9 @@ public class SymbolTableItem {
 	}
 	
 	/**
-	 * »ñÈ¡Ò»¸ö³£Á¿·ûºÅ±íÏîµÄÊµÀı»¯¶ÔÏó
-	 * @param name ³£Á¿Ãû
-	 * @param value ³£Á¿Öµ
+	 * è·å–ä¸€ä¸ªå¸¸é‡ç¬¦å·è¡¨é¡¹çš„å®ä¾‹åŒ–å¯¹è±¡
+	 * @param name å¸¸é‡å
+	 * @param value å¸¸é‡å€¼
 	 * @return
 	 */
 	public static SymbolTableItem getConst(String name,int value){
@@ -127,7 +127,7 @@ public class SymbolTableItem {
 	}
 	
 //	/**
-//	 * »ñÈ¡Ò»¸öÖ÷º¯Êı·ûºÅ±íÏîµÄÊµÀı»¯¶ÔÏó
+//	 * è·å–ä¸€ä¸ªä¸»å‡½æ•°ç¬¦å·è¡¨é¡¹çš„å®ä¾‹åŒ–å¯¹è±¡
 //	 * @return
 //	 */
 //	public static SymbolTableItem getMainProcItem(){
@@ -138,10 +138,10 @@ public class SymbolTableItem {
 
 
 	/**
-	 * »ñÈ¡Ò»¸ö²ÎÊıÏî
-	 * @param dataType ²ÎÊıµÄÊı¾İÀàĞÍ
-	 * @param name ²ÎÊıÃû
-	 * @param index µÚ¼¸¸ö²ÎÊı
+	 * è·å–ä¸€ä¸ªå‚æ•°é¡¹
+	 * @param dataType å‚æ•°çš„æ•°æ®ç±»å‹
+	 * @param name å‚æ•°å
+	 * @param index ç¬¬å‡ ä¸ªå‚æ•°
 	 * @return
 	 */
 	public static SymbolTableItem getPara(DataType dataType,String name,int index){
@@ -153,8 +153,8 @@ public class SymbolTableItem {
 	}
 	
 	/**
-	 * »ñÈ¡Ò»¸ö×Ö·û´®±äÁ¿·ûºÅ±íÏîµÄÊµÀı»¯¶ÔÏó
-	 * @param name ×Ö·û´®±äÁ¿µÄ±äÁ¿Ãû
+	 * è·å–ä¸€ä¸ªå­—ç¬¦ä¸²å˜é‡ç¬¦å·è¡¨é¡¹çš„å®ä¾‹åŒ–å¯¹è±¡
+	 * @param name å­—ç¬¦ä¸²å˜é‡çš„å˜é‡å
 	 * @return
 	 */
 	public static SymbolTableItem getStringItem(String name){
@@ -206,7 +206,7 @@ public class SymbolTableItem {
 	}
 
 	/**
-	 * @param dataTypeÒªÉèÖÃµÄ dataType
+	 * @param dataTypeè¦è®¾ç½®çš„ dataType
 	 */
 	public void setDataType(DataType dataType) {
 		this.dataType = dataType;

@@ -2,13 +2,9 @@ package cn.ed.qut.compiler.base.dataStruct.symbolTable.abstruct;
 
 import java.util.HashMap;
 
-import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.DataType;
-import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolTableItem;
-import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolType;
-
 /**
- * 使用HashMap实现的符号表
- * @author 清居
+ * 浣跨敤HashMap瀹炵幇鐨勭鍙疯〃
+ * @author 娓呭眳
  *
  */
 public abstract class HashSymbolTable extends SymbolTable{

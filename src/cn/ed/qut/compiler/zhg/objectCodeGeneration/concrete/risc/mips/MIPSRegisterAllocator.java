@@ -3,6 +3,9 @@ package cn.ed.qut.compiler.zhg.objectCodeGeneration.concrete.risc.mips;
 import java.util.ArrayList;
 
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.abstruct.SymbolTable;
+import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.DataType;
+import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolTableItem;
+import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolType;
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.Variate;
 import cn.ed.qut.compiler.base.intermediateCodeGeneration.FourElement;
 import cn.ed.qut.compiler.zhg.objectCodeGeneration.Register;
@@ -10,8 +13,8 @@ import cn.ed.qut.compiler.zhg.objectCodeGeneration.RegisterAllocator;
 import cn.ed.qut.compiler.zhg.objectCodeGeneration.SymbolTableStack;
 
 /**
- * MIPSÖ¸Áî¼¯ÏÂµÄ¼Ä´æÆ÷·ÖÅäÆ÷
- * @author Çå¾Ó
+ * MIPSæŒ‡ä»¤é›†ä¸‹çš„å¯„å­˜å™¨åˆ†é…å™¨
+ * @author æ¸…å±…
  *
  */
 
@@ -37,42 +40,61 @@ public class MIPSRegisterAllocator extends RegisterAllocator {
 		String arg1=element.getArg1();
 		String arg2=element.getArg2();
 		String res=(String) element.getResult();
+		String regName=null;
 		
-		//»ñÈ¡µ±Ç°·ûºÅ±í
-		SymbolTable symbolTable=SymbolTableStack.peek();
+		SymbolTableItem b=SymbolTableStack.getItem(arg1);
+		SymbolTableItem c=SymbolTableStack.getItem(arg2);
+		SymbolTableItem a=SymbolTableStack.getItem(res);
+		
 		//TODO element:(i:A=B op C)
-		//(1)Èç¹ûBµÄÏÖĞĞÖµÔÚ¼Ä´æÆ÷RÖĞ£¬ÇÒ¸Ã¼Ä´æÆ÷Ö»°üº¬BµÄÖµ£¬
-		//   »òÕßBºÍAÊÇÍ¬Ò»±êÊ¶·û£¬»òÕßBÔÚËÄÔªÊ½Ö®ºó²»ÔÙ±»ÒıÓÃ£¬ÔòÑ¡È¡RiÎªËùĞè¼Ä´æÆ÷£¬×ª£¨4£©
+		//(1)å¦‚æœBçš„ç°è¡Œå€¼åœ¨å¯„å­˜å™¨Rä¸­ï¼Œä¸”è¯¥å¯„å­˜å™¨åªåŒ…å«Bçš„å€¼ï¼Œ
+		//   æˆ–è€…Bå’ŒAæ˜¯åŒä¸€æ ‡è¯†ç¬¦ï¼Œæˆ–è€…Båœ¨å››å…ƒå¼ä¹‹åä¸å†è¢«å¼•ç”¨ï¼Œåˆ™é€‰å–Riä¸ºæ‰€éœ€å¯„å­˜å™¨ï¼Œè½¬ï¼ˆ4ï¼‰
+			//åˆ¤æ–­Bæ˜¯å¦å­˜åœ¨ä¸ç¬¦å·è¡¨
+			if(b!=null){//å½“Bå­˜åœ¨æ—¶
+				//å½“Bæ˜¯å˜é‡
+				if(b.getSymbolType()==SymbolType.VAR){
+					Variate bInfo=b.getVariate();
+					//TODO 
+					
+				}
+			}
+			
+			
 		
-		
-		//(2)ÈçÓĞÉĞÎ´·ÖÅäµÄ¼Ä´æÆ÷£¬Ôò´ÓÖĞÑ¡È¡Ò»¸öRi,ÎªËùĞè¼Ä´æÆ÷,×ª(4)
-		
-		//(3)´ÓÒÑ·ÖÅäµÄ¼Ä´æÆ÷ÖĞÑ¡È¡Ò»¸öRi×÷ÎªËùĞèµÄ¼Ä´æÆ÷R£¬Ñ¡È¡Ô­ÔòÎª£¬Õ¼ÓÃRiµÄ±äÁ¿µÄÖµÒ²Í¬Ê±´æ·ÅÔÚÖ÷´æÖĞ
-		//	»òÕßÔÚ»ù±¾¿éÖĞÒªÔÚ×îÔ¶µÄÎ»ÖÃ²Å»áÒıÓÃµ½¡£ÕâÑù£¬¶Ô¼Ä´æÆ÷RiËùº¬±äÁ¿×öÈçÏÂµ÷Õû
-		//		¶ÔRVALUE[R]£¨R¼Ä´æÆ÷·ÖÅäµÄ±äÁ¿ÁĞ±í£©ÖĞµÄÃ¿Ò»¸ö±äÁ¿M,Èç¹ûM²»ÊÇAÇÒAVALUE[M]
-		//	(±äÁ¿MËùÔÚµÄÎ»ÖÃ)£¬²»º¬M¡£Ôò
-		//  1.Éú³ÉÄ¿±ê´úÂëST Ri£¬M£¨½«¼Ä´æÆ÷RiµÄÄÚÈİÈ¡µ½M£©
-		//  2.Èç¹ûMÊÇB£¬ÔòÁîAVALUE[M]={M,Ri}·ñÔòÁîAVALUE[M]={M}
-		//	3.É¾³ıRVALUE[Ri]ÖĞµÄM
-		//	4.¸ø³öR£¬·µ»Ø
-		return null;
+		//(2)å¦‚æœ‰å°šæœªåˆ†é…çš„å¯„å­˜å™¨ï¼Œåˆ™ä»ä¸­é€‰å–ä¸€ä¸ªRi,ä¸ºæ‰€éœ€å¯„å­˜å™¨,è½¬(4)
+			regName=getRegister();
+			if(regName!=null)return regName;
+		//(3)ä»å·²åˆ†é…çš„å¯„å­˜å™¨ä¸­é€‰å–ä¸€ä¸ªRiä½œä¸ºæ‰€éœ€çš„å¯„å­˜å™¨Rï¼Œé€‰å–åŸåˆ™ä¸ºï¼Œå ç”¨Riçš„å˜é‡çš„å€¼ä¹ŸåŒæ—¶å­˜æ”¾åœ¨ä¸»å­˜ä¸­
+		//	æˆ–è€…åœ¨åŸºæœ¬å—ä¸­è¦åœ¨æœ€è¿œçš„ä½ç½®æ‰ä¼šå¼•ç”¨åˆ°ã€‚è¿™æ ·ï¼Œå¯¹å¯„å­˜å™¨Riæ‰€å«å˜é‡åšå¦‚ä¸‹è°ƒæ•´
+		//		å¯¹RVALUE[R]ï¼ˆRå¯„å­˜å™¨åˆ†é…çš„å˜é‡åˆ—è¡¨ï¼‰ä¸­çš„æ¯ä¸€ä¸ªå˜é‡M,å¦‚æœMä¸æ˜¯Aä¸”AVALUE[M]
+		//	(å˜é‡Mæ‰€åœ¨çš„ä½ç½®)ï¼Œä¸å«Mã€‚åˆ™
+		//  1.ç”Ÿæˆç›®æ ‡ä»£ç ST Riï¼ŒMï¼ˆå°†å¯„å­˜å™¨Riçš„å†…å®¹å–åˆ°Mï¼‰
+		//  2.å¦‚æœMæ˜¯Bï¼Œåˆ™ä»¤AVALUE[M]={M,Ri}å¦åˆ™ä»¤AVALUE[M]={M}
+		//	3.åˆ é™¤RVALUE[Ri]ä¸­çš„M
+		//(4)ç»™å‡ºRï¼Œè¿”å›
+		return regName;
 	}
 	
 	@Override
 	public String getRegister(String source, FourElement element) {
-		//»ñÈ¡µ±Ç°·ûºÅ±í
+		//è·å–å½“å‰ç¬¦å·è¡¨
 		SymbolTable symbolTable=SymbolTableStack.peek();
-		//»ñÈ¡²Ù×÷Êı1µÄ´æ·ÅÎ»ÖÃ
-		//»ñÈ¡²Ù×÷Êı2µÄ´æ·ÅÎ»ÖÃ
+		//è·å–æ“ä½œæ•°1çš„å­˜æ”¾ä½ç½®
+		//è·å–æ“ä½œæ•°2çš„å­˜æ”¾ä½ç½®
 		
 		return null;
 	}
 
 
-	//¸ù¾İ¸ø³öµÄ±äÁ¿»ñµÃÒ»¸ö¼Ä´æÆ÷
+	//è·å–ä¸€ä¸ªç©ºé—²çš„å¯„å­˜å™¨
 	@Override
-	public String getRegister(String source) {
-		// TODO ×Ô¶¯Éú³ÉµÄ·½·¨´æ¸ù
+	public String getRegister() {
+		for (Register register : registerList) {
+			if(register.getAllocatVar()==null||register.getAllocatVar().size()==0){
+				return register.getName();
+			}
+		}
+		
 		return null;
 	}
 

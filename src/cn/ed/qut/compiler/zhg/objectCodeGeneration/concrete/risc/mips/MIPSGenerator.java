@@ -1,221 +1,160 @@
 package cn.ed.qut.compiler.zhg.objectCodeGeneration.concrete.risc.mips;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.GlobalSymbolTable;
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.abstruct.SymbolTable;
 import cn.ed.qut.compiler.base.intermediateCodeGeneration.FourElement;
+import cn.ed.qut.compiler.zhg.objectCodeGeneration.BaseBlock;
+import cn.ed.qut.compiler.zhg.objectCodeGeneration.ObjectCodeGenerater;
 
 /**
- * ¸ÃÀà»¹Î´Íê³É
- * @author Çå¾Ó
+ * è¯¥ç±»è¿˜æœªå®Œæˆ
+ * @author æ¸…å±…
  * @       TODO
  */
-public class MIPSGenerator{
+public class MIPSGenerator extends ObjectCodeGenerater{
+
 
 	
-	private String fileName;
-	private ArrayList<FourElement> fourElements;
-	private File file;
-	private ArrayList<String> assemblers;
+
 	
-	//Éú³ÉµÄÄ¿±ê´úÂëÎÄ¼şºó×ºÃû
+	
+	//ç”Ÿæˆçš„ç›®æ ‡ä»£ç æ–‡ä»¶åç¼€å
 	private static final String ASSEMBLER_EXTENSION_NAME=".asm";
-	//ÖĞ¼ä´úÂëÎÄ¼şµÄºó×ºÃû
-	private static final String INTERMEDIATECODE_EXTENSION_NAME="";
 	
+
 	public MIPSGenerator() {
 
 	}
+	
 	/**
-	 * ³õÊ¼»¯»ã±àÓïÑÔÉú³ÉÀà£¬´ÓÎÄ¼ş»ñÈ¡ÖĞ¼ä´úÂë£¬Éú³ÉÖĞ¼ä´úÂëÁĞ±í
-	 * @param fileName ÖĞ¼äÓïÑÔÎÄ¼şµÄÎÄ¼şÃû,²»´øºó×º
-	 * @throws Exception
+	 * æ„é€ æŒ‡å®šæ–‡ä»¶åçš„MIPSç”Ÿæˆå™¨
 	 */
-public MIPSGenerator(String fileName)throws Exception{
-	
-	this.fileName=fileName;
-	file =new File(fileName+INTERMEDIATECODE_EXTENSION_NAME);
-	
-	this.assemblers=new ArrayList<>();
-	
-	//´ÓÖĞ¼äÓïÑÔÎÄ¼şÖĞ»¹Ô­ËÄÔªÊ½µÄArrayList
-	
-	ObjectInputStream inputStream=null;
-	try {
-		inputStream=new ObjectInputStream(new FileInputStream(file));
-		
-		Object object=inputStream.readObject();
-		if(object instanceof ArrayList)
-			fourElements=(ArrayList<FourElement>)object;
-		
-	
-	} catch (ClassNotFoundException | IOException e) {
-		System.out.println("Ä¿±ê´úÂëÉú³ÉÆ÷³õÊ¼»¯Ê§°Ü");
-		e.printStackTrace();
+	public MIPSGenerator(String fileName, ArrayList<FourElement> fourElements) {
+		super(fourElements, fileName, "", ASSEMBLER_EXTENSION_NAME);
 	}
-	finally {
-		inputStream.close();
+	
+	public MIPSGenerator(ArrayList<FourElement>elements){
+		super(elements);
 	}
-}
+	
+	/**
+	 * å››å…ƒå¼å®šä¹‰
+	 *ï¼ˆ+ï¼ŒOP1ï¼Œop2ï¼Œresï¼‰ res=OP1+OP2
+	 *ï¼ˆ-ï¼ŒOP1ï¼ŒOP2ï¼Œresï¼‰res=OP1-OP2
+	 *ï¼ˆ*ï¼ŒOP1.OP2.resï¼‰res=OP1*OP2
+	 *ï¼ˆ/ï¼ŒOP1ï¼ŒOP2ï¼Œresï¼‰res=OP1/OP2
+	 *ï¼ˆ%ï¼Œop1ï¼Œop2ï¼Œresï¼‰res=op1 mod op2
+	 *ï¼ˆJAï¼Œa,b,labelï¼‰if(a>b)goto label
+	 *ï¼ˆJBï¼Œa,b,labelï¼‰if(a<b)goto label
+	 *ï¼ˆJE,a,b,labelï¼‰if(a==b)goto...
+	 *ï¼ˆJNE,a,b,labelï¼‰if(a!=b)goto...
+	 *ï¼ˆJAE,a,b,labelï¼‰if(a>=b)goto...
+	 *ï¼ˆJBE,a,b,labelï¼‰if(a<=b)goto...
+	 *ï¼ˆMINUSï¼Œop1ï¼Œnullï¼Œresï¼‰res=-op1
+	 *ï¼ˆGOTOï¼Œnulï¼Œ,nullï¼Œlabelï¼‰goto label
+	 *ï¼ˆASSIGNï¼Œop1ï¼Œnullï¼Œresï¼‰res=op1
+	 *ï¼ˆPARAï¼Œop1ï¼Œnullï¼Œnullï¼‰ op1ä½œä¸ºå‚æ•°ä¼ é€’
+	 *ï¼ˆRETURNï¼Œop1ï¼Œnullï¼Œnullï¼‰op1ä½œä¸ºè¿”å›å€¼
+	 *ï¼ˆCALLï¼Œnullï¼Œnullï¼Œop1ï¼‰è°ƒç”¨è¿‡ç¨‹op1
+	 *ï¼ˆSCANFï¼Œop1ï¼Œnullï¼Œnullï¼‰ä»æ§åˆ¶å°è¯»å…¥æ•°å†™åˆ°op1
+	 *ï¼ˆPRINTFï¼Œop1ï¼Œnullï¼Œnullï¼‰è¾“å‡ºop1åˆ°æ§åˆ¶å°
+	 */
+	
 
-/**
- * ¸ù¾İËÄÔªÊ½Éú³ÉÖ¸¶¨ÎÄ¼şÃûµÄÉú³ÉÆ÷
- */
-public MIPSGenerator(String fileName, ArrayList<FourElement> fourElements) {
-		super();
-		this.fileName = fileName;
-		this.fourElements = fourElements;
-	}
-/**
- * ËÄÔªÊ½¶¨Òå
- *£¨+£¬OP1£¬op2£¬res£© res=OP1+OP2
- *£¨-£¬OP1£¬OP2£¬res£©res=OP1-OP2
- *£¨*£¬OP1.OP2.res£©res=OP1*OP2
- *£¨/£¬OP1£¬OP2£¬res£©res=OP1/OP2
- *£¨%£¬op1£¬op2£¬res£©res=op1 mod op2
- *£¨JA£¬a,b,label£©if(a>b)goto label
- *£¨JB£¬a,b,label£©if(a<b)goto label
- *£¨JE,a,b,label£©if(a==b)goto...
- *£¨JNE,a,b,label£©if(a!=b)goto...
- *£¨JAE,a,b,label£©if(a>=b)goto...
- *£¨JBE,a,b,label£©if(a<=b)goto...
- *£¨MINUS£¬op1£¬null£¬res£©res=-op1
- *£¨GOTO£¬nul£¬,null£¬label£©goto label
- *£¨ASSIGN£¬op1£¬null£¬res£©res=op1
- *£¨PARA£¬op1£¬null£¬null£© op1×÷Îª²ÎÊı´«µİ
- *£¨RETURN£¬op1£¬null£¬null£©op1×÷Îª·µ»ØÖµ
- *£¨CALL£¬null£¬null£¬op1£©µ÷ÓÃ¹ı³Ìop1
- *£¨SCANF£¬op1£¬null£¬null£©´Ó¿ØÖÆÌ¨¶ÁÈëÊıĞ´µ½op1
- *£¨PRINTF£¬op1£¬null£¬null£©Êä³öop1µ½¿ØÖÆÌ¨
- */
-/**
- * Ä¿±ê´úÂëÉú³ÉÈë¿Ú
- * @return Éú³ÉµÄÄ¿±ê´úÂëÎÄ¼ş
- * @throws Exception
- */
-public File generator() throws Exception{
-	File file=new File(fileName+ASSEMBLER_EXTENSION_NAME);
-	
-	for(int i = 0; i < fourElements.size(); i++){
-		FourElement temp=fourElements.get(i);	
-		//½«ËÄÔªÊ½×ª»»ÎªMIPSÖ¸Áî
-		String tempAssembler=switchFourElementToMIPS(temp);
-		//Ìí¼Ó½øÖ¸ÁîÁĞ±í
-		assemblers.add(tempAssembler);
-	}
-	//½«Éú³ÉµÄMIPSÖ¸ÁîĞ´ÈëÎÄ¼ş
-	file.createNewFile();
-	if(file.canWrite()){
-		FileWriter fileWriter=new FileWriter(file);
-		for (String assembler : assemblers) {
-			fileWriter.write(assembler);
-		}
-		fileWriter.close();
-	}else{
-		throw new Exception("ÎÄ¼şĞ´ÈëÊ§°Ü");
-	}
-	
-	return file;
-}
+	public static String switchFourElementToMIPS(FourElement element){
+		StringBuilder tempAssembler=new StringBuilder();
+		//è·å–å…¨å±€ç¬¦å·è¡¨
+		SymbolTable symbolTable=GlobalSymbolTable.getSymbolTable();
+		if(element.getOp().equals("+")){
+			//æŸ¥è¯¢+æ˜¯ç«‹å³æ•°åŠ è¿˜æ˜¯æ•´å‹å˜é‡åŠ 
 
-public static String switchFourElementToMIPS(FourElement element){
-	StringBuilder tempAssembler=new StringBuilder();
-	//»ñÈ¡È«¾Ö·ûºÅ±í
-	SymbolTable symbolTable=GlobalSymbolTable.getSymbolTable();
-	if(element.getOp().equals("+")){
-		//²éÑ¯+ÊÇÁ¢¼´Êı¼Ó»¹ÊÇÕûĞÍ±äÁ¿¼Ó
-		
-		//ÅĞ¶ÏËÄÔªÊ½µÄµÚÒ»¸ö²Ù×÷ÊıÊÇ³£Êı»¹ÊÇ±äÁ¿
-		if(symbolTable.isInt( element.getArg1() ) ){
-			if(symbolTable.isInt(element.getArg2())){
-				
+			//åˆ¤æ–­å››å…ƒå¼çš„ç¬¬ä¸€ä¸ªæ“ä½œæ•°æ˜¯å¸¸æ•°è¿˜æ˜¯å˜é‡
+			if(symbolTable.isInt( element.getArg1() ) ){
+				if(symbolTable.isInt(element.getArg2())){
+
+				}
 			}
-		}
-		
-		try {
-			//Á¢¼´Êı¼Ó
-			Integer.decode(element.getArg1());
-		} catch (NumberFormatException e) {
-			//ÕûÊı±äÁ¿¼Ó
-		}
-		
-		
-		
-		if(symbolTable.isConst(element.getArg1())||symbolTable.isConst(element.getArg2())){
-			
-		}
-		tempAssembler.append("ADD ");
-	}
-	else if(element.getOp().equals("")){
-		
-	}
-	else if(element.getOp().equals("")){
-		
-	}
-	else if(element.getOp().equals("")){
-		
-	}
-	else if(element.getOp().equals("")){
-		
-	}
-	else if(element.getOp().equals("")){
-		
-	}
-	else if(element.getOp().equals("")){
-		
-	}
-	else if(element.getOp().equals("")){
-		
-	}
-	else if(element.getOp().equals("")){
-		
-	}
-	else if(element.getOp().equals("")){
-		
-	}
-	else if(element.getOp().equals("")){
-		
-	}
-	else if(element.getOp().equals("")){
-		
-	}
-	else if(element.getOp().equals("")){
-		
-	}
-	else if(element.getOp().equals("")){
-		
-	}
-	else if(element.getOp().equals("")){
-		
-	}
-	else if(element.getOp().equals("")){
-		
-	}
-	else if(element.getOp().equals("")){
-		
-	}
-	else if(element.getOp().equals("")){
-		
-	}
-	else{
-		//TODO ´íÎóÅÅ³ı
-		return null;
-	}
-	
-	return tempAssembler.toString();
-}
-public ArrayList<FourElement> getFourElements() {
-	return fourElements;
-}
 
-public void setFourElements(ArrayList<FourElement> fourElements) {
-	this.fourElements = fourElements;
-}
+			try {
+				//ç«‹å³æ•°åŠ 
+				Integer.decode(element.getArg1());
+			} catch (NumberFormatException e) {
+				//æ•´æ•°å˜é‡åŠ 
+			}
+
+
+
+			if(symbolTable.isConst(element.getArg1())||symbolTable.isConst(element.getArg2())){
+
+			}
+			tempAssembler.append("ADD ");
+		}
+		else if(element.getOp().equals("")){
+
+		}
+		else if(element.getOp().equals("")){
+
+		}
+		else if(element.getOp().equals("")){
+
+		}
+		else if(element.getOp().equals("")){
+
+		}
+		else if(element.getOp().equals("")){
+
+		}
+		else if(element.getOp().equals("")){
+
+		}
+		else if(element.getOp().equals("")){
+
+		}
+		else if(element.getOp().equals("")){
+
+		}
+		else if(element.getOp().equals("")){
+
+		}
+		else if(element.getOp().equals("")){
+
+		}
+		else if(element.getOp().equals("")){
+
+		}
+		else if(element.getOp().equals("")){
+
+		}
+		else if(element.getOp().equals("")){
+
+		}
+		else if(element.getOp().equals("")){
+
+		}
+		else if(element.getOp().equals("")){
+
+		}
+		else if(element.getOp().equals("")){
+
+		}
+		else if(element.getOp().equals("")){
+
+		}
+		else{
+			//TODO é”™è¯¯æ’é™¤
+			return null;
+		}
+
+		return tempAssembler.toString();
+	}
+
+	@Override
+	protected void baseBlockToObjectCode(BaseBlock baseBlock) {
+		// TODO è‡ªåŠ¨ç”Ÿæˆçš„æ–¹æ³•å­˜æ ¹
+		
+	}
+
 
 }

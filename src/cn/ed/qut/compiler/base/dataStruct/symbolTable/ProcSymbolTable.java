@@ -5,14 +5,14 @@ import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolTableItem;
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolType;
 
 /**
- * ·½·¨·ûºÅ±í,´æ´¢·½·¨ÖĞµÄ±êÊ¶·û
- * @author Çå¾Ó
+ * æ–¹æ³•ç¬¦å·è¡¨,å­˜å‚¨æ–¹æ³•ä¸­çš„æ ‡è¯†ç¬¦
+ * @author æ¸…å±…
  *
  */
 public class ProcSymbolTable extends HashSymbolTable{
 	private int paraNum=0;
 	/**
-	 * ÊÇ·ñÊÇ²ÎÊı
+	 * æ˜¯å¦æ˜¯å‚æ•°
 	 * @param name
 	 * @return
 	 */
@@ -20,7 +20,7 @@ public class ProcSymbolTable extends HashSymbolTable{
 		return isType(SymbolType.PARA, name);
 	}
 	/**
-	 * »ñÈ¡¸Ã·ûºÅ±íÖĞ²ÎÊıµÄ¸öÊı
+	 * è·å–è¯¥ç¬¦å·è¡¨ä¸­å‚æ•°çš„ä¸ªæ•°
 	 * @return
 	 */
 	public int getParaNum(){
@@ -33,12 +33,12 @@ public class ProcSymbolTable extends HashSymbolTable{
 	
 	
 	/**
-	 * »ñÈ¡µÚindex¸ö²ÎÊıµÄ·ûºÅ±íÏî
-	 * @param index ²ÎÊıµÄindex
-	 * @return ²ÎÊıÕâ¸ö·ûºÅ±íÏî
+	 * è·å–ç¬¬indexä¸ªå‚æ•°çš„ç¬¦å·è¡¨é¡¹
+	 * @param index å‚æ•°çš„index
+	 * @return å‚æ•°è¿™ä¸ªç¬¦å·è¡¨é¡¹
 	 */
 	public SymbolTableItem getPara(int index){
-		//±éÀúÃ¿Ò»¸ö²ÎÊı£¬²é¿´ËüµÄÖµÊÇ·ñÊÇindex
+		//éå†æ¯ä¸€ä¸ªå‚æ•°ï¼ŒæŸ¥çœ‹å®ƒçš„å€¼æ˜¯å¦æ˜¯index
 		for (String key: sMap.keySet()) {
 			SymbolTableItem temp=sMap.get(key);
 			if(temp.getSymbolType()==SymbolType.PARA){

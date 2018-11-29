@@ -96,7 +96,7 @@ public InfoFrame(String title,String fileName){
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-InfoFrame inf=new InfoFrame("����","test.txt");
+InfoFrame inf=new InfoFrame("锟斤拷锟斤拷","test.txt");
 inf.setVisible(true);
 	}
 

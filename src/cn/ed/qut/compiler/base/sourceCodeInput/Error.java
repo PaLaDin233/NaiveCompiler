@@ -3,10 +3,10 @@ package cn.ed.qut.compiler.base.sourceCodeInput;
 import cn.ed.qut.compiler.base.wordSegmenter.Word;
 
 public class Error {
-private int id ;//´íÎóĞòºÅ£»
-private String info;//´íÎóĞÅÏ¢£»
-private int line ;//´íÎóËùÔÚĞĞ
-private Word word;//´íÎóµÄµ¥´Ê
+private int id ;//é”™è¯¯åºå·ï¼›
+private String info;//é”™è¯¯ä¿¡æ¯ï¼›
+private int line ;//é”™è¯¯æ‰€åœ¨è¡Œ
+private Word word;//é”™è¯¯çš„å•è¯
 public Error(){
 	
 }
@@ -28,7 +28,7 @@ public String getInfo() {
 	return info;
 }
 /**
- * @param info ÒªÉèÖÃµÄ info
+ * @param info è¦è®¾ç½®çš„ info
  */
 public void setInfo(String info) {
 	this.info = info;
@@ -40,7 +40,7 @@ public int getId() {
 	return id;
 }
 /**
- * @param id ÒªÉèÖÃµÄ id
+ * @param id è¦è®¾ç½®çš„ id
  */
 public void setId(int id) {
 	this.id = id;
@@ -52,7 +52,7 @@ public int getLine() {
 	return line;
 }
 /**
- * @param line ÒªÉèÖÃµÄ line
+ * @param line è¦è®¾ç½®çš„ line
  */
 public void setLine(int line) {
 	this.line = line;
@@ -64,7 +64,7 @@ public Word getWord() {
 	return word;
 }
 /**
- * @param word ÒªÉèÖÃµÄ word
+ * @param word è¦è®¾ç½®çš„ word
  */
 public void setWord(Word word) {
 	this.word = word;

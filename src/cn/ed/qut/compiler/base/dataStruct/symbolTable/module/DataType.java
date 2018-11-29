@@ -1,8 +1,8 @@
 package cn.ed.qut.compiler.base.dataStruct.symbolTable.module;
 
 /**
- * ¸ÃÀàÊÇÒ»¸öÃ¶¾ÙÀàĞÍ<br>
- * ±íÊ¾Êı¾İÀàĞÍÓĞ
+ * è¯¥ç±»æ˜¯ä¸€ä¸ªæšä¸¾ç±»å‹<br>
+ * è¡¨ç¤ºæ•°æ®ç±»å‹æœ‰
  *  VOID,
  *  BYTE,
  *	CHAR,
@@ -13,7 +13,7 @@ package cn.ed.qut.compiler.base.dataStruct.symbolTable.module;
  *	DOUBLE,
  *	STRING,
  *	STRUCT<br>
- * @author Çå¾Ó
+ * @author æ¸…å±…
  *
  */
 public enum DataType {

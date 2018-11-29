@@ -4,22 +4,22 @@ import java.util.ArrayList;
 import cn.ed.qut.compiler.base.parsing.AnalyseNode;
 
 /**
- * µ¥´ÊÀà
- * 1¡¢µ¥´ÊĞòºÅ 2¡¢µ¥´ÊµÄÖµ 3¡¢µ¥´ÊÀàĞÍ 4¡¢µ¥´ÊËùÔÚĞĞ 5¡¢µ¥´ÊÊÇ·ñºÏ·¨
+ * å•è¯ç±»
+ * 1ã€å•è¯åºå· 2ã€å•è¯çš„å€¼ 3ã€å•è¯ç±»å‹ 4ã€å•è¯æ‰€åœ¨è¡Œ 5ã€å•è¯æ˜¯å¦åˆæ³•
  */
 public class Word {
-	public final static String KEY = "¹Ø¼ü×Ö";
-	public final static String OPERATOR = "ÔËËã·û";
-	public final static String INT_CONST = "ÕûĞÎ³£Á¿";
-	public final static String CHAR_CONST = "×Ö·û³£Á¿";
-	public final static String BOOL_CONST = "²¼¶û³£Á¿";
-	public final static String IDENTIFIER = "±êÖ¾·û";
-	public final static String BOUNDARYSIGN = "½ç·û";
-	public final static String END = "½áÊø·û";
-	public final static String UNIDEF = "Î´ÖªÀàĞÍ";
-	public static ArrayList<String> key = new ArrayList<String>();// ¹Ø¼ü×Ö¼¯ºÏ
-	public static ArrayList<String> boundarySign = new ArrayList<String>();// ½ç·û¼¯ºÏ
-	public static ArrayList<String> operator = new ArrayList<String>();// ÔËËã·û¼¯ºÏ
+	public final static String KEY = "å…³é”®å­—";
+	public final static String OPERATOR = "è¿ç®—ç¬¦";
+	public final static String INT_CONST = "æ•´å½¢å¸¸é‡";
+	public final static String CHAR_CONST = "å­—ç¬¦å¸¸é‡";
+	public final static String BOOL_CONST = "å¸ƒå°”å¸¸é‡";
+	public final static String IDENTIFIER = "æ ‡å¿—ç¬¦";
+	public final static String BOUNDARYSIGN = "ç•Œç¬¦";
+	public final static String END = "ç»“æŸç¬¦";
+	public final static String UNIDEF = "æœªçŸ¥ç±»å‹";
+	public static ArrayList<String> key = new ArrayList<String>();// å…³é”®å­—é›†åˆ
+	public static ArrayList<String> boundarySign = new ArrayList<String>();// ç•Œç¬¦é›†åˆ
+	public static ArrayList<String> operator = new ArrayList<String>();// è¿ç®—ç¬¦é›†åˆ
 	static {
 		Word.operator.add("+");
 		Word.operator.add("-");
@@ -58,11 +58,11 @@ public class Word {
 		Word.key.add("printf");
 		Word.key.add("scanf");
 	}
-	private int id;// µ¥´ÊĞòºÅ
-	private String value;// µ¥´ÊµÄÖµ
-	private String type;// µ¥´ÊÀàĞÍ
-	private int line;// µ¥´ÊËùÔÚĞĞ
-	private boolean flag = true;//µ¥´ÊÊÇ·ñºÏ·¨
+	private int id;// å•è¯åºå·
+	private String value;// å•è¯çš„å€¼
+	private String type;// å•è¯ç±»å‹
+	private int line;// å•è¯æ‰€åœ¨è¡Œ
+	private boolean flag = true;//å•è¯æ˜¯å¦åˆæ³•
 
 	public Word() {
 
@@ -87,7 +87,7 @@ public class Word {
 		return boundarySign.contains(word);
 	}
 
-	public static boolean isArOP(String word) {// ÅĞ¶Ïµ¥´ÊÊÇ·ñÎªËãÊõÔËËã·û
+	public static boolean isArOP(String word) {// åˆ¤æ–­å•è¯æ˜¯å¦ä¸ºç®—æœ¯è¿ç®—ç¬¦
 		for(int i=0;i<3;){}
 		if ((word.equals("+") || word.equals("-") || word.equals("*") || word
 				.equals("/")))
@@ -96,7 +96,7 @@ public class Word {
 			return false;
 	}
 
-	public static boolean isBoolOP(String word) {// ÅĞ¶Ïµ¥´ÊÊÇ·ñÎª²¼¶ûÔËËã·û
+	public static boolean isBoolOP(String word) {// åˆ¤æ–­å•è¯æ˜¯å¦ä¸ºå¸ƒå°”è¿ç®—ç¬¦
 		if ((word.equals(">") || word.equals("<") || word.equals("==")
 				|| word.equals("!=") || word.equals("!") || word.equals("&&") || word
 				.equals("||")))
@@ -113,7 +113,7 @@ public class Word {
 	}
 
 	/**
-	 * @param id ÒªÉèÖÃµÄ id
+	 * @param id è¦è®¾ç½®çš„ id
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -127,7 +127,7 @@ public class Word {
 	}
 
 	/**
-	 * @param line ÒªÉèÖÃµÄ line
+	 * @param line è¦è®¾ç½®çš„ line
 	 */
 	public void setLine(int line) {
 		this.line = line;
@@ -141,7 +141,7 @@ public class Word {
 	}
 
 	/**
-	 * @param value ÒªÉèÖÃµÄ value
+	 * @param value è¦è®¾ç½®çš„ value
 	 */
 	public void setValue(String value) {
 		this.value = value;
@@ -155,7 +155,7 @@ public class Word {
 	}
 
 	/**
-	 * @param type ÒªÉèÖÃµÄ type
+	 * @param type è¦è®¾ç½®çš„ type
 	 */
 	public void setType(String type) {
 		this.type = type;
@@ -169,7 +169,7 @@ public class Word {
 	}
 
 	/**
-	 * @param flag ÒªÉèÖÃµÄ flag
+	 * @param flag è¦è®¾ç½®çš„ flag
 	 */
 	public void setFlag(boolean flag) {
 		this.flag = flag;

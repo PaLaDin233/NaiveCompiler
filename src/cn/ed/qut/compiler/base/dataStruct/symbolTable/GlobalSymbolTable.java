@@ -5,23 +5,23 @@ import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolTableItem;
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolType;
 
 /**
- * È«¾Ö·ûºÅ±íÀà<br>
+ * å…¨å±€ç¬¦å·è¡¨ç±»<br>
  * 
- * @author Çå¾Ó
+ * @author æ¸…å±…
  * @version 0.1
  * @func
- * Ê¹ÓÃµ¥ÀıÄ£Ê½£¬Í¬Ò»¸öÊ±¼ä¶ÎÄÚÖ»ÔÊĞíÓĞÒ»¸ö¶ÔÏó´æÔÚ
+ * ä½¿ç”¨å•ä¾‹æ¨¡å¼ï¼ŒåŒä¸€ä¸ªæ—¶é—´æ®µå†…åªå…è®¸æœ‰ä¸€ä¸ªå¯¹è±¡å­˜åœ¨
  */
 public class GlobalSymbolTable extends HashSymbolTable{
-	//volatileÓÃÓÚ¶àÏß³Ì±à³Ì£¬Ò²¾ÍÊÇÎªÁËÏÂÃæµÄÏß³Ì°²È«£¬ËäÈ»Õâ¸öÏîÄ¿¶àÏß³Ì²¢Ã»ÓĞÓÃµ½£¬µ«ÊÇÍòÒ»ÒÔºóÉı¼¶Îª²¢ĞĞ±àÒëÁËÄØ
+	//volatileç”¨äºå¤šçº¿ç¨‹ç¼–ç¨‹ï¼Œä¹Ÿå°±æ˜¯ä¸ºäº†ä¸‹é¢çš„çº¿ç¨‹å®‰å…¨ï¼Œè™½ç„¶è¿™ä¸ªé¡¹ç›®å¤šçº¿ç¨‹å¹¶æ²¡æœ‰ç”¨åˆ°ï¼Œä½†æ˜¯ä¸‡ä¸€ä»¥åå‡çº§ä¸ºå¹¶è¡Œç¼–è¯‘äº†å‘¢
 	private static volatile GlobalSymbolTable globalSymbolTable;
 	private int procNum=0;
 	private GlobalSymbolTable() {}
 	/**
-	 * Ïß³Ì°²È«
+	 * çº¿ç¨‹å®‰å…¨
 	 * 
-	 * »ñÈ¡·ûºÅ±íµÄ¶ÔÏó
-	 * @return ¸ÃÀàµÄÎ¨Ò»¶ÔÏó
+	 * è·å–ç¬¦å·è¡¨çš„å¯¹è±¡
+	 * @return è¯¥ç±»çš„å”¯ä¸€å¯¹è±¡
 	 */
 	public static GlobalSymbolTable getSymbolTable(){
 		if (globalSymbolTable==null) {
@@ -34,17 +34,17 @@ public class GlobalSymbolTable extends HashSymbolTable{
 		return globalSymbolTable;
 	}
 	/**
-	 * »ñÈ¡·½·¨funcNameµÚindex¸ö²ÎÊıµÄ·ûºÅ±íÏî
-	 * @param index ²ÎÊıµÄindex
-	 * @param funName ·½·¨µÄname
+	 * è·å–æ–¹æ³•funcNameç¬¬indexä¸ªå‚æ•°çš„ç¬¦å·è¡¨é¡¹
+	 * @param index å‚æ•°çš„index
+	 * @param funName æ–¹æ³•çš„name
 	 * @return
 	 */
 	public SymbolTableItem getPara(int index,String funName){
-		//»ñÈ¡·½·¨Ïî
+		//è·å–æ–¹æ³•é¡¹
 		SymbolTableItem func=getSymbolTableItem(funName);
 		if(func==null||func.getSymbolType()!=SymbolType.PROC)return null;
 
-		//»ñÈ¡·½·¨ÏîµÄ·ûºÅ±í,ÔÙ»ñÈ¡²ÎÊı
+		//è·å–æ–¹æ³•é¡¹çš„ç¬¦å·è¡¨,å†è·å–å‚æ•°
 		return func.getSymbolTable().getPara(index);
 
 	}

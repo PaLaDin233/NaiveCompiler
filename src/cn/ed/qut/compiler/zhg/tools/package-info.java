@@ -2,8 +2,8 @@
  * 
  */
 /**
- * 这个包是用于工具
- * @author 清居
+ * 杩欎釜鍖呮槸鐢ㄤ簬宸ュ叿
+ * @author 娓呭眳
  *
  */
 package cn.ed.qut.compiler.zhg.tools;

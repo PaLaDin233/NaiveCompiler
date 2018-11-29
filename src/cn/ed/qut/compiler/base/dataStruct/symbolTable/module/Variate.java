@@ -6,22 +6,22 @@ import java.util.List;
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.abstruct.SymbolTable;
 import cn.ed.qut.compiler.zhg.objectCodeGeneration.Register;
 /**
- * ±äÁ¿Àà£¬°üÀ¨³ÌĞò¶¨ÒåµÄ±äÁ¿(È«¾Ö±äÁ¿£¬¾Ö²¿±äÁ¿)£¬ËÄÔªÊ½Éú³ÉµÄÁÙÊ±±äÁ¿
- * @author Çå¾Ó
+ * å˜é‡ç±»ï¼ŒåŒ…æ‹¬ç¨‹åºå®šä¹‰çš„å˜é‡(å…¨å±€å˜é‡ï¼Œå±€éƒ¨å˜é‡)ï¼Œå››å…ƒå¼ç”Ÿæˆçš„ä¸´æ—¶å˜é‡
+ * @author æ¸…å±…
  * 
  */
 public class Variate {
-//	private String name;//±äÁ¿Ãû
+//	private String name;//å˜é‡å
 	private boolean waitUse=false;
 	private boolean active=false;
 	
 	/**
-	 * ±äÁ¿´æ·ÅµÄÎ»ÖÃ£¬¼Ä´æÆ÷»òÕßÊÇÄÚ´æ£¬¼Ä´æÆ÷µÄ»°ÊÇÄÄ¸ö¼Ä´æÆ÷<br>
-	 * ÖµÊÇ-1Ê±±íÊ¾´æ·ÅÔÚÄÚ´æÖĞ
+	 * å˜é‡å­˜æ”¾çš„ä½ç½®ï¼Œå¯„å­˜å™¨æˆ–è€…æ˜¯å†…å­˜ï¼Œå¯„å­˜å™¨çš„è¯æ˜¯å“ªä¸ªå¯„å­˜å™¨<br>
+	 * å€¼æ˜¯-1æ—¶è¡¨ç¤ºå­˜æ”¾åœ¨å†…å­˜ä¸­
 	 */
 	private List<Integer> location=new ArrayList<>();//
 
-//	private SymbolTable symbolTable;//±äÁ¿ËùÔÚµÄ·ûºÅ±í
+//	private SymbolTable symbolTable;//å˜é‡æ‰€åœ¨çš„ç¬¦å·è¡¨
 	
 	public Variate() {
 	
@@ -36,7 +36,7 @@ public class Variate {
 		this.symbolTable = symbolTable;
 	}*/
 	/**
-	 * Îª±äÁ¿Ìí¼Ó´æ·ÅÎ»ÖÃ
+	 * ä¸ºå˜é‡æ·»åŠ å­˜æ”¾ä½ç½®
 	 * @param register
 	 */
 	public void addLocation(Register register){
@@ -46,12 +46,12 @@ public class Variate {
 
 
 	/**
-	 * ½«±äÁ¿·ÖÅä¸ø¼Ä´æÆ÷
-	 * @param register Ëù·ÖÅäµÄ¼Ä´æÆ÷
+	 * å°†å˜é‡åˆ†é…ç»™å¯„å­˜å™¨
+	 * @param register æ‰€åˆ†é…çš„å¯„å­˜å™¨
 	 */
 	public void allotVariate(Register register){
-		location.add(register.getId());//½«¼Ä´æÆ÷¼ÓÈë±äÁ¿Î»ÖÃÁĞ±í
-		//Ïò±äÁ¿µÄ´æ´¢Î»ÖÃÌí¼ÓÕâ¸ö¼Ä´æÆ÷
+		location.add(register.getId());//å°†å¯„å­˜å™¨åŠ å…¥å˜é‡ä½ç½®åˆ—è¡¨
+		//å‘å˜é‡çš„å­˜å‚¨ä½ç½®æ·»åŠ è¿™ä¸ªå¯„å­˜å™¨
 		register.add(this);
 		
 	}
@@ -66,7 +66,7 @@ public class Variate {
 
 	
 	/**
-	 * Í¨¹ı¼Ä´æÆ÷Ãû£¬½«¼Ä´æÆ÷ÖĞ±äÁ¿µÄ´æ·ÅÎ»ÖÃÁĞ±íÒÆ³ı
+	 * é€šè¿‡å¯„å­˜å™¨åï¼Œå°†å¯„å­˜å™¨ä¸­å˜é‡çš„å­˜æ”¾ä½ç½®åˆ—è¡¨ç§»é™¤
 	 * @param regName
 	 */
 	public void removeFromAddress(int id){
@@ -84,7 +84,7 @@ public class Variate {
 	}
 
 	/**
-	 * ½«´ıÓÃĞÅÏ¢È¡·´
+	 * å°†å¾…ç”¨ä¿¡æ¯å–å
 	 * 
 	 */
 	public void changeWaitUse() {
@@ -99,7 +99,7 @@ public class Variate {
 	}
 
 	/**
-	 * ½«ÊÇ·ñ»îÔ¾ĞÅÏ¢È¡·´
+	 * å°†æ˜¯å¦æ´»è·ƒä¿¡æ¯å–å
 	 */
 	public void changeActive() {
 		active = !active;
