@@ -20,20 +20,27 @@ public abstract class ObjectCodeGenerater {
 	
 	private String intermediateCodeExtensionName="";
 	private String objectCodeExtensionName;
-
+	private RegisterAllocator registerAllocator;
+	
 	protected List<String> objectCodeList;
 	
 	protected List<BaseBlock> baseBlocks;
+	protected List<FourElement> fourElements;
 	private String fileName;
 	private File file;
-	
+	{
+		this.baseBlocks=new ArrayList<>();
+		this.objectCodeList=new ArrayList<>();
+		init();
+	}
 
 	public ObjectCodeGenerater() {
 	}
 	
 	//根据四元式列表生成基本块列表——基本块的划分
-	public ObjectCodeGenerater(List<FourElement> elements) {
-		baseBlocksInit(elements);
+	public ObjectCodeGenerater(List<FourElement> fourElements) {
+		baseBlocksInit(fourElements);
+		this.fourElements=fourElements;
 	}
 	
 	public ObjectCodeGenerater(List<FourElement> fourElements, String fileName,
@@ -42,7 +49,7 @@ public abstract class ObjectCodeGenerater {
 		this.intermediateCodeExtensionName = intermediateCodeExtensionName;
 		this.setObjectCodeExtensionName(objectCodeExtensionName);
 		baseBlocksInit(fourElements);
-		
+		this.fourElements=fourElements;
 		
 	}
 	
@@ -64,6 +71,8 @@ public abstract class ObjectCodeGenerater {
 		}
 	}
 
+	protected abstract void init();
+	
 	/**
 	 * 初始化汇编语言生成类，从文件获取中间代码，生成中间代码列表
 	 * @param fileName 中间语言文件的文件名,不带后缀
@@ -72,8 +81,7 @@ public abstract class ObjectCodeGenerater {
 	public void init(String fileName)throws Exception{
 		setFileName(fileName);
 		file =new File(fileName+intermediateCodeExtensionName);
-		this.baseBlocks=new ArrayList<>();
-		this.objectCodeList=new ArrayList<>();
+		
 
 		//从中间语言文件中还原四元式的ArrayList
 		ArrayList<FourElement> fourElements=null;
@@ -94,6 +102,7 @@ public abstract class ObjectCodeGenerater {
 			inputStream.close();
 		}
 		if(fourElements!=null)baseBlocksInit(fourElements);
+		this.fourElements=fourElements;
 	}
 
 	
@@ -102,10 +111,10 @@ public abstract class ObjectCodeGenerater {
 		BaseBlock b=null;
 		for (FourElement fourElement : elements) {
 			//当四元式的初步基本块id与当前基本块号不相等时，生成新的基本块，将新的基本块加入基本块列表中
-			if(fourElement.getId()!=id){
+			if(fourElement.getCodeBlockNum()!=id){
 				id++;
 				b=new BaseBlock(id);
-				baseBlocks.add(b);
+				getBaseBlocks().add(b);
 			}
 			//向基本块添加四元式
 			b.addFourElement(fourElement);
@@ -129,16 +138,20 @@ public abstract class ObjectCodeGenerater {
 	 * @throws Exception
 	 */
 	public File generator() throws Exception{
-		for (BaseBlock baseBlock : baseBlocks) {
+		for (BaseBlock baseBlock : getBaseBlocks()) {
 			baseBlockToObjectCode(baseBlock);
 		}
-		File file=new File(fileName+getExtensionName());
+		File file;
+		if(fileName!=null)
+			file=new File(fileName+getExtensionName());
+		else file=new File("output/target.txt"+getExtensionName());
 		//将生成的MIPS指令写入文件
+		
 		if(!file.exists())file.createNewFile();
 		if(file.canWrite()){
 			FileWriter fileWriter=new FileWriter(file);
 			for (String objectCode : objectCodeList) {
-				fileWriter.write(objectCode);
+				fileWriter.write(objectCode+"\r");
 			}
 			fileWriter.close();
 		}else{
@@ -189,5 +202,27 @@ public abstract class ObjectCodeGenerater {
 	public void setObjectCodeExtensionName(String objectCodeExtensionName) {
 		this.objectCodeExtensionName = objectCodeExtensionName;
 	}
+
+	/**
+	 * @return baseBlocks
+	 */
+	public List<BaseBlock> getBaseBlocks() {
+		return baseBlocks;
+	}
+
+	/**
+	 * @return registerAllocator
+	 */
+	public RegisterAllocator getRegisterAllocator() {
+		return registerAllocator;
+	}
+
+	/**
+	 * @param registerAllocator 要设置的 registerAllocator
+	 */
+	public void setRegisterAllocator(RegisterAllocator registerAllocator) {
+		this.registerAllocator = registerAllocator;
+	}
+
 
 }

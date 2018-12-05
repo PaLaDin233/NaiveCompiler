@@ -9,9 +9,12 @@ import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolType;
 
 public class SymbolTableStack {
 	private static Stack<SymbolTable> tableStack=new Stack<>();
+	static {
+		tableStack.push(GlobalSymbolTable.getSymbolTable());
+	}
 	private SymbolTableStack(){
 		//将全局符号表放入栈中
-		tableStack.push(GlobalSymbolTable.getSymbolTable());
+		
 	}
 	
 	/**

@@ -6,8 +6,12 @@ package cn.ed.qut.compiler.zhg.objectCodeGeneration;
  */
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import javax.lang.model.element.Element;
+
+import cn.ed.qut.compiler.base.dataStruct.symbolTable.abstruct.SymbolTable;
 import cn.ed.qut.compiler.base.intermediateCodeGeneration.FourElement;
 
 public class BaseBlock {
@@ -15,6 +19,8 @@ public class BaseBlock {
 	
 	private List<FourElement> elements;//基本块的四元式列表
 	
+	private BaseBlockSymbolTable baseBlockSymbolTable;
+
 	public BaseBlock() {
 	}
 	
@@ -34,4 +40,33 @@ public class BaseBlock {
 	public List<FourElement> getElements() {
 		return elements;
 	}
+
+	@Override
+	public String toString() {
+		Iterator<FourElement> iterator=elements.iterator();
+		StringBuilder builder=new StringBuilder();
+		builder.append("BaseBlock[\n");
+		while(iterator.hasNext()){
+			builder.append(iterator.next());
+			builder.append("\n");
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
+	/**
+	 * @return baseBlockSymbolTable
+	 */
+	public BaseBlockSymbolTable getBaseBlockSymbolTable() {
+		return baseBlockSymbolTable;
+	}
+
+	/**
+	 * @param baseBlockSymbolTable 要设置的 baseBlockSymbolTable
+	 */
+	public void setBaseBlockSymbolTable() {
+		this.baseBlockSymbolTable = new BaseBlockSymbolTable(this);
+	}
+	
+	
 }

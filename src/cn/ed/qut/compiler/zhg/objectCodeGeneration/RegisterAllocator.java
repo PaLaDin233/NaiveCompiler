@@ -29,17 +29,31 @@ public abstract class RegisterAllocator {
 	 * @param element 四元式
 	 * @return 分配的寄存器
 	 */
-	public abstract String getRegister(String source,FourElement element);
+	public abstract Register getRegister(String target,FourElement element,Register resultR);
 	
 	/**
 	 * 
 	 * @return 未被使用的通用寄存器的寄存器名称,如MIPS下的$s0
 	 */
-	public abstract String getRegister();
+	public abstract Register getRegister();
 
-	public abstract String getRegister(FourElement element);
+	/**
+	 * 获取四元式存放结果的寄存器
+	 * @param element 选择的四元式
+	 * @return 存放结果的寄存器
+	 */
+	public abstract Register getRegister(FourElement element);
 
+	/**
+	 * 根据一个基本块分配寄存器
+	 * @param baseBlock
+	 * @return
+	 */
 
-	
+	public List<Register> getRegisterList(){
+		return this.registerList;
+	}
+
+	public abstract Register getRegisterIfNoFreeRegister(FourElement fourElement);
 	
 }

@@ -2,8 +2,8 @@ package cn.ed.qut.compiler.base.dataStruct.symbolTable.module;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
-import cn.ed.qut.compiler.base.dataStruct.symbolTable.abstruct.SymbolTable;
 import cn.ed.qut.compiler.zhg.objectCodeGeneration.Register;
 /**
  * 变量类，包括程序定义的变量(全局变量，局部变量)，四元式生成的临时变量
@@ -11,15 +11,20 @@ import cn.ed.qut.compiler.zhg.objectCodeGeneration.Register;
  * 
  */
 public class Variate {
-//	private String name;//变量名
-	private boolean waitUse=false;
-	private boolean active=false;
+
+	private String name;//变量名
+	private List<Integer> location=new ArrayList<>();//
+	/**
+	 * 变量待用信息与活跃信息链
+	 */
+	private Stack<Integer> waitUseInfo=new Stack<>();
+	private Stack<Boolean> activeInfo=new Stack<>();
 	
 	/**
 	 * 变量存放的位置，寄存器或者是内存，寄存器的话是哪个寄存器<br>
 	 * 值是-1时表示存放在内存中
 	 */
-	private List<Integer> location=new ArrayList<>();//
+	
 
 //	private SymbolTable symbolTable;//变量所在的符号表
 	
@@ -40,7 +45,7 @@ public class Variate {
 	 * @param register
 	 */
 	public void addLocation(Register register){
-		location.add(register.getId());
+		getLocation().add(register.getId());
 	}
 	
 
@@ -50,7 +55,7 @@ public class Variate {
 	 * @param register 所分配的寄存器
 	 */
 	public void allotVariate(Register register){
-		location.add(register.getId());//将寄存器加入变量位置列表
+		addLocation(register);//将寄存器加入变量位置列表
 		//向变量的存储位置添加这个寄存器
 		register.add(this);
 		
@@ -70,44 +75,60 @@ public class Variate {
 	 * @param regName
 	 */
 	public void removeFromAddress(int id){
-		for (Integer i: location) {
+		for (Integer i: getLocation()) {
 			if(i.equals(id)){
-				location.remove(i);
+				getLocation().remove(i);
 			}
 		}
 	}
-	/**
-	 * @return waitUse
-	 */
-	public boolean isWaitUse() {
-		return waitUse;
-	}
+	
 
-	/**
-	 * 将待用信息取反
-	 * 
-	 */
-	public void changeWaitUse() {
-		waitUse = !waitUse;
-	}
 
-	/**
-	 * @return active
-	 */
-	public boolean isActive() {
-		return active;
-	}
-
-	/**
-	 * 将是否活跃信息取反
-	 */
-	public void changeActive() {
-		active = !active;
-	}
 	
 	@Override
-	protected void finalize() throws Throwable {
-		location.clear();
-		location=null;
+	protected void finalize(){
+		getLocation().clear();
+		
+		getWaitUseInfo().clear();
+		
+		getActiveInfo().clear();
 	}
+	/**
+	 * @return waitUseInfo
+	 */
+	public Stack<Integer> getWaitUseInfo() {
+		return waitUseInfo;
+	}
+
+	/**
+	 * @return activeInfo
+	 */
+	public Stack<Boolean> getActiveInfo() {
+		return activeInfo;
+	}
+	/**
+	 * @return location
+	 */
+	public List<Integer> getLocation() {
+		return location;
+	}
+	/**
+	 * @param location 要设置的 location
+	 */
+	public void setLocation(List<Integer> location) {
+		this.location = location;
+	}
+	/**
+	 * @return name
+	 */
+	public String getName() {
+		return name;
+	}
+	/**
+	 * @param name 要设置的 name
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
 }
