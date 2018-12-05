@@ -31,10 +31,10 @@ public class Variate {
 	public Variate() {
 	
 	}
-	/*public Variate(String name) {
+	public Variate(String name) {
 		this.name = name;
 	}
-	
+	/*
 	public Variate(String name, SymbolTable symbolTable) {
 		super();
 		this.name = name;
