@@ -1,5 +1,8 @@
 package cn.ed.qut.compiler.base.dataStruct.symbolTable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.abstruct.HashSymbolTable;
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolTableItem;
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolType;
@@ -61,5 +64,16 @@ public class GlobalSymbolTable extends HashSymbolTable{
 		return procNum;
 	}
 
+	public List<String> getStaticVarNameList(){
+		List<String> list=new ArrayList<>();
+		
+		for (String key : sMap.keySet()) {
+			if(sMap.get(key).getSymbolType().equals(SymbolType.VAR)){
+				list.add(sMap.get(key).getName());
+			}
+		}
+		
+		return list;
+	}
 	
 }

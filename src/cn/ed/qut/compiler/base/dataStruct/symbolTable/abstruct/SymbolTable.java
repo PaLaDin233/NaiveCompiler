@@ -6,6 +6,8 @@
 package cn.ed.qut.compiler.base.dataStruct.symbolTable.abstruct;
 
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.DataType;
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolTableItem;
@@ -211,5 +213,6 @@ public abstract class SymbolTable {
 		return sMap.get(name)!=null;
 	}
 
+	
 
 }

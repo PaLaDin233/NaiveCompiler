@@ -5,6 +5,10 @@ import java.util.List;
 
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.ProcSymbolTable;
 
+/**
+ * @author minecraft
+ *
+ */
 public class SymbolTableItem {
 	
 	
@@ -90,7 +94,7 @@ public class SymbolTableItem {
 	private static SymbolTableItem getVar(String name){
 		SymbolTableItem item=getItemNoType(name);
 		item.setSymbolType(SymbolType.VAR);
-		item.setVariate(new Variate());
+		item.setVariate(new Variate(name));
 		return item;
 	}
 	
@@ -217,6 +221,12 @@ public class SymbolTableItem {
 
 	public void setVariate(Variate variate) {
 		this.variate = variate;
+	}
+
+	@Override
+	public String toString() {
+		return "SymbolTableItem [type=" + type + ", name=" + name + ", value=" + value + ", dataType=" + dataType
+				+ ", symbolTable=" + symbolTable + ", variate=" + variate + "]";
 	}
 	
 	

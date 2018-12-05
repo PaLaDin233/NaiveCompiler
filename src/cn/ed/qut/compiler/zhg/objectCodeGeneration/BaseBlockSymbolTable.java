@@ -1,6 +1,9 @@
 package cn.ed.qut.compiler.zhg.objectCodeGeneration;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,7 +34,7 @@ public class BaseBlockSymbolTable extends HashSymbolTable {
 			for(int i=0;i<3;i++){
 				if(arg[i]!=null){
 					//使用正则表达式模式进行匹配，判断该arg是不是一个数值,如123,-123
-					if(!p.matcher(arg[0]).matches()){
+					if(!p.matcher(arg[i]).matches()){
 						SymbolTableItem item=SymbolTableStack.getItem(arg[i]);
 						Variate variate;
 						
@@ -118,6 +121,18 @@ public class BaseBlockSymbolTable extends HashSymbolTable {
 	public Info getInfo(){
 		return info;
 	}
+	@Override
+	public String toString() {
+		Set<Entry<String, SymbolTableItem>> s=sMap.entrySet();
+		StringBuilder builder=new StringBuilder();
+		
+		for (Entry<String, SymbolTableItem> e : s) {
+			builder.append(e.getKey()).append(":").append(e.getValue()).append("\n");
+		}
+		return builder.toString();
+	}
+	
+	
 	
 	private class Info{
 		private Boolean actionInfo;
