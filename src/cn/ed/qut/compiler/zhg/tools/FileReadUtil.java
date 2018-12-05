@@ -15,7 +15,7 @@ public final class FileReadUtil {
 	}
 	
 	public static void sysoFile(String fileName){
-		List<String>list=FileReadUtil.readFile("a.c");
+		List<String>list=FileReadUtil.readFile(fileName);
 		
 		for (String string : list) {
 			System.out.println(string);

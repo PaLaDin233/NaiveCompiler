@@ -11,8 +11,10 @@ public class FourElement implements Serializable{
     private String op;//操作符
     private String arg1;//第一个操作数
     private String arg2;//第二个操作数
-    private Object result;//结果
+    private String result;//结果
     private int codeBlockNum;//四元式所在代码块号
+    private int objectCodeId;//四元式对应生成的第一条目标代码号
+    
     public FourElement(){
 
     }
@@ -34,13 +36,13 @@ public class FourElement implements Serializable{
 	/**
 	 * @return result
 	 */
-	public Object getResult() {
+	public String getResult() {
 		return result;
 	}
 	/**
 	 * @param result 要设置的 result
 	 */
-	public void setResult(Object result) {
+	public void setResult(String result) {
 		this.result = result;
 	}
 	/**
@@ -103,4 +105,24 @@ public class FourElement implements Serializable{
 	public void setCodeBlockNum(int codeBlockNum) {
 		this.codeBlockNum = codeBlockNum;
 	}
+	@Override
+	public String toString() {
+		StringBuilder builder=new StringBuilder();
+		builder.append(result).append("=").append(arg1).append(op).append(arg2);
+		return builder.toString();
+	}
+	/**
+	 * @return objectCodeId
+	 */
+	public int getObjectCodeId() {
+		return objectCodeId;
+	}
+	/**
+	 * @param objectCodeId 要设置的 objectCodeId
+	 */
+	public void setObjectCodeId(int objectCodeId) {
+		this.objectCodeId = objectCodeId;
+	}
+	
+	
 }
