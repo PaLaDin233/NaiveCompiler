@@ -1,4 +1,4 @@
-package cn.ed.qut.compiler.base.parsing;
+package cn.ed.qut.compiler.zhg.parsing;
 
 import cn.ed.qut.compiler.base.wordSegmenter.Word;
 
