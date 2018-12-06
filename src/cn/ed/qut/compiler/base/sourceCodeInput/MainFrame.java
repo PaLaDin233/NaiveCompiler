@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 
 import cn.ed.qut.compiler.base.objectCodeGeneration.Asm;
 import cn.ed.qut.compiler.base.parsing.LexAnalyse;
@@ -31,17 +32,18 @@ public class MainFrame extends JFrame {
 	public MainFrame() {
 		this.init();
 	}
-
+	
 	public void init() {
 
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Dimension screen = toolkit.getScreenSize();
-		setTitle("C语言小型编译器");
+		setTitle("Naive!Compiler!");
 		setSize(750, 480);
 		super.setResizable(false);
 		super.setLocation(screen.width / 2 - this.getWidth() / 2, screen.height
 				/ 2 - this.getHeight() / 2);
 		this.setContentPane(this.createContentPane());
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
 	private JPanel createContentPane() {
@@ -110,6 +112,7 @@ public class MainFrame extends JFrame {
 				System.exit(-1);
 			}
 		});
+		
 		ananlyseMenuItem.addActionListener(new ActionListener() {
 			
 			@Override
@@ -117,6 +120,10 @@ public class MainFrame extends JFrame {
 				try {
 					lexAnalyse=new LexAnalyse(sourseFile.getText());
 					wordListPath = lexAnalyse.outputWordList();
+					if(lexAnalyse.isFail()){
+						int i=lexAnalyse.errorList.get(0).getLine();
+						setErrorLine(i);
+					}
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -134,6 +141,10 @@ public class MainFrame extends JFrame {
 				parser=new Parser(lexAnalyse);
 				try {
 					parser.grammerAnalyse();
+					if(parser.graErrorFlag){
+						   int i=parser.errorList.get(0).getLine();
+						   setErrorLine(i);
+						}
 					LL1Path= parser.outputLL1();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -228,7 +239,19 @@ public class MainFrame extends JFrame {
 		this.setJMenuBar(menuBar);
 
 	}
-
+	public void setErrorLine(int i){
+		try {
+			sourseFile.requestFocus();
+			int selectionStart = sourseFile.getLineStartOffset(i-1);
+			int selectionEnd = sourseFile.getLineEndOffset(i-1);
+			sourseFile.setSelectionStart(selectionStart);
+			sourseFile.setSelectionEnd(selectionEnd);
+			sourseFile.setSelectionColor(Color.red);
+		} catch (BadLocationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 	public static String readFile(String fileName) throws IOException {
 		StringBuilder sbr = new StringBuilder();
 		String str;
