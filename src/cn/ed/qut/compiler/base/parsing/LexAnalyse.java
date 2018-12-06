@@ -656,7 +656,6 @@ public class LexAnalyse {
 	}
 
 	public String outputWordList() throws IOException {
-		System.out.println(typelist);
 		File file = new File("./result/");
 		if (!file.exists()) {
 			file.mkdirs();
@@ -696,7 +695,6 @@ public class LexAnalyse {
 		for(Typeword x : typelist ){
 			list.add(x.getValue());
 		}
-		System.out.println(list.toString());
 		return list;
 		
 	}

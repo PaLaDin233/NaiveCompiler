@@ -134,6 +134,12 @@ public abstract class ObjectCodeGenerater {
 		int id=-1;
 		BaseBlock b=null;
 		for (FourElement fourElement : elements) {
+			if(fourElement.getArg1().equals("/")){
+				fourElement.setArg1(null);
+			}
+			if(fourElement.getArg2().equals("/")){
+				fourElement.setArg2(null);
+			}
 			//当四元式的初步基本块id与当前基本块号不相等时，生成新的基本块，将新的基本块加入基本块列表中
 			if(fourElement.getCodeBlockNum()!=id){
 				if(b!=null)b.setBaseBlockSymbolTable();
@@ -233,7 +239,7 @@ public abstract class ObjectCodeGenerater {
 	}
 
 	public String getFileName() {
-		return fileName;
+		return fileName+objectCodeExtensionName;
 	}
 
 	public void setFileName(String fileName) {

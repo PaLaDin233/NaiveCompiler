@@ -34,8 +34,6 @@ public class Asm {
 		asmCode(fourElemList);
 		asmTail();
 		
-		for(int i=0;i<asmCodeList.size();i++)
-			System.out.println(asmCodeList.get(i));
 		
 //		try {
 //			makdir();
@@ -150,7 +148,7 @@ public class Asm {
 	public void asmCode(ArrayList<FourElement> fourElemList) {
 		 
 		int position=endPosition(fourElemList);//获取运算的出口位置
-		System.out.println("位置"+position);
+		System.out.println("出口位置"+position);
 		
 		for (int i = 0; i < fourElemList.size(); i++) {
 			

@@ -121,7 +121,7 @@ public class Parser {
 		while_rj=new Stack<Integer>();
 		for_fj=new Stack<Integer>();
 		for_rj=new Stack<Integer>();
-
+		blockNum=0;
 	}
 	public void grammerAnalyse(){//LL1分析方法进行语法分析
 		if(lexAnalyse.isFail())javax.swing.JOptionPane.showMessageDialog(null, "词法分析未通过，不能进行语法分析");
@@ -139,11 +139,6 @@ public class Parser {
 				graErrorFlag=true;
 				break;
 			}
-			//		if(){
-			//			System.out.println("EEEEEE");
-			//			break;
-			//		}
-
 			top=analyseStack.get(0);//当前栈顶元素
 			firstWord=wordList.get(0);//待分析单词
 			if(firstWord.getValue().equals("#")//正常结束
@@ -165,12 +160,12 @@ public class Parser {
 				nonTermOP(top.getName());	
 			}else if(top.getType().equals(AnalyseNode.ACTIONSIGN)){//栈顶是动作符号时的处理
 				actionSignOP();
+				blockNum++;
 			}
 
 			bf.append("当前分析栈:");
 			for(int i=0;i<analyseStack.size();i++){
 				bf.append(analyseStack.get(i).getName());
-				//System.out.println(analyseStack.get(i).name);
 			}
 			bf.append("\t").append("余留符号串：");
 			for(int j=0;j<wordList.size();j++){
@@ -181,6 +176,7 @@ public class Parser {
 				bf.append(semanticStack.get(k));
 			}
 		}
+		
 	}
 	private void termOP(String term) {
 		if (
@@ -191,7 +187,6 @@ public class Parser {
 				|| (term.equals("id") && firstWord.getType().equals(Word.IDENTIFIER))
 				||(term.equals("\"%d\"")&&firstWord.getType().equals(Word.IDENTIFIER))
 				){
-			System.out.println("name:"+term+"   "+"succeful");
 			analyseStack.remove(0);
 			wordList.remove(0);
 		} 
@@ -200,7 +195,6 @@ public class Parser {
 			analyseStack.remove(0);
 			wordList.remove(0);
 			error = new Error(errorCount, "语法错误", firstWord.getLine(), firstWord);
-			System.out.println("name:"+term+"   "+"defeat"+"  "+errorCount);
 			errorList.add(error);
 			graErrorFlag = true;
 		}
@@ -759,6 +753,10 @@ public class Parser {
 
 		}
 	}
+	/**
+	 * 基本块号
+	 */
+	private static int blockNum=0;
 	private void actionSignOP(){
 		if(top.getName().equals("@ADD_SUB")){
 			if(OP!=null&&(OP.equals("+")||OP.equals("-"))){
@@ -766,7 +764,7 @@ public class Parser {
 				ARG1=semanticStack.pop();
 				RES=newTemp();
 				//fourElemCount++;
-				FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,ARG2,RES);
+				FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,ARG2,RES,blockNum);
 				fourElemList.add(fourElem);
 				L.setValue(RES);
 				semanticStack.push(L.getValue());
@@ -786,7 +784,7 @@ public class Parser {
 				ARG1=semanticStack.pop();
 				RES=newTemp();
 				//fourElemCount++;
-				FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,ARG2,RES);
+				FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,ARG2,RES,blockNum);
 				fourElemList.add(fourElem);
 				T.setValue(RES);
 				semanticStack.push(T.getValue());
@@ -853,7 +851,7 @@ public class Parser {
 				ARG1=semanticStack.pop();
 				RES=ARG1;
 				//fourElemCount++;
-				FourElement fourElem=new FourElement(++fourElemCount,for_op.pop(),ARG1,"/",RES);
+				FourElement fourElem=new FourElement(++fourElemCount,for_op.pop(),ARG1,"/",RES,blockNum);
 				fourElemList.add(fourElem);
 			}
 			analyseStack.remove(0);
@@ -865,7 +863,7 @@ public class Parser {
 			ARG1=semanticStack.pop();
 			RES=semanticStack.pop();;
 			//fourElemCount++;
-			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/",RES);
+			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/",RES,blockNum);
 			fourElemList.add(fourElem);
 			OP=null;
 			analyseStack.remove(0);
@@ -875,7 +873,7 @@ public class Parser {
 			ARG1=semanticStack.pop();
 			RES=semanticStack.pop();;
 			//fourElemCount++;
-			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/",RES);
+			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/",RES,blockNum);
 			fourElemList.add(fourElem);
 			OP=null;
 			analyseStack.remove(0);
@@ -885,7 +883,7 @@ public class Parser {
 			ARG1=semanticStack.pop();
 			RES=newTemp();
 			//fourElemCount++;
-			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,ARG2,RES);
+			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,ARG2,RES,blockNum);
 			fourElemList.add(fourElem);
 			G.setValue(RES);
 			semanticStack.push(G.getValue());
@@ -898,7 +896,7 @@ public class Parser {
 		}else if(top.getName().equals("@IF_FJ")){
 			OP="FJ";
 			ARG1=semanticStack.pop();
-			FourElement fourElem=new FourElement(++fourElemCount,OP,RES,ARG1,"/");
+			FourElement fourElem=new FourElement(++fourElemCount,OP,RES,ARG1,"/",blockNum);
 			if_fj.push(fourElemCount);
 			fourElemList.add(fourElem);
 			OP=null;
@@ -906,7 +904,7 @@ public class Parser {
 		}else if(top.getName().equals("@SCANF")){
 			OP="SCANF";
 			ARG1=semanticStack.pop();
-			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/","/");
+			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/","/",blockNum);
 			//		if_fj.push(fourElemCount);
 			fourElemList.add(fourElem);
 			OP=null;
@@ -914,7 +912,7 @@ public class Parser {
 		}else if(top.getName().equals("@PRINTF")){
 			OP="PRINTF";
 			ARG1=semanticStack.pop();
-			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/","/");
+			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/","/",blockNum);
 			//		if_fj.push(fourElemCount);
 			fourElemList.add(fourElem);
 			OP=null;
@@ -924,7 +922,7 @@ public class Parser {
 			analyseStack.remove(0);
 		}else if(top.getName().equals("@IF_RJ")){
 			OP="RJ";
-			FourElement fourElem=new FourElement(++fourElemCount,OP,"/","/","/");
+			FourElement fourElem=new FourElement(++fourElemCount,OP,"/","/","/",blockNum);
 			if_rj.push(fourElemCount);
 			fourElemList.add(fourElem);
 			OP=null;
@@ -935,7 +933,7 @@ public class Parser {
 		}else if(top.getName().equals("@WHILE_FJ")){
 			OP="FJ";
 			ARG1=semanticStack.pop();
-			FourElement fourElem=new FourElement(++fourElemCount,OP,"/",ARG1,"/");
+			FourElement fourElem=new FourElement(++fourElemCount,OP,"/",ARG1,"/",blockNum);
 			while_fj.push(fourElemCount);
 			fourElemList.add(fourElem);
 			OP=null;
@@ -943,7 +941,7 @@ public class Parser {
 		}else if(top.getName().equals("@WHILE_RJ")){
 			OP="RJ";
 			RES=(while_fj.peek()-1)+"";
-			FourElement fourElem=new FourElement(++fourElemCount,OP,RES,"/","/");
+			FourElement fourElem=new FourElement(++fourElemCount,OP,RES,"/","/",blockNum);
 			for_rj.push(fourElemCount);
 			fourElemList.add(fourElem);
 			OP=null;
@@ -954,7 +952,7 @@ public class Parser {
 		}else if(top.getName().equals("@FOR_FJ")){
 			OP="FJ";
 			ARG1=semanticStack.pop();
-			FourElement fourElem=new FourElement(++fourElemCount,OP,"/",ARG1,"/");
+			FourElement fourElem=new FourElement(++fourElemCount,OP,"/",ARG1,"/",blockNum);
 			for_fj.push(fourElemCount);
 			fourElemList.add(fourElem);
 			OP=null;
@@ -962,7 +960,7 @@ public class Parser {
 		}else if(top.getName().equals("@FOR_RJ")){
 			OP="RJ";
 			RES=(for_fj.peek()-1)+"";
-			FourElement fourElem=new FourElement(++fourElemCount,OP,RES,"/","/");
+			FourElement fourElem=new FourElement(++fourElemCount,OP,RES,"/","/",blockNum);
 			for_rj.push(fourElemCount);
 			fourElemList.add(fourElem);
 			OP=null;
@@ -981,7 +979,7 @@ public class Parser {
 	}
 	public String outputLL1() throws IOException{
 		//grammerAnalyse();
-		File file=new File("./result/");
+		File file=new File("./output/");
 		if(!file.exists()){
 			file.mkdirs();
 			file.createNewFile();//如果这个文件不存在就创建它
@@ -1010,7 +1008,7 @@ public class Parser {
 	}
 	public String outputFourElem() throws IOException{
 
-		File file=new File("./result/");
+		File file=new File("./output/");
 		if(!file.exists()){
 			file.mkdirs();
 			file.createNewFile();//如果这个文件不存在就创建它
