@@ -197,9 +197,10 @@ public abstract class ObjectCodeGenerater {
 	/**
 	 * 目标代码生成入口
 	 * @return 生成的目标代码文件
+	 * @throws IOException 
 	 * @throws Exception
 	 */
-	public File generator() throws Exception{
+	public File generator() throws IOException{
 		for (BaseBlock baseBlock : getBaseBlocks()) {
 			baseBlockToObjectCode(baseBlock);
 		}
@@ -220,7 +221,7 @@ public abstract class ObjectCodeGenerater {
 			}
 			fileWriter.close();
 		}else{
-			throw new Exception("文件写入失败");
+			throw new IOException("文件写入失败");
 		}
 
 		return file;

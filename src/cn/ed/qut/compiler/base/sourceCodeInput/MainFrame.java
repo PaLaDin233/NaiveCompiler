@@ -10,6 +10,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -102,8 +104,8 @@ public class MainFrame extends JFrame {
 						soursePath =chooser.getSelectedFile().getPath();
 						text = readFile(soursePath);
 						sourseFile.setText(text);
-					} catch (IOException e1) {
-						e1.printStackTrace();
+					}catch (Exception e1) {
+						javax.swing.JOptionPane.showMessageDialog(null,"非法操作！");
 					}
 				}
 			}
@@ -127,9 +129,8 @@ public class MainFrame extends JFrame {
 						int i=lexAnalyse.errorList.get(0).getLine();
 						setErrorLine(i);
 					}
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				}catch (Exception e1) {
+					javax.swing.JOptionPane.showMessageDialog(null,"非法操作！");
 				}
 				InfoFrame inf = new InfoFrame("词法分析", wordListPath);
 
@@ -140,21 +141,26 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				lexAnalyse=new LexAnalyse(sourseFile.getText());
-				parser=new Parser(lexAnalyse);
 				try {
+					lexAnalyse = new LexAnalyse(sourseFile.getText());
+				} catch (Exception e2) {
+					javax.swing.JOptionPane.showMessageDialog(null,"请选择文件！");
+					return;
+				}
+				try {
+					parser=new Parser(lexAnalyse);
 					parser.grammerAnalyse();
 					if(parser.graErrorFlag){
 						   int i=parser.errorList.get(0).getLine();
 						   setErrorLine(i);
 						}
 					LL1Path= parser.outputLL1();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					InfoFrame inf = new InfoFrame("语法分析", LL1Path);
+					inf.setVisible(true);
+				}catch (Exception e1) {
+					javax.swing.JOptionPane.showMessageDialog(null,"非法操作！");
 				}
-				InfoFrame inf = new InfoFrame("语法分析", LL1Path);
-				inf.setVisible(true);
+				
 				
 			}
 		});
@@ -163,13 +169,17 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					lexAnalyse=new LexAnalyse(sourseFile.getText());
+					lexAnalyse = new LexAnalyse(sourseFile.getText());
+				} catch (Exception e2) {
+					javax.swing.JOptionPane.showMessageDialog(null,"请选择文件！");
+					return;
+				}
+				try {
 					parser=new Parser(lexAnalyse);
 					parser.grammerAnalyse();
 					fourElementPath=parser.outputFourElem();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				}catch (Exception e1) {
+					javax.swing.JOptionPane.showMessageDialog(null,"非法操作！");
 				}
 				InfoFrame inf = new InfoFrame("中间代码生成", fourElementPath);
 				inf.setVisible(true);
@@ -180,7 +190,12 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//获取标识符
-				lexAnalyse = new LexAnalyse(sourseFile.getText());
+				try {
+					lexAnalyse = new LexAnalyse(sourseFile.getText());
+				} catch (Exception e2) {
+					javax.swing.JOptionPane.showMessageDialog(null,"请选择文件！");
+					return;
+				}
 				ArrayList<Word> wordList;
 				wordList = lexAnalyse.getWordList();
 				ArrayList<String> id = new ArrayList<String>();
@@ -201,9 +216,8 @@ public class MainFrame extends JFrame {
 				try {
 					inf = new InfoFrame("8086汇编代码", asm.getAsmFile());
 					inf.setVisible(true);		
-				} catch (IOException e1) {
-					// TODO 自动生成的 catch 块
-					e1.printStackTrace();
+				}catch (Exception e1) {
+					javax.swing.JOptionPane.showMessageDialog(null,"非法操作！");
 				}
 				
 			}
@@ -213,15 +227,18 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//获取标识符
-				lexAnalyse = new LexAnalyse(sourseFile.getText());
+				try {
+					lexAnalyse = new LexAnalyse(sourseFile.getText());
+				} catch (Exception e2) {
+					javax.swing.JOptionPane.showMessageDialog(null,"请选择文件！");
+					return;
+				}
 				ArrayList<Word> wordList;
 				wordList = lexAnalyse.getWordList();
-				ArrayList<String> id = new ArrayList<String>();
+				Set<String> id = new HashSet<String>();
 				for (Word word : wordList) {
 					if(word.getType().equals(Word.IDENTIFIER)){
-						if(!id.contains(word.getValue())){
-							id.add(word.getValue());
-						}
+						id.add(word.getValue());
 					}
 				}
 				for (String string : id) {
@@ -246,10 +263,14 @@ public class MainFrame extends JFrame {
 					file=generator.generator();
 					inf = new InfoFrame("MIPS汇编代码", file.getPath());
 					inf.setVisible(true);
-				} catch (Exception e1) {
+				} catch (NullPointerException e2) {
 					// TODO 自动生成的 catch 块
-					javax.swing.JOptionPane.showMessageDialog(null, "异常！");
-					e1.printStackTrace();
+					int i=parser.errorList.get(0).getLine();
+					   setErrorLine(i);
+					javax.swing.JOptionPane.showMessageDialog(null,parser.errorList.get(0).getInfo() );
+					
+				}catch (Exception e1) {
+					javax.swing.JOptionPane.showMessageDialog(null,"非法操作！");
 				}
 				
 				

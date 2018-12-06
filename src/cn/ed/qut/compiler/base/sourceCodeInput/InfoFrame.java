@@ -20,25 +20,25 @@ public class InfoFrame extends JFrame {
 	private static final long serialVersionUID = 8766059377195109228L;
 	private static String title;
 	private static String fileName;
-	
+
 	private static TextArea text;
-	
+
 	public InfoFrame() {
 		init();
-		
+
 	}
-public InfoFrame(String title,String fileName){
-	this.title=title;
-	this.fileName=fileName;
-	init();
-	this.setTitle(title);
-	try {
-		readFile(fileName);
-	} catch (IOException e) {
-		
-		e.printStackTrace();
-	}	
-}
+	public InfoFrame(String title,String fileName){
+		this.title=title;
+		this.fileName=fileName;
+		init();
+		this.setTitle(title);
+		try {
+			readFile(fileName);
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}	
+	}
 	private void init() {
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Dimension screen = toolkit.getScreenSize();
@@ -57,18 +57,18 @@ public InfoFrame(String title,String fileName){
 		return pane;
 	}
 	private String readFile(String filename) 
-	throws IOException{
+			throws IOException{
 		StringBuilder sbr = new StringBuilder();
 		String str;
-			FileInputStream fis = new FileInputStream(filename);
-			BufferedInputStream bis = new BufferedInputStream(fis);
-			InputStreamReader isr = new InputStreamReader(bis, "UTF-8");
-			BufferedReader in=new BufferedReader(isr);
-			while((str=in.readLine())!=null){
-				sbr.append(str).append('\n');
-			}
-			in.close();
-			text.setText(sbr.toString());
+		FileInputStream fis = new FileInputStream(filename);
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		InputStreamReader isr = new InputStreamReader(bis, "UTF-8");
+		BufferedReader in=new BufferedReader(isr);
+		while((str=in.readLine())!=null){
+			sbr.append(str).append('\n');
+		}
+		in.close();
+		text.setText(sbr.toString());
 		return sbr.toString();
 	}
 	public static String getTitl() {
@@ -96,8 +96,8 @@ public InfoFrame(String title,String fileName){
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-InfoFrame inf=new InfoFrame("锟斤拷锟斤拷","test.txt");
-inf.setVisible(true);
+		InfoFrame inf=new InfoFrame("锟斤拷锟斤拷","test.txt");
+		inf.setVisible(true);
 	}
 
 }
