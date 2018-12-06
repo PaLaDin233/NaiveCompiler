@@ -47,990 +47,990 @@ public class Parser {
 	Stack<Integer>if_fj,if_rj,while_fj,while_rj,for_fj,for_rj;//if while for 跳转地址栈
 	Stack<String>for_op=new Stack<String>();
 	public ArrayList<String> fourElemT=new ArrayList<String>();
-public Parser(){
-		
+	public Parser(){
+
 	}
-public Parser(LexAnalyse lexAnalyse){
+	public Parser(LexAnalyse lexAnalyse){
 		this.lexAnalyse=lexAnalyse;
 		this.wordList=lexAnalyse.wordList;
 		init();
 	}
-private String newTemp(){
-	tempCount++;
-	fourElemT.add("T"+tempCount);
-	return "T"+tempCount;
-}
-public void init(){
-	S=new AnalyseNode(AnalyseNode.NONTERMINAL, "S", null);
-	A=new AnalyseNode(AnalyseNode.NONTERMINAL, "A", null);
-	B=new AnalyseNode(AnalyseNode.NONTERMINAL, "B", null);
-	C=new AnalyseNode(AnalyseNode.NONTERMINAL, "C", null);
-	X=new AnalyseNode(AnalyseNode.NONTERMINAL, "X", null);
-	Y=new AnalyseNode(AnalyseNode.NONTERMINAL, "Y", null);
-	Z=new AnalyseNode(AnalyseNode.NONTERMINAL, "Z", null);
-	Z1=new AnalyseNode(AnalyseNode.NONTERMINAL, "Z'", null);
-	U=new AnalyseNode(AnalyseNode.NONTERMINAL, "U", null);
-	U1=new AnalyseNode(AnalyseNode.NONTERMINAL, "U'", null);
-	E=new AnalyseNode(AnalyseNode.NONTERMINAL, "E", null);
-	E1=new AnalyseNode(AnalyseNode.NONTERMINAL, "E'", null);
-	H=new AnalyseNode(AnalyseNode.NONTERMINAL, "H", null);
-	H1=new AnalyseNode(AnalyseNode.NONTERMINAL, "H'", null);
-	G=new AnalyseNode(AnalyseNode.NONTERMINAL, "G", null);
-	F=new AnalyseNode(AnalyseNode.NONTERMINAL, "F", null);
-	D=new AnalyseNode(AnalyseNode.NONTERMINAL, "D", null);
-	L=new AnalyseNode(AnalyseNode.NONTERMINAL, "L", null);
-	L1=new AnalyseNode(AnalyseNode.NONTERMINAL, "L'", null);
-	T=new AnalyseNode(AnalyseNode.NONTERMINAL, "T", null);
-	T1=new AnalyseNode(AnalyseNode.NONTERMINAL, "T'", null);
-	O=new AnalyseNode(AnalyseNode.NONTERMINAL, "O", null);
-	P=new AnalyseNode(AnalyseNode.NONTERMINAL, "P", null);
-	Q=new AnalyseNode(AnalyseNode.NONTERMINAL, "Q", null);
-	R=new AnalyseNode(AnalyseNode.NONTERMINAL, "R", null);
-	ADD_SUB=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@ADD_SUB", null);
-	ADD=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@ADD", null);
-	SUB=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@SUB", null);
-	DIV_MUL=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@DIV_MUL", null);
-	DIV=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@DIV", null);
-	MUL=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@MUL", null);
-	ASS_F=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@ASS_F", null);
-	ASS_R=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@ASS_R", null);
-	ASS_Q=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@ASS_Q", null);
-	ASS_U=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@ASS_U", null);
-	TRAN_LF=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@TRAN_LF", null);
-	SINGLE=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@SINGLE", null);
-	SINGLE_OP=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@SINGLE_OP", null);
-	EQ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@EQ", null);
-	EQ_U1=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@EQ_U'", null);
-	COMPARE=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@COMPARE", null);
-	COMPARE_OP=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@COMPARE_OP", null);
-	IF_FJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@IF_FJ", null);
-	SCANF=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@SCANF", null);
-	PRINTF=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@PRINTF", null);
-IF_RJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@IF_RJ", null);
-IF_BACKPATCH_FJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@IF_BACKPATCH_FJ", null);
-IF_BACKPATCH_RJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@IF_BACKPATCH_RJ", null);
- WHILE_FJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@WHILE_FJ", null);
-WHILE_RJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@WHILE_RJ", null);
-WHILE_BACKPATCH_FJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@WHILE_BACKPATCH_FJ", null);
-FOR_FJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@FOR_FJ", null);
-FOR_RJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@FOR_RJ", null);
-FOR_BACKPATCH_FJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@FOR_BACKPATCH_FJ", null);
-if_fj=new Stack<Integer>();
-if_rj=new Stack<Integer>();
-while_fj=new Stack<Integer>();
-while_rj=new Stack<Integer>();
-for_fj=new Stack<Integer>();
-for_rj=new Stack<Integer>();
-	
-}
-public void grammerAnalyse(){//LL1分析方法进行语法分析
-	if(lexAnalyse.isFail())javax.swing.JOptionPane.showMessageDialog(null, "词法分析未通过，不能进行语法分析");
-	bf=new StringBuffer();
-	int gcount=0;
-	error=null;
-	analyseStack.add(0,S);
-	analyseStack.add(1,new AnalyseNode(AnalyseNode.END, "#", null));
-	semanticStack.add("#");
-	while(!analyseStack.empty()&&!wordList.isEmpty()){
-		//System.out.println(fourElemCount);
-		bf.append('\n');
-		bf.append("步骤"+gcount+"\t");
-		if(gcount++>10000){
-			graErrorFlag=true;
-			break;
+	private String newTemp(){
+		tempCount++;
+		fourElemT.add("T"+tempCount);
+		return "T"+tempCount;
+	}
+	public void init(){
+		S=new AnalyseNode(AnalyseNode.NONTERMINAL, "S", null);
+		A=new AnalyseNode(AnalyseNode.NONTERMINAL, "A", null);
+		B=new AnalyseNode(AnalyseNode.NONTERMINAL, "B", null);
+		C=new AnalyseNode(AnalyseNode.NONTERMINAL, "C", null);
+		X=new AnalyseNode(AnalyseNode.NONTERMINAL, "X", null);
+		Y=new AnalyseNode(AnalyseNode.NONTERMINAL, "Y", null);
+		Z=new AnalyseNode(AnalyseNode.NONTERMINAL, "Z", null);
+		Z1=new AnalyseNode(AnalyseNode.NONTERMINAL, "Z'", null);
+		U=new AnalyseNode(AnalyseNode.NONTERMINAL, "U", null);
+		U1=new AnalyseNode(AnalyseNode.NONTERMINAL, "U'", null);
+		E=new AnalyseNode(AnalyseNode.NONTERMINAL, "E", null);
+		E1=new AnalyseNode(AnalyseNode.NONTERMINAL, "E'", null);
+		H=new AnalyseNode(AnalyseNode.NONTERMINAL, "H", null);
+		H1=new AnalyseNode(AnalyseNode.NONTERMINAL, "H'", null);
+		G=new AnalyseNode(AnalyseNode.NONTERMINAL, "G", null);
+		F=new AnalyseNode(AnalyseNode.NONTERMINAL, "F", null);
+		D=new AnalyseNode(AnalyseNode.NONTERMINAL, "D", null);
+		L=new AnalyseNode(AnalyseNode.NONTERMINAL, "L", null);
+		L1=new AnalyseNode(AnalyseNode.NONTERMINAL, "L'", null);
+		T=new AnalyseNode(AnalyseNode.NONTERMINAL, "T", null);
+		T1=new AnalyseNode(AnalyseNode.NONTERMINAL, "T'", null);
+		O=new AnalyseNode(AnalyseNode.NONTERMINAL, "O", null);
+		P=new AnalyseNode(AnalyseNode.NONTERMINAL, "P", null);
+		Q=new AnalyseNode(AnalyseNode.NONTERMINAL, "Q", null);
+		R=new AnalyseNode(AnalyseNode.NONTERMINAL, "R", null);
+		ADD_SUB=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@ADD_SUB", null);
+		ADD=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@ADD", null);
+		SUB=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@SUB", null);
+		DIV_MUL=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@DIV_MUL", null);
+		DIV=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@DIV", null);
+		MUL=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@MUL", null);
+		ASS_F=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@ASS_F", null);
+		ASS_R=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@ASS_R", null);
+		ASS_Q=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@ASS_Q", null);
+		ASS_U=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@ASS_U", null);
+		TRAN_LF=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@TRAN_LF", null);
+		SINGLE=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@SINGLE", null);
+		SINGLE_OP=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@SINGLE_OP", null);
+		EQ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@EQ", null);
+		EQ_U1=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@EQ_U'", null);
+		COMPARE=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@COMPARE", null);
+		COMPARE_OP=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@COMPARE_OP", null);
+		IF_FJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@IF_FJ", null);
+		SCANF=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@SCANF", null);
+		PRINTF=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@PRINTF", null);
+		IF_RJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@IF_RJ", null);
+		IF_BACKPATCH_FJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@IF_BACKPATCH_FJ", null);
+		IF_BACKPATCH_RJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@IF_BACKPATCH_RJ", null);
+		WHILE_FJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@WHILE_FJ", null);
+		WHILE_RJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@WHILE_RJ", null);
+		WHILE_BACKPATCH_FJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@WHILE_BACKPATCH_FJ", null);
+		FOR_FJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@FOR_FJ", null);
+		FOR_RJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@FOR_RJ", null);
+		FOR_BACKPATCH_FJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@FOR_BACKPATCH_FJ", null);
+		if_fj=new Stack<Integer>();
+		if_rj=new Stack<Integer>();
+		while_fj=new Stack<Integer>();
+		while_rj=new Stack<Integer>();
+		for_fj=new Stack<Integer>();
+		for_rj=new Stack<Integer>();
+
+	}
+	public void grammerAnalyse(){//LL1分析方法进行语法分析
+		if(lexAnalyse.isFail())javax.swing.JOptionPane.showMessageDialog(null, "词法分析未通过，不能进行语法分析");
+		bf=new StringBuffer();
+		int gcount=0;
+		error=null;
+		analyseStack.add(0,S);
+		analyseStack.add(1,new AnalyseNode(AnalyseNode.END, "#", null));
+		semanticStack.add("#");
+		while(!analyseStack.empty()&&!wordList.isEmpty()){
+			//System.out.println(fourElemCount);
+			bf.append('\n');
+			bf.append("步骤"+gcount+"\t");
+			if(gcount++>10000){
+				graErrorFlag=true;
+				break;
+			}
+			//		if(){
+			//			System.out.println("EEEEEE");
+			//			break;
+			//		}
+
+			top=analyseStack.get(0);//当前栈顶元素
+			firstWord=wordList.get(0);//待分析单词
+			if(firstWord.getValue().equals("#")//正常结束
+					&&top.getName().equals("#")){
+				bf.append("\n");
+				analyseStack.remove(0);
+				wordList.remove(0);
+
+			}
+			else if(top.getName().equals("#")){
+				analyseStack.remove(0);
+				graErrorFlag=true;
+				break;
+
+			}
+			else if(AnalyseNode.isTerm(top)){//终极符时的处理
+				termOP(top.getName());
+			}else if(AnalyseNode.isNonterm(top)){
+				nonTermOP(top.getName());	
+			}else if(top.getType().equals(AnalyseNode.ACTIONSIGN)){//栈顶是动作符号时的处理
+				actionSignOP();
+			}
+
+			bf.append("当前分析栈:");
+			for(int i=0;i<analyseStack.size();i++){
+				bf.append(analyseStack.get(i).getName());
+				//System.out.println(analyseStack.get(i).name);
+			}
+			bf.append("\t").append("余留符号串：");
+			for(int j=0;j<wordList.size();j++){
+				bf.append(wordList.get(j).getValue());
+			}
+			bf.append("\t").append("语义栈:");
+			for(int k=semanticStack.size()-1;k>=0;k--){
+				bf.append(semanticStack.get(k));
+			}
 		}
-//		if(){
-//			System.out.println("EEEEEE");
-//			break;
-//		}
-			
-		top=analyseStack.get(0);//当前栈顶元素
-		firstWord=wordList.get(0);//待分析单词
-		if(firstWord.getValue().equals("#")//正常结束
-				&&top.name.equals("#")){
-			bf.append("\n");
+	}
+	private void termOP(String term) {
+		if (
+				(firstWord.getType().equals(Word.INT_CONST)||firstWord.getType().equals(Word.CHAR_CONST))
+				||(firstWord.getType().equals(Word.OPERATOR)&&term.equals(firstWord.getValue()))
+				||(firstWord.getType().equals(Word.BOUNDARYSIGN)&&term.equals(firstWord.getValue()))
+				||(firstWord.getType().equals(Word.KEY)&&term.equals(firstWord.getValue()))
+				|| (term.equals("id") && firstWord.getType().equals(Word.IDENTIFIER))
+				||(term.equals("\"%d\"")&&firstWord.getType().equals(Word.IDENTIFIER))
+				){
+			System.out.println("name:"+term+"   "+"succeful");
 			analyseStack.remove(0);
 			wordList.remove(0);
-			
-		}
-		else if(top.name.equals("#")){
+		} 
+		else {
+			errorCount++;
 			analyseStack.remove(0);
-			graErrorFlag=true;
-			break;
-			
-		}
-		else if(AnalyseNode.isTerm(top)){//终极符时的处理
-			 termOP(top.name);
-		}else if(AnalyseNode.isNonterm(top)){
-			nonTermOP(top.name);	
-		}else if(top.type.equals(AnalyseNode.ACTIONSIGN)){//栈顶是动作符号时的处理
-			actionSignOP();
-		}
-		
-		bf.append("当前分析栈:");
-		for(int i=0;i<analyseStack.size();i++){
-			bf.append(analyseStack.get(i).name);
-			//System.out.println(analyseStack.get(i).name);
-		}
-		bf.append("\t").append("余留符号串：");
-		for(int j=0;j<wordList.size();j++){
-			bf.append(wordList.get(j).getValue());
-		}
-		bf.append("\t").append("语义栈:");
-		for(int k=semanticStack.size()-1;k>=0;k--){
-			bf.append(semanticStack.get(k));
+			wordList.remove(0);
+			error = new Error(errorCount, "语法错误", firstWord.getLine(), firstWord);
+			System.out.println("name:"+term+"   "+"defeat"+"  "+errorCount);
+			errorList.add(error);
+			graErrorFlag = true;
 		}
 	}
-}
-private void termOP(String term) {
-	if (
-		(firstWord.getType().equals(Word.INT_CONST)||firstWord.getType().equals(Word.CHAR_CONST))
-		||(firstWord.getType().equals(Word.OPERATOR)&&term.equals(firstWord.getValue()))
-		||(firstWord.getType().equals(Word.BOUNDARYSIGN)&&term.equals(firstWord.getValue()))
-		||(firstWord.getType().equals(Word.KEY)&&term.equals(firstWord.getValue()))
-		|| (term.equals("id") && firstWord.getType().equals(Word.IDENTIFIER))
-		||(term.equals("\"%d\"")&&firstWord.getType().equals(Word.IDENTIFIER))
-		){
-		System.out.println("name:"+term+"   "+"succeful");
-		analyseStack.remove(0);
-		wordList.remove(0);
-	} 
-	else {
-		errorCount++;
-		analyseStack.remove(0);
-		wordList.remove(0);
-		error = new Error(errorCount, "语法错误", firstWord.getLine(), firstWord);
-		System.out.println("name:"+term+"   "+"defeat"+"  "+errorCount);
-		errorList.add(error);
-		graErrorFlag = true;
-	}
-}
 
-private void nonTermOP(String nonTerm){
-	if(nonTerm.equals("Z'"))nonTerm="1";
-	if(nonTerm.equals("U'"))nonTerm="2";
-	if(nonTerm.equals("E'"))nonTerm="3";
-	if(nonTerm.equals("H'"))nonTerm="4";
-	if(nonTerm.equals("L'"))nonTerm="5";
-	if(nonTerm.equals("T'"))nonTerm="6";
-	switch(nonTerm.charAt(0)){//栈顶为非终结符处理
-	//N:S,B,A,C,,X,R,Z,Z’,U,U’,E,E’,H,H’,G,M,D,L,L’,T,T’,F,O,P,Q
-	case 'S':
-	if(firstWord.getValue().equals("void")){
-		analyseStack.remove(0);
-		analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "void", null));
-		analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "main", null));
-		analyseStack.add(2,new AnalyseNode(AnalyseNode.TERMINAL, "(", null));
-		analyseStack.add(3,new AnalyseNode(AnalyseNode.TERMINAL, ")", null));
-		analyseStack.add(4,new AnalyseNode(AnalyseNode.TERMINAL, "{", null));
-		analyseStack.add(5,A);
-		analyseStack.add(6,new AnalyseNode(AnalyseNode.TERMINAL, "}", null));
-	}else{
-		errorCount++;
-		analyseStack.remove(0);
-		wordList.remove(0);
-		error=new Error(errorCount,"主函数没有返回值",firstWord.getLine(),firstWord);
-		errorList.add(error);	
-		graErrorFlag=true;
-	}
-		break;
-	case 'A':
-		if(firstWord.getValue().equals("int")||firstWord.getValue().equals("char")
-				||firstWord.getValue().equals("bool")){
-			analyseStack.remove(0);
-			analyseStack.add(0,C);
-			analyseStack.add(1,A);
-		}else if(firstWord.getValue().equals("printf")){
-			analyseStack.remove(0);
-			analyseStack.add(0,C);
-			analyseStack.add(1,A);
-			
-		}
-		else if(firstWord.getValue().equals("scanf")){
-			analyseStack.remove(0);
-			analyseStack.add(0,C);
-			analyseStack.add(1,A);
-		}
-		else if(firstWord.getValue().equals("if")){
-			analyseStack.remove(0);
-			analyseStack.add(0,C);
-			analyseStack.add(1,A);
-		}
-		else if(firstWord.getValue().equals("while")){
-			analyseStack.remove(0);
-			analyseStack.add(0,C);
-			analyseStack.add(1,A);
-		}
-		else if(firstWord.getValue().equals("for")){
-			analyseStack.remove(0);
-			analyseStack.add(0,C);
-			analyseStack.add(1,A);
+	private void nonTermOP(String nonTerm){
+		if(nonTerm.equals("Z'"))nonTerm="1";
+		if(nonTerm.equals("U'"))nonTerm="2";
+		if(nonTerm.equals("E'"))nonTerm="3";
+		if(nonTerm.equals("H'"))nonTerm="4";
+		if(nonTerm.equals("L'"))nonTerm="5";
+		if(nonTerm.equals("T'"))nonTerm="6";
+		switch(nonTerm.charAt(0)){//栈顶为非终结符处理
+		//N:S,B,A,C,,X,R,Z,Z’,U,U’,E,E’,H,H’,G,M,D,L,L’,T,T’,F,O,P,Q
+		case 'S':
+			if(firstWord.getValue().equals("void")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "void", null));
+				analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "main", null));
+				analyseStack.add(2,new AnalyseNode(AnalyseNode.TERMINAL, "(", null));
+				analyseStack.add(3,new AnalyseNode(AnalyseNode.TERMINAL, ")", null));
+				analyseStack.add(4,new AnalyseNode(AnalyseNode.TERMINAL, "{", null));
+				analyseStack.add(5,A);
+				analyseStack.add(6,new AnalyseNode(AnalyseNode.TERMINAL, "}", null));
+			}else{
+				errorCount++;
+				analyseStack.remove(0);
+				wordList.remove(0);
+				error=new Error(errorCount,"主函数没有返回值",firstWord.getLine(),firstWord);
+				errorList.add(error);	
+				graErrorFlag=true;
 			}
-		else if(firstWord.getType().equals(Word.IDENTIFIER)){
-			analyseStack.remove(0);
-			analyseStack.add(0,C);
-			analyseStack.add(1,A);
-		}else{
-			analyseStack.remove(0);
-		}
-		break;
-	
-	case 'B':
- if (firstWord.getValue().equals("printf")) {
-		analyseStack.remove(0);
-		analyseStack.add(0, new AnalyseNode(AnalyseNode.TERMINAL,"printf", null));
-		analyseStack.add(1, new AnalyseNode(AnalyseNode.TERMINAL, "(",null));
-		analyseStack.add(2, new AnalyseNode(AnalyseNode.TERMINAL, "\"%d\"",null));
-		analyseStack.add(3, new AnalyseNode(AnalyseNode.TERMINAL, ",",null));
-		analyseStack.add(4,F);
-		analyseStack.add(5, new AnalyseNode(AnalyseNode.TERMINAL, ")",null));
-		analyseStack.add(6,PRINTF);
-		analyseStack.add(7, A);
-		analyseStack.add(8, new AnalyseNode(AnalyseNode.TERMINAL, ";",null));
-	}
- 
-		else if (firstWord.getValue().equals("scanf")) {
-			analyseStack.remove(0);
-			analyseStack.add(0, new AnalyseNode(AnalyseNode.TERMINAL,
-					"scanf", null));
-			analyseStack.add(1, new AnalyseNode(AnalyseNode.TERMINAL, "(",
-					null));
-			analyseStack.add(2, new AnalyseNode(AnalyseNode.TERMINAL, "\"%d\"",
-					null));
-			analyseStack.add(3, new AnalyseNode(AnalyseNode.TERMINAL, ",",
-					null));
-			analyseStack.add(4, new AnalyseNode(AnalyseNode.TERMINAL, "&",
-					null));
-			analyseStack.add(5,F);
-			analyseStack.add(6, new AnalyseNode(AnalyseNode.TERMINAL, ")",
-					null));
-			analyseStack.add(7,SCANF);
-			analyseStack.add(8, A);
-			analyseStack.add(9, new AnalyseNode(AnalyseNode.TERMINAL, ";",
-					null));
-		}
-		else if(firstWord.getValue().equals("if")){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "if", null));
-			analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "(", null));
-			analyseStack.add(2,G);
-			analyseStack.add(3,new AnalyseNode(AnalyseNode.TERMINAL, ")", null));
-			analyseStack.add(4,IF_FJ);
-			analyseStack.add(5,new AnalyseNode(AnalyseNode.TERMINAL, "{", null));
-			analyseStack.add(6,A);
-			analyseStack.add(7,new AnalyseNode(AnalyseNode.TERMINAL, "}", null));
-			analyseStack.add(8,IF_BACKPATCH_FJ);
-			analyseStack.add(9,IF_RJ);
-			analyseStack.add(10,new AnalyseNode(AnalyseNode.TERMINAL, "else", null));
-			analyseStack.add(11,new AnalyseNode(AnalyseNode.TERMINAL, "{", null));
-			analyseStack.add(12,A);
-			analyseStack.add(13,new AnalyseNode(AnalyseNode.TERMINAL, "}", null));
-			analyseStack.add(14,IF_BACKPATCH_RJ);
-		}
-		else if(firstWord.getValue().equals("while")){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "while", null));
-			analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "(", null));
-			analyseStack.add(2,G);
-			analyseStack.add(3,new AnalyseNode(AnalyseNode.TERMINAL, ")", null));
-			analyseStack.add(4,WHILE_FJ);
-			analyseStack.add(5,new AnalyseNode(AnalyseNode.TERMINAL, "{", null));
-			analyseStack.add(6,A);
-			analyseStack.add(7,new AnalyseNode(AnalyseNode.TERMINAL, "}", null));
-			analyseStack.add(8,WHILE_RJ);
-			analyseStack.add(9,WHILE_BACKPATCH_FJ);
-		}
-		else if(firstWord.getValue().equals("for")){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "for", null));
-			analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "(", null));
-			analyseStack.add(2,Y);
-			analyseStack.add(3,Z);
-			analyseStack.add(4,new AnalyseNode(AnalyseNode.TERMINAL, ";", null));
-			analyseStack.add(5,G);
-			analyseStack.add(6,FOR_FJ);
-			analyseStack.add(7,new AnalyseNode(AnalyseNode.TERMINAL, ";", null));
-			analyseStack.add(8,Q);
-			analyseStack.add(9,new AnalyseNode(AnalyseNode.TERMINAL, ")", null));
-			analyseStack.add(10,new AnalyseNode(AnalyseNode.TERMINAL, "{", null));
-			analyseStack.add(11,A);
-			analyseStack.add(12,SINGLE);
-			analyseStack.add(13,new AnalyseNode(AnalyseNode.TERMINAL, "}", null));
-			analyseStack.add(14,FOR_RJ);
-			analyseStack.add(15,FOR_BACKPATCH_FJ);
-		}
-		else{
-			analyseStack.remove(0);
-		}
-		break;
-	case 'C':
-		
+			break;
+		case 'A':
+			if(firstWord.getValue().equals("int")||firstWord.getValue().equals("char")
+					||firstWord.getValue().equals("bool")){
+				analyseStack.remove(0);
+				analyseStack.add(0,C);
+				analyseStack.add(1,A);
+			}else if(firstWord.getValue().equals("printf")){
+				analyseStack.remove(0);
+				analyseStack.add(0,C);
+				analyseStack.add(1,A);
+
+			}
+			else if(firstWord.getValue().equals("scanf")){
+				analyseStack.remove(0);
+				analyseStack.add(0,C);
+				analyseStack.add(1,A);
+			}
+			else if(firstWord.getValue().equals("if")){
+				analyseStack.remove(0);
+				analyseStack.add(0,C);
+				analyseStack.add(1,A);
+			}
+			else if(firstWord.getValue().equals("while")){
+				analyseStack.remove(0);
+				analyseStack.add(0,C);
+				analyseStack.add(1,A);
+			}
+			else if(firstWord.getValue().equals("for")){
+				analyseStack.remove(0);
+				analyseStack.add(0,C);
+				analyseStack.add(1,A);
+			}
+			else if(firstWord.getType().equals(Word.IDENTIFIER)){
+				analyseStack.remove(0);
+				analyseStack.add(0,C);
+				analyseStack.add(1,A);
+			}else{
+				analyseStack.remove(0);
+			}
+			break;
+
+		case 'B':
+			if (firstWord.getValue().equals("printf")) {
+				analyseStack.remove(0);
+				analyseStack.add(0, new AnalyseNode(AnalyseNode.TERMINAL,"printf", null));
+				analyseStack.add(1, new AnalyseNode(AnalyseNode.TERMINAL, "(",null));
+				analyseStack.add(2, new AnalyseNode(AnalyseNode.TERMINAL, "\"%d\"",null));
+				analyseStack.add(3, new AnalyseNode(AnalyseNode.TERMINAL, ",",null));
+				analyseStack.add(4,F);
+				analyseStack.add(5, new AnalyseNode(AnalyseNode.TERMINAL, ")",null));
+				analyseStack.add(6,PRINTF);
+				analyseStack.add(7, A);
+				analyseStack.add(8, new AnalyseNode(AnalyseNode.TERMINAL, ";",null));
+			}
+
+			else if (firstWord.getValue().equals("scanf")) {
+				analyseStack.remove(0);
+				analyseStack.add(0, new AnalyseNode(AnalyseNode.TERMINAL,
+						"scanf", null));
+				analyseStack.add(1, new AnalyseNode(AnalyseNode.TERMINAL, "(",
+						null));
+				analyseStack.add(2, new AnalyseNode(AnalyseNode.TERMINAL, "\"%d\"",
+						null));
+				analyseStack.add(3, new AnalyseNode(AnalyseNode.TERMINAL, ",",
+						null));
+				analyseStack.add(4, new AnalyseNode(AnalyseNode.TERMINAL, "&",
+						null));
+				analyseStack.add(5,F);
+				analyseStack.add(6, new AnalyseNode(AnalyseNode.TERMINAL, ")",
+						null));
+				analyseStack.add(7,SCANF);
+				analyseStack.add(8, A);
+				analyseStack.add(9, new AnalyseNode(AnalyseNode.TERMINAL, ";",
+						null));
+			}
+			else if(firstWord.getValue().equals("if")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "if", null));
+				analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "(", null));
+				analyseStack.add(2,G);
+				analyseStack.add(3,new AnalyseNode(AnalyseNode.TERMINAL, ")", null));
+				analyseStack.add(4,IF_FJ);
+				analyseStack.add(5,new AnalyseNode(AnalyseNode.TERMINAL, "{", null));
+				analyseStack.add(6,A);
+				analyseStack.add(7,new AnalyseNode(AnalyseNode.TERMINAL, "}", null));
+				analyseStack.add(8,IF_BACKPATCH_FJ);
+				analyseStack.add(9,IF_RJ);
+				analyseStack.add(10,new AnalyseNode(AnalyseNode.TERMINAL, "else", null));
+				analyseStack.add(11,new AnalyseNode(AnalyseNode.TERMINAL, "{", null));
+				analyseStack.add(12,A);
+				analyseStack.add(13,new AnalyseNode(AnalyseNode.TERMINAL, "}", null));
+				analyseStack.add(14,IF_BACKPATCH_RJ);
+			}
+			else if(firstWord.getValue().equals("while")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "while", null));
+				analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "(", null));
+				analyseStack.add(2,G);
+				analyseStack.add(3,new AnalyseNode(AnalyseNode.TERMINAL, ")", null));
+				analyseStack.add(4,WHILE_FJ);
+				analyseStack.add(5,new AnalyseNode(AnalyseNode.TERMINAL, "{", null));
+				analyseStack.add(6,A);
+				analyseStack.add(7,new AnalyseNode(AnalyseNode.TERMINAL, "}", null));
+				analyseStack.add(8,WHILE_RJ);
+				analyseStack.add(9,WHILE_BACKPATCH_FJ);
+			}
+			else if(firstWord.getValue().equals("for")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "for", null));
+				analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "(", null));
+				analyseStack.add(2,Y);
+				analyseStack.add(3,Z);
+				analyseStack.add(4,new AnalyseNode(AnalyseNode.TERMINAL, ";", null));
+				analyseStack.add(5,G);
+				analyseStack.add(6,FOR_FJ);
+				analyseStack.add(7,new AnalyseNode(AnalyseNode.TERMINAL, ";", null));
+				analyseStack.add(8,Q);
+				analyseStack.add(9,new AnalyseNode(AnalyseNode.TERMINAL, ")", null));
+				analyseStack.add(10,new AnalyseNode(AnalyseNode.TERMINAL, "{", null));
+				analyseStack.add(11,A);
+				analyseStack.add(12,SINGLE);
+				analyseStack.add(13,new AnalyseNode(AnalyseNode.TERMINAL, "}", null));
+				analyseStack.add(14,FOR_RJ);
+				analyseStack.add(15,FOR_BACKPATCH_FJ);
+			}
+			else{
+				analyseStack.remove(0);
+			}
+			break;
+		case 'C':
+
 			analyseStack.remove(0);
 			analyseStack.add(0,X);
 			analyseStack.add(1,B);
 			analyseStack.add(2,R);
-		break;
-	case 'X':
-		if(firstWord.getValue().equals("int")||firstWord.getValue().equals("char")||firstWord.getValue().equals("bool")){
-			analyseStack.remove(0);
-			analyseStack.add(0,Y);
-			analyseStack.add(1,Z);
-			analyseStack.add(2,new AnalyseNode(AnalyseNode.TERMINAL, ";", null));
-		}else{
-			analyseStack.remove(0);
-		}
-		break;
-	case 'Y':
-		if(firstWord.getValue().equals("int")){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "int", null));
-		}
-		else if(firstWord.getValue().equals("char")){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "char", null));
-		}
-		else if(firstWord.getValue().equals("bool")){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "bool", null));
-		}
-		else{
-			errorCount++;
-			analyseStack.remove(0);
-			wordList.remove(0);
-			error=new Error(errorCount,"非法数据类型",firstWord.getLine(),firstWord);
-			errorList.add(error);	
-			graErrorFlag=true;
-		}
-		break;
-	case 'Z':
-		if(firstWord.getType().equals(Word.IDENTIFIER)){
-			analyseStack.remove(0);
-			analyseStack.add(0,U);
-			analyseStack.add(1,Z1);
-		}
-		else{
-			errorCount++;
-			analyseStack.remove(0);
-			wordList.remove(0);
-			error=new Error(errorCount,"非法标识符",firstWord.getLine(),firstWord);
-			errorList.add(error);
-			graErrorFlag=true;
-		}
-		break;
-	case '1'://z'
-		if(firstWord.getValue().equals(",")){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, ",", null));
-			analyseStack.add(1,Z);
-		}
-		else{
-			analyseStack.remove(0);
-		}
-		break;
-	case 'U':
-		if(firstWord.getType().equals(Word.IDENTIFIER)){
-			analyseStack.remove(0);
-			analyseStack.add(0,ASS_U);
-			analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "id", null));
-			analyseStack.add(2,U1);
-		}
-		else{
-			errorCount++;
-			analyseStack.remove(0);
-			wordList.remove(0);
-			error=new Error(errorCount,"非法标识符",firstWord.getLine(),firstWord);
-			errorList.add(error);
-			graErrorFlag=true;
-		}
-		break;
-	case '2'://U'
-		if(firstWord.getValue().equals("=")){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "=", null));
-			analyseStack.add(1,L);
-			analyseStack.add(2,EQ_U1);
-		}
-		else{			
-			analyseStack.remove(0);
-		}
-		break;
-	case 'R':
-		if(firstWord.getType().equals(Word.IDENTIFIER)){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.ACTIONSIGN, "@ASS_R", null));
-			analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "id", null));
-			analyseStack.add(2,new AnalyseNode(AnalyseNode.TERMINAL, "=", null));
-			analyseStack.add(3,L);
-			analyseStack.add(4,EQ);
-			analyseStack.add(5,new AnalyseNode(AnalyseNode.TERMINAL, ";", null));
-		}
-		else{
-			analyseStack.remove(0);
-		}
-		break;
-	case 'P':
-		if(firstWord.getType().equals(Word.IDENTIFIER)){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "id", null));
-		}else if(firstWord.getType().equals(Word.INT_CONST)){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "num", null));
-		}else if(firstWord.getType().equals(Word.CHAR_CONST)){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "ch", null));
-		}
-		else{
-			errorCount++;
-			analyseStack.remove(0);
-			wordList.remove(0);
-			error=new Error(errorCount,"不能输出的数据类型",firstWord.getLine(),firstWord);
-			errorList.add(error);	
-			graErrorFlag=true;
-		}
-		break;
-	case 'E':
-		if(firstWord.getType().equals(Word.IDENTIFIER)){
-			analyseStack.remove(0);
-			analyseStack.add(0,H);
-			analyseStack.add(1,E1);
-		}else if(firstWord.getType().equals(Word.INT_CONST)){
-			analyseStack.remove(0);
-			analyseStack.add(0,H);
-			analyseStack.add(1,E1);
-		}else if(firstWord.getValue().equals("(")){
-			analyseStack.remove(0);
-			analyseStack.add(0,H);
-			analyseStack.add(1,E1);
-		}
-		else{
-			errorCount++;
-			analyseStack.remove(0);
-			wordList.remove(0);
-			error=new Error(errorCount,"不能进行算术运算的数据类型",firstWord.getLine(),firstWord);
-			errorList.add(error);	
-			graErrorFlag=true;
-		}
-		break;
-	case '3'://E'
-		if(firstWord.getValue().equals("&&")){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "&&", null));
-			analyseStack.add(1,E);
-		}else {
-			analyseStack.remove(0);
-		}
-		break;
-	case 'H':
-		if(firstWord.getType().equals(Word.IDENTIFIER)){
-			analyseStack.remove(0);
-			analyseStack.add(0,G);
-			analyseStack.add(1,H1);
-		}else if(firstWord.getType().equals(Word.INT_CONST)){
-			analyseStack.remove(0);
-			analyseStack.add(0,G);
-			analyseStack.add(1,H1);
-		}else if(firstWord.getValue().equals("(")){
-			analyseStack.remove(0);
-			analyseStack.add(0,G);
-			analyseStack.add(1,H1);
-		}
-		else{
-			errorCount++;
-			analyseStack.remove(0);
-			wordList.remove(0);
-			error=new Error(errorCount,"不能进行算术运算的数据类型",firstWord.getLine(),firstWord);
-			errorList.add(error);	
-			graErrorFlag=true;
-		}
-		break;
-	case '4'://H'
-		if(firstWord.getValue().equals("||")){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "||", null));
-			analyseStack.add(1,E);
-		}else {
-			analyseStack.remove(0);
-		}
-		break;
-	case 'D':
-		if(firstWord.getValue().equals("==")){
-			analyseStack.remove(0);
-			analyseStack.add(0,COMPARE_OP);
-			analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "==", null));
-		}else if(firstWord.getValue().equals("!=")){
-			analyseStack.remove(0);
-			analyseStack.add(0,COMPARE_OP);
-			analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "!=", null));
-			
-		}else if(firstWord.getValue().equals(">")){
-			analyseStack.remove(0);
-			analyseStack.add(0,COMPARE_OP);
-			analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, ">", null));
-		}else if(firstWord.getValue().equals("<")){
-			analyseStack.remove(0);
-			analyseStack.add(0,COMPARE_OP);
-			analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "<", null));
-		}else if(firstWord.getValue().equals(">=")) {
-			analyseStack.remove(0);
-			analyseStack.add(0, COMPARE_OP);
-			analyseStack.add(1, new AnalyseNode(AnalyseNode.TERMINAL, ">=",null));
-	    }else if(firstWord.getValue().equals("<=")) {
-			analyseStack.remove(0);
-			analyseStack.add(0, COMPARE_OP);
-			analyseStack.add(1, new AnalyseNode(AnalyseNode.TERMINAL, "<=",	null));
-	    }else{
-			errorCount++;
-			analyseStack.remove(0);
-			wordList.remove(0);
-			error=new Error(errorCount,"非法运算符",firstWord.getLine(),firstWord);
-			errorList.add(error);	
-			graErrorFlag=true;
-		}
-		break;
-	case 'G':
-		if(firstWord.getType().equals(Word.IDENTIFIER)){
-			analyseStack.remove(0);
-			analyseStack.add(0,F);
-			analyseStack.add(1,D);
-			analyseStack.add(2,F);
-			analyseStack.add(3,COMPARE);
-		}else if(firstWord.getType().equals(Word.INT_CONST)){
-			analyseStack.remove(0);
-			analyseStack.add(0,F);
-			analyseStack.add(1,D);
-			analyseStack.add(2,F);
-			analyseStack.add(3,COMPARE);
-		}
-		else if(firstWord.getValue().equals("(")){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "(", null));
-			analyseStack.add(1,E);
-			analyseStack.add(2,new AnalyseNode(AnalyseNode.TERMINAL, ")", null));
-		}
-		else if(firstWord.getValue().equals("!")){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "!", null));
-			analyseStack.add(1,E);
-		}
-		else{
-			errorCount++;
-			analyseStack.remove(0);
-			wordList.remove(0);
-			error=new Error(errorCount,"不能进行算术运算的数据类型或括号不匹配",firstWord.getLine(),firstWord);
-			errorList.add(error);
-			graErrorFlag=true;
-		}
-		break;
-	case 'L':
-		if(firstWord.getType().equals(Word.IDENTIFIER)){
-			analyseStack.remove(0);
-			analyseStack.add(0,T);
-			analyseStack.add(1,L1);
-			analyseStack.add(2,ADD_SUB);
-		}else if(firstWord.getType().equals(Word.INT_CONST)){
-			analyseStack.remove(0);
-			analyseStack.add(0,T);
-			analyseStack.add(1,L1);
-			analyseStack.add(2,ADD_SUB);
-		}
-		else if(firstWord.getValue().equals("(")){
-			analyseStack.remove(0);
-			analyseStack.add(0,T);
-			analyseStack.add(1,L1);
-			analyseStack.add(2,ADD_SUB);
-		}
-		else{
-			errorCount++;
-			analyseStack.remove(0);
-			wordList.remove(0);
-			error=new Error(errorCount,"不能进行算术运算的数据类型或括号不匹配",firstWord.getLine(),firstWord);
-			errorList.add(error);
-			graErrorFlag=true;
-		}
-		break;
-	case '5'://l'
-		if(firstWord.getValue().equals("+")){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "+", null));
-			analyseStack.add(1,L);
-			analyseStack.add(2,ADD);
-		}
-		else if(firstWord.getValue().equals("-")){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "-", null));
-			analyseStack.add(1,L);
-			analyseStack.add(2,SUB);
-		}else {
-			analyseStack.remove(0);
-		}
-		break;
+			break;
+		case 'X':
+			if(firstWord.getValue().equals("int")||firstWord.getValue().equals("char")||firstWord.getValue().equals("bool")){
+				analyseStack.remove(0);
+				analyseStack.add(0,Y);
+				analyseStack.add(1,Z);
+				analyseStack.add(2,new AnalyseNode(AnalyseNode.TERMINAL, ";", null));
+			}else{
+				analyseStack.remove(0);
+			}
+			break;
+		case 'Y':
+			if(firstWord.getValue().equals("int")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "int", null));
+			}
+			else if(firstWord.getValue().equals("char")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "char", null));
+			}
+			else if(firstWord.getValue().equals("bool")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "bool", null));
+			}
+			else{
+				errorCount++;
+				analyseStack.remove(0);
+				wordList.remove(0);
+				error=new Error(errorCount,"非法数据类型",firstWord.getLine(),firstWord);
+				errorList.add(error);	
+				graErrorFlag=true;
+			}
+			break;
+		case 'Z':
+			if(firstWord.getType().equals(Word.IDENTIFIER)){
+				analyseStack.remove(0);
+				analyseStack.add(0,U);
+				analyseStack.add(1,Z1);
+			}
+			else{
+				errorCount++;
+				analyseStack.remove(0);
+				wordList.remove(0);
+				error=new Error(errorCount,"非法标识符",firstWord.getLine(),firstWord);
+				errorList.add(error);
+				graErrorFlag=true;
+			}
+			break;
+		case '1'://z'
+			if(firstWord.getValue().equals(",")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, ",", null));
+				analyseStack.add(1,Z);
+			}
+			else{
+				analyseStack.remove(0);
+			}
+			break;
+		case 'U':
+			if(firstWord.getType().equals(Word.IDENTIFIER)){
+				analyseStack.remove(0);
+				analyseStack.add(0,ASS_U);
+				analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "id", null));
+				analyseStack.add(2,U1);
+			}
+			else{
+				errorCount++;
+				analyseStack.remove(0);
+				wordList.remove(0);
+				error=new Error(errorCount,"非法标识符",firstWord.getLine(),firstWord);
+				errorList.add(error);
+				graErrorFlag=true;
+			}
+			break;
+		case '2'://U'
+			if(firstWord.getValue().equals("=")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "=", null));
+				analyseStack.add(1,L);
+				analyseStack.add(2,EQ_U1);
+			}
+			else{			
+				analyseStack.remove(0);
+			}
+			break;
+		case 'R':
+			if(firstWord.getType().equals(Word.IDENTIFIER)){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.ACTIONSIGN, "@ASS_R", null));
+				analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "id", null));
+				analyseStack.add(2,new AnalyseNode(AnalyseNode.TERMINAL, "=", null));
+				analyseStack.add(3,L);
+				analyseStack.add(4,EQ);
+				analyseStack.add(5,new AnalyseNode(AnalyseNode.TERMINAL, ";", null));
+			}
+			else{
+				analyseStack.remove(0);
+			}
+			break;
+		case 'P':
+			if(firstWord.getType().equals(Word.IDENTIFIER)){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "id", null));
+			}else if(firstWord.getType().equals(Word.INT_CONST)){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "num", null));
+			}else if(firstWord.getType().equals(Word.CHAR_CONST)){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "ch", null));
+			}
+			else{
+				errorCount++;
+				analyseStack.remove(0);
+				wordList.remove(0);
+				error=new Error(errorCount,"不能输出的数据类型",firstWord.getLine(),firstWord);
+				errorList.add(error);	
+				graErrorFlag=true;
+			}
+			break;
+		case 'E':
+			if(firstWord.getType().equals(Word.IDENTIFIER)){
+				analyseStack.remove(0);
+				analyseStack.add(0,H);
+				analyseStack.add(1,E1);
+			}else if(firstWord.getType().equals(Word.INT_CONST)){
+				analyseStack.remove(0);
+				analyseStack.add(0,H);
+				analyseStack.add(1,E1);
+			}else if(firstWord.getValue().equals("(")){
+				analyseStack.remove(0);
+				analyseStack.add(0,H);
+				analyseStack.add(1,E1);
+			}
+			else{
+				errorCount++;
+				analyseStack.remove(0);
+				wordList.remove(0);
+				error=new Error(errorCount,"不能进行算术运算的数据类型",firstWord.getLine(),firstWord);
+				errorList.add(error);	
+				graErrorFlag=true;
+			}
+			break;
+		case '3'://E'
+			if(firstWord.getValue().equals("&&")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "&&", null));
+				analyseStack.add(1,E);
+			}else {
+				analyseStack.remove(0);
+			}
+			break;
+		case 'H':
+			if(firstWord.getType().equals(Word.IDENTIFIER)){
+				analyseStack.remove(0);
+				analyseStack.add(0,G);
+				analyseStack.add(1,H1);
+			}else if(firstWord.getType().equals(Word.INT_CONST)){
+				analyseStack.remove(0);
+				analyseStack.add(0,G);
+				analyseStack.add(1,H1);
+			}else if(firstWord.getValue().equals("(")){
+				analyseStack.remove(0);
+				analyseStack.add(0,G);
+				analyseStack.add(1,H1);
+			}
+			else{
+				errorCount++;
+				analyseStack.remove(0);
+				wordList.remove(0);
+				error=new Error(errorCount,"不能进行算术运算的数据类型",firstWord.getLine(),firstWord);
+				errorList.add(error);	
+				graErrorFlag=true;
+			}
+			break;
+		case '4'://H'
+			if(firstWord.getValue().equals("||")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "||", null));
+				analyseStack.add(1,E);
+			}else {
+				analyseStack.remove(0);
+			}
+			break;
+		case 'D':
+			if(firstWord.getValue().equals("==")){
+				analyseStack.remove(0);
+				analyseStack.add(0,COMPARE_OP);
+				analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "==", null));
+			}else if(firstWord.getValue().equals("!=")){
+				analyseStack.remove(0);
+				analyseStack.add(0,COMPARE_OP);
+				analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "!=", null));
 
-	case 'T':
-		if(firstWord.getType().equals(Word.IDENTIFIER)){
-			analyseStack.remove(0);
-			analyseStack.add(0,F);
-			analyseStack.add(1,T1);
-			analyseStack.add(2,DIV_MUL);
-		}else if(firstWord.getType().equals(Word.INT_CONST)){
-			analyseStack.remove(0);
-			analyseStack.add(0,F);
-			analyseStack.add(1,T1);
-			analyseStack.add(2,DIV_MUL);
-		}
-		else if(firstWord.getValue().equals("(")){
-			analyseStack.remove(0);
-			analyseStack.add(0,F);
-			analyseStack.add(1,T1);
-			analyseStack.add(2,DIV_MUL);
-		}
-		else{
-			errorCount++;
-			analyseStack.remove(0);
-			wordList.remove(0);
-			error=new Error(errorCount,"不能进行算术运算的数据类型",firstWord.getLine(),firstWord);
-			errorList.add(error);	
-			graErrorFlag=true;
-		}
-		break;
-	case '6'://T'
-		if(firstWord.getValue().equals("*")){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "*", null));
-			analyseStack.add(1,T);
-			analyseStack.add(2,MUL);
-		}
-		else if(firstWord.getValue().equals("/")){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "/", null));
-			analyseStack.add(1,T);
-			analyseStack.add(2,DIV);
-		}else {
-			analyseStack.remove(0);
-		}
-		break;
-	case 'F':
-		if(firstWord.getType().equals(Word.IDENTIFIER)){
-			analyseStack.remove(0);
-			analyseStack.add(0,ASS_F);
-			analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "id", null));
-		}else if(firstWord.getType().equals(Word.INT_CONST)){
-			analyseStack.remove(0);
-			analyseStack.add(0,ASS_F);
-			analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "num", null));
-		}else if(firstWord.getValue().equals("(")){
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "(", null));
-			analyseStack.add(1,L);
-			analyseStack.add(2,new AnalyseNode(AnalyseNode.TERMINAL, ")", null));
-			analyseStack.add(3,TRAN_LF);
-		}
-		else{
-			//errorCount++;
-			analyseStack.remove(0);
-		//	wordList.remove(0);
-			//error=new Error(errorCount,"不能进行算术运算的数据类型",firstWord.line,firstWord);
-			//errorList.add(error);
-			//graErrorFlag=true;
-		}
-		break;
-	case 'O':
-		if(firstWord.getValue().equals("++")){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.ACTIONSIGN, "@SINGLE_OP", null));
-			analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "++", null));
-		}else if(firstWord.getValue().equals("--")){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.ACTIONSIGN, "@SINGLE_OP", null));
-			analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "--", null));
+			}else if(firstWord.getValue().equals(">")){
+				analyseStack.remove(0);
+				analyseStack.add(0,COMPARE_OP);
+				analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, ">", null));
+			}else if(firstWord.getValue().equals("<")){
+				analyseStack.remove(0);
+				analyseStack.add(0,COMPARE_OP);
+				analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "<", null));
+			}else if(firstWord.getValue().equals(">=")) {
+				analyseStack.remove(0);
+				analyseStack.add(0, COMPARE_OP);
+				analyseStack.add(1, new AnalyseNode(AnalyseNode.TERMINAL, ">=",null));
+			}else if(firstWord.getValue().equals("<=")) {
+				analyseStack.remove(0);
+				analyseStack.add(0, COMPARE_OP);
+				analyseStack.add(1, new AnalyseNode(AnalyseNode.TERMINAL, "<=",	null));
+			}else{
+				errorCount++;
+				analyseStack.remove(0);
+				wordList.remove(0);
+				error=new Error(errorCount,"非法运算符",firstWord.getLine(),firstWord);
+				errorList.add(error);	
+				graErrorFlag=true;
+			}
+			break;
+		case 'G':
+			if(firstWord.getType().equals(Word.IDENTIFIER)){
+				analyseStack.remove(0);
+				analyseStack.add(0,F);
+				analyseStack.add(1,D);
+				analyseStack.add(2,F);
+				analyseStack.add(3,COMPARE);
+			}else if(firstWord.getType().equals(Word.INT_CONST)){
+				analyseStack.remove(0);
+				analyseStack.add(0,F);
+				analyseStack.add(1,D);
+				analyseStack.add(2,F);
+				analyseStack.add(3,COMPARE);
+			}
+			else if(firstWord.getValue().equals("(")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "(", null));
+				analyseStack.add(1,E);
+				analyseStack.add(2,new AnalyseNode(AnalyseNode.TERMINAL, ")", null));
+			}
+			else if(firstWord.getValue().equals("!")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "!", null));
+				analyseStack.add(1,E);
+			}
+			else{
+				errorCount++;
+				analyseStack.remove(0);
+				wordList.remove(0);
+				error=new Error(errorCount,"不能进行算术运算的数据类型或括号不匹配",firstWord.getLine(),firstWord);
+				errorList.add(error);
+				graErrorFlag=true;
+			}
+			break;
+		case 'L':
+			if(firstWord.getType().equals(Word.IDENTIFIER)){
+				analyseStack.remove(0);
+				analyseStack.add(0,T);
+				analyseStack.add(1,L1);
+				analyseStack.add(2,ADD_SUB);
+			}else if(firstWord.getType().equals(Word.INT_CONST)){
+				analyseStack.remove(0);
+				analyseStack.add(0,T);
+				analyseStack.add(1,L1);
+				analyseStack.add(2,ADD_SUB);
+			}
+			else if(firstWord.getValue().equals("(")){
+				analyseStack.remove(0);
+				analyseStack.add(0,T);
+				analyseStack.add(1,L1);
+				analyseStack.add(2,ADD_SUB);
+			}
+			else{
+				errorCount++;
+				analyseStack.remove(0);
+				wordList.remove(0);
+				error=new Error(errorCount,"不能进行算术运算的数据类型或括号不匹配",firstWord.getLine(),firstWord);
+				errorList.add(error);
+				graErrorFlag=true;
+			}
+			break;
+		case '5'://l'
+			if(firstWord.getValue().equals("+")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "+", null));
+				analyseStack.add(1,L);
+				analyseStack.add(2,ADD);
+			}
+			else if(firstWord.getValue().equals("-")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "-", null));
+				analyseStack.add(1,L);
+				analyseStack.add(2,SUB);
+			}else {
+				analyseStack.remove(0);
+			}
+			break;
 
-		}else {
-			analyseStack.remove(0);
+		case 'T':
+			if(firstWord.getType().equals(Word.IDENTIFIER)){
+				analyseStack.remove(0);
+				analyseStack.add(0,F);
+				analyseStack.add(1,T1);
+				analyseStack.add(2,DIV_MUL);
+			}else if(firstWord.getType().equals(Word.INT_CONST)){
+				analyseStack.remove(0);
+				analyseStack.add(0,F);
+				analyseStack.add(1,T1);
+				analyseStack.add(2,DIV_MUL);
+			}
+			else if(firstWord.getValue().equals("(")){
+				analyseStack.remove(0);
+				analyseStack.add(0,F);
+				analyseStack.add(1,T1);
+				analyseStack.add(2,DIV_MUL);
+			}
+			else{
+				errorCount++;
+				analyseStack.remove(0);
+				wordList.remove(0);
+				error=new Error(errorCount,"不能进行算术运算的数据类型",firstWord.getLine(),firstWord);
+				errorList.add(error);	
+				graErrorFlag=true;
+			}
+			break;
+		case '6'://T'
+			if(firstWord.getValue().equals("*")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "*", null));
+				analyseStack.add(1,T);
+				analyseStack.add(2,MUL);
+			}
+			else if(firstWord.getValue().equals("/")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "/", null));
+				analyseStack.add(1,T);
+				analyseStack.add(2,DIV);
+			}else {
+				analyseStack.remove(0);
+			}
+			break;
+		case 'F':
+			if(firstWord.getType().equals(Word.IDENTIFIER)){
+				analyseStack.remove(0);
+				analyseStack.add(0,ASS_F);
+				analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "id", null));
+			}else if(firstWord.getType().equals(Word.INT_CONST)){
+				analyseStack.remove(0);
+				analyseStack.add(0,ASS_F);
+				analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "num", null));
+			}else if(firstWord.getValue().equals("(")){
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "(", null));
+				analyseStack.add(1,L);
+				analyseStack.add(2,new AnalyseNode(AnalyseNode.TERMINAL, ")", null));
+				analyseStack.add(3,TRAN_LF);
+			}
+			else{
+				//errorCount++;
+				analyseStack.remove(0);
+				//	wordList.remove(0);
+				//error=new Error(errorCount,"不能进行算术运算的数据类型",firstWord.line,firstWord);
+				//errorList.add(error);
+				//graErrorFlag=true;
+			}
+			break;
+		case 'O':
+			if(firstWord.getValue().equals("++")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.ACTIONSIGN, "@SINGLE_OP", null));
+				analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "++", null));
+			}else if(firstWord.getValue().equals("--")){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.ACTIONSIGN, "@SINGLE_OP", null));
+				analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "--", null));
+
+			}else {
+				analyseStack.remove(0);
+			}
+			break;
+		case 'Q'://Q
+			if(firstWord.getType().equals(Word.IDENTIFIER)){
+				analyseStack.remove(0);
+				analyseStack.add(0,new AnalyseNode(AnalyseNode.ACTIONSIGN, "@ASS_Q", null));
+				analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "id", null));
+				analyseStack.add(2,new AnalyseNode(AnalyseNode.TERMINAL, "O", null));
+			}else {
+				analyseStack.remove(0);
+			}
+			break;
+
 		}
-		break;
-	case 'Q'://Q
-		if(firstWord.getType().equals(Word.IDENTIFIER)){
-			analyseStack.remove(0);
-			analyseStack.add(0,new AnalyseNode(AnalyseNode.ACTIONSIGN, "@ASS_Q", null));
-			analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "id", null));
-			analyseStack.add(2,new AnalyseNode(AnalyseNode.TERMINAL, "O", null));
-		}else {
-			analyseStack.remove(0);
-		}
-		break;
-		
 	}
-}
-private void actionSignOP(){
-	if(top.name.equals("@ADD_SUB")){
-		if(OP!=null&&(OP.equals("+")||OP.equals("-"))){
+	private void actionSignOP(){
+		if(top.getName().equals("@ADD_SUB")){
+			if(OP!=null&&(OP.equals("+")||OP.equals("-"))){
+				ARG2=semanticStack.pop();
+				ARG1=semanticStack.pop();
+				RES=newTemp();
+				//fourElemCount++;
+				FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,ARG2,RES);
+				fourElemList.add(fourElem);
+				L.setValue(RES);
+				semanticStack.push(L.getValue());
+				OP=null;
+			}
+			analyseStack.remove(0);
+
+		}else if(top.getName().equals("@ADD")){
+			OP="+";
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@SUB")){
+			OP="-";
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@DIV_MUL")){
+			if(OP!=null&&(OP.equals("*")||OP.equals("/"))){
+				ARG2=semanticStack.pop();
+				ARG1=semanticStack.pop();
+				RES=newTemp();
+				//fourElemCount++;
+				FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,ARG2,RES);
+				fourElemList.add(fourElem);
+				T.setValue(RES);
+				semanticStack.push(T.getValue());
+				OP=null;
+			}
+			analyseStack.remove(0);
+		}
+		else if(top.getName().equals("@DIV")){
+			OP="/";
+			analyseStack.remove(0);
+		}
+		else if(top.getName().equals("@MUL")){
+			OP="*";
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@TRAN_LF")){
+			F.setValue(L.getValue());
+			//semanticStack.push(F.value);
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@ASS_F")){
+			F.setValue(firstWord.getValue());
+			if(!LexAnalyse.getTypelist().contains(F.getValue())&&(F.getValue().charAt(0)>64)){
+				//			System.out。println();
+				error=new Error(errorCount,"没有定义      ",firstWord.getLine(),firstWord);
+				errorList.add(error);
+				graErrorFlag=true;
+			};
+			//		for (String x : LexAnalyse.getChar()) { 
+			//            if(U.value.equals(x)) {
+			//             error=new Error(errorCount,"重复定义      "+x,firstWord.line,firstWord);
+			//                errorList.add(error);
+			//                graErrorFlag=true;
+			//                }
+			// }
+			//System.out.println(F.value);
+			semanticStack.push(F.getValue());
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@ASS_R")){
+			R.setValue(firstWord.getValue());
+			if(!LexAnalyse.getTypelist().contains(R.getValue())&&(R.getValue().charAt(0)>64)){
+				error=new Error(errorCount,"没有定义      ",firstWord.getLine(),firstWord);
+				errorList.add(error);
+				graErrorFlag=true;
+			};
+			semanticStack.push(R.getValue());
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@ASS_Q")){
+			Q.setValue(firstWord.getValue());
+			semanticStack.push(Q.getValue());
+			analyseStack.remove(0);
+		}
+		else if(top.getName().equals("@ASS_U")){
+			U.setValue(firstWord.getValue());
+			for (String x : semanticStack) { 
+				if(U.getValue().equals(x)) {
+					error=new Error(errorCount,"重复定义      "+x,firstWord.getLine(),firstWord);
+					errorList.add(error);
+					graErrorFlag=true;
+				}
+			}
+			semanticStack.push(U.getValue());
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@SINGLE")){
+			if(for_op.peek()!=null){
+				ARG1=semanticStack.pop();
+				RES=ARG1;
+				//fourElemCount++;
+				FourElement fourElem=new FourElement(++fourElemCount,for_op.pop(),ARG1,"/",RES);
+				fourElemList.add(fourElem);
+			}
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@SINGLE_OP")){
+			for_op.push(firstWord.getValue());
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@EQ")){
+			OP="=";
+			ARG1=semanticStack.pop();
+			RES=semanticStack.pop();;
+			//fourElemCount++;
+			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/",RES);
+			fourElemList.add(fourElem);
+			OP=null;
+			analyseStack.remove(0);
+		}
+		else if(top.getName().equals("@EQ_U'")){
+			OP="=";
+			ARG1=semanticStack.pop();
+			RES=semanticStack.pop();;
+			//fourElemCount++;
+			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/",RES);
+			fourElemList.add(fourElem);
+			OP=null;
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@COMPARE")){//???
 			ARG2=semanticStack.pop();
+			OP=semanticStack.pop();
 			ARG1=semanticStack.pop();
 			RES=newTemp();
 			//fourElemCount++;
 			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,ARG2,RES);
 			fourElemList.add(fourElem);
-			L.value=RES;
-			semanticStack.push(L.value);
+			G.setValue(RES);
+			semanticStack.push(G.getValue());
 			OP=null;
-		}
-		analyseStack.remove(0);
-		
-	}else if(top.name.equals("@ADD")){
-		OP="+";
-		analyseStack.remove(0);
-	}else if(top.name.equals("@SUB")){
-		OP="-";
-		analyseStack.remove(0);
-	}else if(top.name.equals("@DIV_MUL")){
-		if(OP!=null&&(OP.equals("*")||OP.equals("/"))){
-			ARG2=semanticStack.pop();
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@COMPARE_OP")){//???
+			D.setValue(firstWord.getValue());
+			semanticStack.push(D.getValue());
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@IF_FJ")){
+			OP="FJ";
 			ARG1=semanticStack.pop();
-			RES=newTemp();
-			//fourElemCount++;
-			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,ARG2,RES);
+			FourElement fourElem=new FourElement(++fourElemCount,OP,RES,ARG1,"/");
+			if_fj.push(fourElemCount);
 			fourElemList.add(fourElem);
-			T.value=RES;
-			semanticStack.push(T.value);
 			OP=null;
-		}
-		analyseStack.remove(0);
-	}
-	else if(top.name.equals("@DIV")){
-		OP="/";
-		analyseStack.remove(0);
-		}
-	else if(top.name.equals("@MUL")){
-		OP="*";
-		analyseStack.remove(0);
-	}else if(top.name.equals("@TRAN_LF")){
-		F.value=L.value;
-		//semanticStack.push(F.value);
-		analyseStack.remove(0);
-	}else if(top.name.equals("@ASS_F")){
-		F.value=firstWord.getValue();
-		if(!LexAnalyse.getTypelist().contains(F.value)&&(F.value.charAt(0)>64)){
-//			System.out。println();
-			error=new Error(errorCount,"没有定义      ",firstWord.getLine(),firstWord);
-            errorList.add(error);
-            graErrorFlag=true;
-		};
-//		for (String x : LexAnalyse.getChar()) { 
-//            if(U.value.equals(x)) {
-//             error=new Error(errorCount,"重复定义      "+x,firstWord.line,firstWord);
-//                errorList.add(error);
-//                graErrorFlag=true;
-//                }
-// }
-		//System.out.println(F.value);
-		semanticStack.push(F.value);
-		analyseStack.remove(0);
-	}else if(top.name.equals("@ASS_R")){
-		R.value=firstWord.getValue();
-		if(!LexAnalyse.getTypelist().contains(R.value)&&(R.value.charAt(0)>64)){
-			error=new Error(errorCount,"没有定义      ",firstWord.getLine(),firstWord);
-            errorList.add(error);
-            graErrorFlag=true;
-		};
-		semanticStack.push(R.value);
-		analyseStack.remove(0);
-	}else if(top.name.equals("@ASS_Q")){
-		Q.value=firstWord.getValue();
-		semanticStack.push(Q.value);
-		analyseStack.remove(0);
-	}
-	else if(top.name.equals("@ASS_U")){
-		 U.value=firstWord.getValue();
-		 for (String x : semanticStack) { 
-		            if(U.value.equals(x)) {
-		             error=new Error(errorCount,"重复定义      "+x,firstWord.getLine(),firstWord);
-		                errorList.add(error);
-		                graErrorFlag=true;
-		                }
-		 }
-		semanticStack.push(U.value);
-		analyseStack.remove(0);
-	}else if(top.name.equals("@SINGLE")){
-		if(for_op.peek()!=null){
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@SCANF")){
+			OP="SCANF";
 			ARG1=semanticStack.pop();
-			RES=ARG1;
-			//fourElemCount++;
-			FourElement fourElem=new FourElement(++fourElemCount,for_op.pop(),ARG1,"/",RES);
+			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/","/");
+			//		if_fj.push(fourElemCount);
 			fourElemList.add(fourElem);
+			OP=null;
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@PRINTF")){
+			OP="PRINTF";
+			ARG1=semanticStack.pop();
+			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/","/");
+			//		if_fj.push(fourElemCount);
+			fourElemList.add(fourElem);
+			OP=null;
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@IF_BACKPATCH_FJ")){
+			backpatch(if_fj.pop(), fourElemCount+2);
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@IF_RJ")){
+			OP="RJ";
+			FourElement fourElem=new FourElement(++fourElemCount,OP,"/","/","/");
+			if_rj.push(fourElemCount);
+			fourElemList.add(fourElem);
+			OP=null;
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@IF_BACKPATCH_RJ")){
+			backpatch(if_rj.pop(), fourElemCount+1);
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@WHILE_FJ")){
+			OP="FJ";
+			ARG1=semanticStack.pop();
+			FourElement fourElem=new FourElement(++fourElemCount,OP,"/",ARG1,"/");
+			while_fj.push(fourElemCount);
+			fourElemList.add(fourElem);
+			OP=null;
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@WHILE_RJ")){
+			OP="RJ";
+			RES=(while_fj.peek()-1)+"";
+			FourElement fourElem=new FourElement(++fourElemCount,OP,RES,"/","/");
+			for_rj.push(fourElemCount);
+			fourElemList.add(fourElem);
+			OP=null;
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@WHILE_BACKPATCH_FJ")){
+			backpatch(while_fj.pop(), fourElemCount+1);
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@FOR_FJ")){
+			OP="FJ";
+			ARG1=semanticStack.pop();
+			FourElement fourElem=new FourElement(++fourElemCount,OP,"/",ARG1,"/");
+			for_fj.push(fourElemCount);
+			fourElemList.add(fourElem);
+			OP=null;
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@FOR_RJ")){
+			OP="RJ";
+			RES=(for_fj.peek()-1)+"";
+			FourElement fourElem=new FourElement(++fourElemCount,OP,RES,"/","/");
+			for_rj.push(fourElemCount);
+			fourElemList.add(fourElem);
+			OP=null;
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@FOR_BACKPATCH_FJ")){
+			backpatch(for_fj.pop(), fourElemCount+1);
+			analyseStack.remove(0);
 		}
-		analyseStack.remove(0);
-	}else if(top.name.equals("@SINGLE_OP")){
-		for_op.push(firstWord.getValue());
-		analyseStack.remove(0);
-	}else if(top.name.equals("@EQ")){
-		OP="=";
-		ARG1=semanticStack.pop();
-		RES=semanticStack.pop();;
-		//fourElemCount++;
-		FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/",RES);
-		fourElemList.add(fourElem);
-		OP=null;
-		analyseStack.remove(0);
+
+
 	}
-	else if(top.name.equals("@EQ_U'")){
-		OP="=";
-		ARG1=semanticStack.pop();
-		RES=semanticStack.pop();;
-		//fourElemCount++;
-		FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/",RES);
-		fourElemList.add(fourElem);
-		OP=null;
-		analyseStack.remove(0);
-	}else if(top.name.equals("@COMPARE")){//???
-		ARG2=semanticStack.pop();
-		OP=semanticStack.pop();
-		ARG1=semanticStack.pop();
-		RES=newTemp();
-		//fourElemCount++;
-		FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,ARG2,RES);
-		fourElemList.add(fourElem);
-		G.value=RES;
-		semanticStack.push(G.value);
-		OP=null;
-		analyseStack.remove(0);
-	}else if(top.name.equals("@COMPARE_OP")){//???
-		D.value=firstWord.getValue();
-		semanticStack.push(D.value);
-		analyseStack.remove(0);
-	}else if(top.name.equals("@IF_FJ")){
-		OP="FJ";
-		ARG1=semanticStack.pop();
-		FourElement fourElem=new FourElement(++fourElemCount,OP,RES,ARG1,"/");
-		if_fj.push(fourElemCount);
-		fourElemList.add(fourElem);
-		OP=null;
-		analyseStack.remove(0);
-	}else if(top.name.equals("@SCANF")){
-		OP="SCANF";
-		ARG1=semanticStack.pop();
-		FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/","/");
-//		if_fj.push(fourElemCount);
-		fourElemList.add(fourElem);
-		OP=null;
-		analyseStack.remove(0);
-	}else if(top.name.equals("@PRINTF")){
-		OP="PRINTF";
-		ARG1=semanticStack.pop();
-		FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/","/");
-//		if_fj.push(fourElemCount);
-		fourElemList.add(fourElem);
-		OP=null;
-		analyseStack.remove(0);
-	}else if(top.name.equals("@IF_BACKPATCH_FJ")){
-		backpatch(if_fj.pop(), fourElemCount+2);
-		analyseStack.remove(0);
-	}else if(top.name.equals("@IF_RJ")){
-		OP="RJ";
-		FourElement fourElem=new FourElement(++fourElemCount,OP,"/","/","/");
-		if_rj.push(fourElemCount);
-		fourElemList.add(fourElem);
-		OP=null;
-		analyseStack.remove(0);
-	}else if(top.name.equals("@IF_BACKPATCH_RJ")){
-		backpatch(if_rj.pop(), fourElemCount+1);
-		analyseStack.remove(0);
-	}else if(top.name.equals("@WHILE_FJ")){
-		OP="FJ";
-		ARG1=semanticStack.pop();
-		FourElement fourElem=new FourElement(++fourElemCount,OP,"/",ARG1,"/");
-		while_fj.push(fourElemCount);
-		fourElemList.add(fourElem);
-		OP=null;
-		analyseStack.remove(0);
-	}else if(top.name.equals("@WHILE_RJ")){
-		OP="RJ";
-		RES=(while_fj.peek()-1)+"";
-		FourElement fourElem=new FourElement(++fourElemCount,OP,RES,"/","/");
-		for_rj.push(fourElemCount);
-		fourElemList.add(fourElem);
-		OP=null;
-		analyseStack.remove(0);
-	}else if(top.name.equals("@WHILE_BACKPATCH_FJ")){
-		backpatch(while_fj.pop(), fourElemCount+1);
-		analyseStack.remove(0);
-	}else if(top.name.equals("@FOR_FJ")){
-		OP="FJ";
-		ARG1=semanticStack.pop();
-		FourElement fourElem=new FourElement(++fourElemCount,OP,"/",ARG1,"/");
-		for_fj.push(fourElemCount);
-		fourElemList.add(fourElem);
-		OP=null;
-		analyseStack.remove(0);
-	}else if(top.name.equals("@FOR_RJ")){
-		OP="RJ";
-		RES=(for_fj.peek()-1)+"";
-		FourElement fourElem=new FourElement(++fourElemCount,OP,RES,"/","/");
-		for_rj.push(fourElemCount);
-		fourElemList.add(fourElem);
-		OP=null;
-		analyseStack.remove(0);
-	}else if(top.name.equals("@FOR_BACKPATCH_FJ")){
-		backpatch(for_fj.pop(), fourElemCount+1);
-		analyseStack.remove(0);
+	private void backpatch(int i,int res){
+		FourElement temp=fourElemList.get(i-1);
+		temp.setArg1(res+"");
+		fourElemList.set(i-1, temp);
 	}
-	
-	
-}
-private void backpatch(int i,int res){
-FourElement temp=fourElemList.get(i-1);
-temp.setArg1(res+"");
-fourElemList.set(i-1, temp);
-}
-public String outputLL1() throws IOException{
-	//grammerAnalyse();
-	File file=new File("./result/");
-	if(!file.exists()){
-		file.mkdirs();
-		file.createNewFile();//如果这个文件不存在就创建它
+	public String outputLL1() throws IOException{
+		//grammerAnalyse();
+		File file=new File("./result/");
+		if(!file.exists()){
+			file.mkdirs();
+			file.createNewFile();//如果这个文件不存在就创建它
+		}
+		String path=file.getAbsolutePath();
+		FileOutputStream fos=new FileOutputStream(path+"/LL1.txt");  
+		BufferedOutputStream bos=new BufferedOutputStream(fos); 
+		OutputStreamWriter osw1=new OutputStreamWriter(bos,"utf-8");
+		PrintWriter pw1=new PrintWriter(osw1);
+		pw1.println(bf.toString());
+		bf.delete(0, bf.length());
+		if(graErrorFlag){
+			Error error;
+			pw1.println("错误信息如下：");
+
+			pw1.println("错误序号\t错误信息\t错误所在行 \t错误单词");
+			for(int i=0;i<errorList.size();i++){
+				error=errorList.get(i);
+				pw1.println(error.getId()+"\t"+error.getInfo()+"\t\t"+error.getLine()+"\t"+error.getWord().getValue());
+			}
+		}else {
+			pw1.println("语法分析通过：");
+		}
+		pw1.close();
+		return path+"/LL1.txt";
 	}
-	String path=file.getAbsolutePath();
-	FileOutputStream fos=new FileOutputStream(path+"/LL1.txt");  
-	BufferedOutputStream bos=new BufferedOutputStream(fos); 
-	OutputStreamWriter osw1=new OutputStreamWriter(bos,"utf-8");
-	PrintWriter pw1=new PrintWriter(osw1);
-	pw1.println(bf.toString());
-	bf.delete(0, bf.length());
-	if(graErrorFlag){
-		Error error;
-		pw1.println("错误信息如下：");
-	
-	pw1.println("错误序号\t错误信息\t错误所在行 \t错误单词");
-	for(int i=0;i<errorList.size();i++){
-		error=errorList.get(i);
-		pw1.println(error.getId()+"\t"+error.getInfo()+"\t\t"+error.getLine()+"\t"+error.getWord().getValue());
+	public String outputFourElem() throws IOException{
+
+		File file=new File("./result/");
+		if(!file.exists()){
+			file.mkdirs();
+			file.createNewFile();//如果这个文件不存在就创建它
+		}
+		String path=file.getAbsolutePath();
+		FileOutputStream fos=new FileOutputStream(path+"/FourElement.txt");  
+		BufferedOutputStream bos=new BufferedOutputStream(fos); 
+		OutputStreamWriter osw1=new OutputStreamWriter(bos,"utf-8");
+		PrintWriter pw1=new PrintWriter(osw1);
+		pw1.println("生成的四元式如下");
+		pw1.println("序号（OP,ARG1，ARG2，RESULT）");
+		FourElement temp;
+		for(int i=0;i<fourElemList.size();i++){
+			temp=fourElemList.get(i);
+			pw1.println(temp.getId()+"("+temp.getOp()+","+temp.getArg1()+","+temp.getArg2()+","+temp.getResult()+")");
+		}
+		pw1.close();
+
+		return path+"/FourElement.txt";
 	}
-	}else {
-		pw1.println("语法分析通过：");
-	}
-	pw1.close();
-	return path+"/LL1.txt";
-}
-public String outputFourElem() throws IOException{
-	
-	File file=new File("./result/");
-	if(!file.exists()){
-		file.mkdirs();
-		file.createNewFile();//如果这个文件不存在就创建它
-	}
-	String path=file.getAbsolutePath();
-	FileOutputStream fos=new FileOutputStream(path+"/FourElement.txt");  
-	BufferedOutputStream bos=new BufferedOutputStream(fos); 
-	OutputStreamWriter osw1=new OutputStreamWriter(bos,"utf-8");
-	PrintWriter pw1=new PrintWriter(osw1);
-	pw1.println("生成的四元式如下");
-	pw1.println("序号（OP,ARG1，ARG2，RESULT）");
-	FourElement temp;
-	for(int i=0;i<fourElemList.size();i++){
-		temp=fourElemList.get(i);
-		pw1.println(temp.getId()+"("+temp.getOp()+","+temp.getArg1()+","+temp.getArg2()+","+temp.getResult()+")");
-	}
-	pw1.close();
-	
-	return path+"/FourElement.txt";
-}
 	public static void main(String[] args) {
 
 	}
