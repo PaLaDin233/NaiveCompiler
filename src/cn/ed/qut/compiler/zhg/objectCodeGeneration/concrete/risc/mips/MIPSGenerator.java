@@ -370,7 +370,9 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 		List<String> list=GlobalSymbolTable.getSymbolTable().getStaticVarNameList();
 		
 		for (String string : list) {
-			objectCodeList.add(string+": .word "+GlobalSymbolTable.getSymbolTable().getSymbolTableItem(string).getValue());
+			Object value=GlobalSymbolTable.getSymbolTable().getSymbolTableItem(string).getValue();
+			value=(value==null?0:value);
+			objectCodeList.add(string+": .word "+value);
 		}
 		objectCodeList.add(".text");
 	}

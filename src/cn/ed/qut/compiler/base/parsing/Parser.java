@@ -14,7 +14,7 @@ import cn.ed.qut.compiler.base.wordSegmenter.Word;
 import cn.ed.qut.compiler.base.sourceCodeInput.Error;
 /**
  * 语法分析器
- * @author xxz
+ * @author KB
  *
  */
 public class Parser {
@@ -27,16 +27,16 @@ public class Parser {
 	ArrayList<Word>wordList=new ArrayList<Word>();//单词表
 	Stack<AnalyseNode>analyseStack=new Stack<AnalyseNode>();//分析栈
 	Stack<String>semanticStack=new Stack<String>();//语义栈
-	ArrayList<FourElement>fourElemList=new ArrayList<FourElement>();//四元式列表
-	ArrayList<Error>errorList=new ArrayList<Error>();//错误信息列表
+	public ArrayList<FourElement>fourElemList=new ArrayList<FourElement>();//四元式列表
+	public ArrayList<Error>errorList=new ArrayList<Error>();//错误信息列表
 	StringBuffer bf;//分析栈缓冲流
 	int errorCount=0;//统计错误个数
-	boolean graErrorFlag=false;//语法分析出错标志
+	public boolean graErrorFlag=false;//语法分析出错标志
 	int tempCount=0;//用于生成临时变量
 	int fourElemCount=0;//统计四元式个数
 	AnalyseNode S,B,A,C,X,Y,R,Z,Z1,U,U1,E,E1,H,H1,G,M,D,L,L1,T,T1,F,O,P,Q;
 	AnalyseNode ADD_SUB,DIV_MUL,ADD,SUB,DIV,MUL,ASS_F,ASS_R,ASS_Q,ASS_U,TRAN_LF;
-	AnalyseNode SINGLE,SINGLE_OP,EQ,EQ_U1,COMPARE,COMPARE_OP,IF_FJ,IF_RJ,IF_BACKPATCH_FJ,IF_BACKPATCH_RJ;
+	AnalyseNode SINGLE,SINGLE_OP,EQ,EQ_U1,COMPARE,COMPARE_OP,SCANF,PRINTF,IF_FJ,IF_RJ,IF_BACKPATCH_FJ,IF_BACKPATCH_RJ;
 	AnalyseNode WHILE_FJ,WHILE_RJ,WHILE_BACKPATCH_FJ,FOR_FJ,FOR_RJ,FOR_BACKPATCH_FJ;
 	AnalyseNode top;//当前栈顶元素
 	Word firstWord;//待分析单词
@@ -46,7 +46,7 @@ public class Parser {
 	//int if_fj,if_rj,while_fj,while_rj,for_fj,for_rj;
 	Stack<Integer>if_fj,if_rj,while_fj,while_rj,for_fj,for_rj;//if while for 跳转地址栈
 	Stack<String>for_op=new Stack<String>();
-
+	public ArrayList<String> fourElemT=new ArrayList<String>();
 	public Parser(){
 
 	}
@@ -57,6 +57,7 @@ public class Parser {
 	}
 	private String newTemp(){
 		tempCount++;
+		fourElemT.add("T"+tempCount);
 		return "T"+tempCount;
 	}
 	public void init(){
@@ -103,6 +104,8 @@ public class Parser {
 		COMPARE=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@COMPARE", null);
 		COMPARE_OP=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@COMPARE_OP", null);
 		IF_FJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@IF_FJ", null);
+		SCANF=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@SCANF", null);
+		PRINTF=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@PRINTF", null);
 		IF_RJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@IF_RJ", null);
 		IF_BACKPATCH_FJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@IF_BACKPATCH_FJ", null);
 		IF_BACKPATCH_RJ=new AnalyseNode(AnalyseNode.ACTIONSIGN, "@IF_BACKPATCH_RJ", null);
@@ -136,32 +139,37 @@ public class Parser {
 				graErrorFlag=true;
 				break;
 			}
+			//		if(){
+			//			System.out.println("EEEEEE");
+			//			break;
+			//		}
+
 			top=analyseStack.get(0);//当前栈顶元素
 			firstWord=wordList.get(0);//待分析单词
 			if(firstWord.getValue().equals("#")//正常结束
-					&&top.name.equals("#")){
+					&&top.getName().equals("#")){
 				bf.append("\n");
 				analyseStack.remove(0);
 				wordList.remove(0);
 
 			}
-			else if(top.name.equals("#")){
+			else if(top.getName().equals("#")){
 				analyseStack.remove(0);
 				graErrorFlag=true;
 				break;
 
 			}
 			else if(AnalyseNode.isTerm(top)){//终极符时的处理
-				termOP(top.name);
+				termOP(top.getName());
 			}else if(AnalyseNode.isNonterm(top)){
-				nonTermOP(top.name);	
-			}else if(top.type.equals(AnalyseNode.ACTIONSIGN)){//栈顶是动作符号时的处理
+				nonTermOP(top.getName());	
+			}else if(top.getType().equals(AnalyseNode.ACTIONSIGN)){//栈顶是动作符号时的处理
 				actionSignOP();
 			}
 
 			bf.append("当前分析栈:");
 			for(int i=0;i<analyseStack.size();i++){
-				bf.append(analyseStack.get(i).name);
+				bf.append(analyseStack.get(i).getName());
 				//System.out.println(analyseStack.get(i).name);
 			}
 			bf.append("\t").append("余留符号串：");
@@ -174,24 +182,30 @@ public class Parser {
 			}
 		}
 	}
-	private void termOP(String term){
-		if(firstWord.getType().equals(Word.INT_CONST)||firstWord.getType().equals(Word.CHAR_CONST)||
-				term.equals(firstWord.getValue())||
-				(term.equals("id")&&firstWord.getType().equals(Word.IDENTIFIER)
-						)){
+	private void termOP(String term) {
+		if (
+				(firstWord.getType().equals(Word.INT_CONST)||firstWord.getType().equals(Word.CHAR_CONST))
+				||(firstWord.getType().equals(Word.OPERATOR)&&term.equals(firstWord.getValue()))
+				||(firstWord.getType().equals(Word.BOUNDARYSIGN)&&term.equals(firstWord.getValue()))
+				||(firstWord.getType().equals(Word.KEY)&&term.equals(firstWord.getValue()))
+				|| (term.equals("id") && firstWord.getType().equals(Word.IDENTIFIER))
+				||(term.equals("\"%d\"")&&firstWord.getType().equals(Word.IDENTIFIER))
+				){
+			System.out.println("name:"+term+"   "+"succeful");
 			analyseStack.remove(0);
 			wordList.remove(0);
-		}
-		else{
+		} 
+		else {
 			errorCount++;
 			analyseStack.remove(0);
 			wordList.remove(0);
-			error=new Error(errorCount,"语法错误",firstWord.getLine(),firstWord);
+			error = new Error(errorCount, "语法错误", firstWord.getLine(), firstWord);
+			System.out.println("name:"+term+"   "+"defeat"+"  "+errorCount);
 			errorList.add(error);
-			graErrorFlag=true;
-		}	
-
+			graErrorFlag = true;
+		}
 	}
+
 	private void nonTermOP(String nonTerm){
 		if(nonTerm.equals("Z'"))nonTerm="1";
 		if(nonTerm.equals("U'"))nonTerm="2";
@@ -262,24 +276,38 @@ public class Parser {
 			break;
 
 		case 'B':
-			if(firstWord.getValue().equals("printf")){
+			if (firstWord.getValue().equals("printf")) {
 				analyseStack.remove(0);
-				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "printf", null));
-				analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "(", null));
-				analyseStack.add(2,P);
-				analyseStack.add(3,new AnalyseNode(AnalyseNode.TERMINAL, ")", null));
-				analyseStack.add(4,A);
-				analyseStack.add(5,new AnalyseNode(AnalyseNode.TERMINAL, ";", null));
-
+				analyseStack.add(0, new AnalyseNode(AnalyseNode.TERMINAL,"printf", null));
+				analyseStack.add(1, new AnalyseNode(AnalyseNode.TERMINAL, "(",null));
+				analyseStack.add(2, new AnalyseNode(AnalyseNode.TERMINAL, "\"%d\"",null));
+				analyseStack.add(3, new AnalyseNode(AnalyseNode.TERMINAL, ",",null));
+				analyseStack.add(4,F);
+				analyseStack.add(5, new AnalyseNode(AnalyseNode.TERMINAL, ")",null));
+				analyseStack.add(6,PRINTF);
+				analyseStack.add(7, A);
+				analyseStack.add(8, new AnalyseNode(AnalyseNode.TERMINAL, ";",null));
 			}
-			else if(firstWord.getValue().equals("scanf")){
+
+			else if (firstWord.getValue().equals("scanf")) {
 				analyseStack.remove(0);
-				analyseStack.add(0,new AnalyseNode(AnalyseNode.TERMINAL, "scanf", null));
-				analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "(", null));
-				analyseStack.add(2,new AnalyseNode(AnalyseNode.TERMINAL, "id", null));
-				analyseStack.add(3,new AnalyseNode(AnalyseNode.TERMINAL, ")", null));
-				analyseStack.add(4,A);
-				analyseStack.add(5,new AnalyseNode(AnalyseNode.TERMINAL, ";", null));
+				analyseStack.add(0, new AnalyseNode(AnalyseNode.TERMINAL,
+						"scanf", null));
+				analyseStack.add(1, new AnalyseNode(AnalyseNode.TERMINAL, "(",
+						null));
+				analyseStack.add(2, new AnalyseNode(AnalyseNode.TERMINAL, "\"%d\"",
+						null));
+				analyseStack.add(3, new AnalyseNode(AnalyseNode.TERMINAL, ",",
+						null));
+				analyseStack.add(4, new AnalyseNode(AnalyseNode.TERMINAL, "&",
+						null));
+				analyseStack.add(5,F);
+				analyseStack.add(6, new AnalyseNode(AnalyseNode.TERMINAL, ")",
+						null));
+				analyseStack.add(7,SCANF);
+				analyseStack.add(8, A);
+				analyseStack.add(9, new AnalyseNode(AnalyseNode.TERMINAL, ";",
+						null));
 			}
 			else if(firstWord.getValue().equals("if")){
 				analyseStack.remove(0);
@@ -542,8 +570,15 @@ public class Parser {
 				analyseStack.remove(0);
 				analyseStack.add(0,COMPARE_OP);
 				analyseStack.add(1,new AnalyseNode(AnalyseNode.TERMINAL, "<", null));
-			}
-			else{
+			}else if(firstWord.getValue().equals(">=")) {
+				analyseStack.remove(0);
+				analyseStack.add(0, COMPARE_OP);
+				analyseStack.add(1, new AnalyseNode(AnalyseNode.TERMINAL, ">=",null));
+			}else if(firstWord.getValue().equals("<=")) {
+				analyseStack.remove(0);
+				analyseStack.add(0, COMPARE_OP);
+				analyseStack.add(1, new AnalyseNode(AnalyseNode.TERMINAL, "<=",	null));
+			}else{
 				errorCount++;
 				analyseStack.remove(0);
 				wordList.remove(0);
@@ -725,7 +760,7 @@ public class Parser {
 		}
 	}
 	private void actionSignOP(){
-		if(top.name.equals("@ADD_SUB")){
+		if(top.getName().equals("@ADD_SUB")){
 			if(OP!=null&&(OP.equals("+")||OP.equals("-"))){
 				ARG2=semanticStack.pop();
 				ARG1=semanticStack.pop();
@@ -733,19 +768,19 @@ public class Parser {
 				//fourElemCount++;
 				FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,ARG2,RES);
 				fourElemList.add(fourElem);
-				L.value=RES;
-				semanticStack.push(L.value);
+				L.setValue(RES);
+				semanticStack.push(L.getValue());
 				OP=null;
 			}
 			analyseStack.remove(0);
 
-		}else if(top.name.equals("@ADD")){
+		}else if(top.getName().equals("@ADD")){
 			OP="+";
 			analyseStack.remove(0);
-		}else if(top.name.equals("@SUB")){
+		}else if(top.getName().equals("@SUB")){
 			OP="-";
 			analyseStack.remove(0);
-		}else if(top.name.equals("@DIV_MUL")){
+		}else if(top.getName().equals("@DIV_MUL")){
 			if(OP!=null&&(OP.equals("*")||OP.equals("/"))){
 				ARG2=semanticStack.pop();
 				ARG1=semanticStack.pop();
@@ -753,41 +788,67 @@ public class Parser {
 				//fourElemCount++;
 				FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,ARG2,RES);
 				fourElemList.add(fourElem);
-				T.value=RES;
-				semanticStack.push(T.value);
+				T.setValue(RES);
+				semanticStack.push(T.getValue());
 				OP=null;
 			}
 			analyseStack.remove(0);
 		}
-		else if(top.name.equals("@DIV")){
+		else if(top.getName().equals("@DIV")){
 			OP="/";
 			analyseStack.remove(0);
 		}
-		else if(top.name.equals("@MUL")){
+		else if(top.getName().equals("@MUL")){
 			OP="*";
 			analyseStack.remove(0);
-		}else if(top.name.equals("@TRAN_LF")){
-			F.value=L.value;
+		}else if(top.getName().equals("@TRAN_LF")){
+			F.setValue(L.getValue());
 			//semanticStack.push(F.value);
 			analyseStack.remove(0);
-		}else if(top.name.equals("@ASS_F")){
-			F.value=firstWord.getValue();
-			semanticStack.push(F.value);
+		}else if(top.getName().equals("@ASS_F")){
+			F.setValue(firstWord.getValue());
+			if(!LexAnalyse.getTypelist().contains(F.getValue())&&(F.getValue().charAt(0)>64)){
+				//			System.out。println();
+				error=new Error(errorCount,"没有定义      ",firstWord.getLine(),firstWord);
+				errorList.add(error);
+				graErrorFlag=true;
+			};
+			//		for (String x : LexAnalyse.getChar()) { 
+			//            if(U.value.equals(x)) {
+			//             error=new Error(errorCount,"重复定义      "+x,firstWord.line,firstWord);
+			//                errorList.add(error);
+			//                graErrorFlag=true;
+			//                }
+			// }
+			//System.out.println(F.value);
+			semanticStack.push(F.getValue());
 			analyseStack.remove(0);
-		}else if(top.name.equals("@ASS_R")){
-			R.value=firstWord.getValue();
-			semanticStack.push(R.value);
+		}else if(top.getName().equals("@ASS_R")){
+			R.setValue(firstWord.getValue());
+			if(!LexAnalyse.getTypelist().contains(R.getValue())&&(R.getValue().charAt(0)>64)){
+				error=new Error(errorCount,"没有定义      ",firstWord.getLine(),firstWord);
+				errorList.add(error);
+				graErrorFlag=true;
+			};
+			semanticStack.push(R.getValue());
 			analyseStack.remove(0);
-		}else if(top.name.equals("@ASS_Q")){
-			Q.value=firstWord.getValue();
-			semanticStack.push(Q.value);
+		}else if(top.getName().equals("@ASS_Q")){
+			Q.setValue(firstWord.getValue());
+			semanticStack.push(Q.getValue());
 			analyseStack.remove(0);
 		}
-		else if(top.name.equals("@ASS_U")){
-			U.value=firstWord.getValue();
-			semanticStack.push(U.value);
+		else if(top.getName().equals("@ASS_U")){
+			U.setValue(firstWord.getValue());
+			for (String x : semanticStack) { 
+				if(U.getValue().equals(x)) {
+					error=new Error(errorCount,"重复定义      "+x,firstWord.getLine(),firstWord);
+					errorList.add(error);
+					graErrorFlag=true;
+				}
+			}
+			semanticStack.push(U.getValue());
 			analyseStack.remove(0);
-		}else if(top.name.equals("@SINGLE")){
+		}else if(top.getName().equals("@SINGLE")){
 			if(for_op.peek()!=null){
 				ARG1=semanticStack.pop();
 				RES=ARG1;
@@ -796,10 +857,10 @@ public class Parser {
 				fourElemList.add(fourElem);
 			}
 			analyseStack.remove(0);
-		}else if(top.name.equals("@SINGLE_OP")){
+		}else if(top.getName().equals("@SINGLE_OP")){
 			for_op.push(firstWord.getValue());
 			analyseStack.remove(0);
-		}else if(top.name.equals("@EQ")){
+		}else if(top.getName().equals("@EQ")){
 			OP="=";
 			ARG1=semanticStack.pop();
 			RES=semanticStack.pop();;
@@ -809,7 +870,7 @@ public class Parser {
 			OP=null;
 			analyseStack.remove(0);
 		}
-		else if(top.name.equals("@EQ_U'")){
+		else if(top.getName().equals("@EQ_U'")){
 			OP="=";
 			ARG1=semanticStack.pop();
 			RES=semanticStack.pop();;
@@ -818,7 +879,7 @@ public class Parser {
 			fourElemList.add(fourElem);
 			OP=null;
 			analyseStack.remove(0);
-		}else if(top.name.equals("@COMPARE")){
+		}else if(top.getName().equals("@COMPARE")){//???
 			ARG2=semanticStack.pop();
 			OP=semanticStack.pop();
 			ARG1=semanticStack.pop();
@@ -826,71 +887,87 @@ public class Parser {
 			//fourElemCount++;
 			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,ARG2,RES);
 			fourElemList.add(fourElem);
-			G.value=RES;
-			semanticStack.push(G.value);
+			G.setValue(RES);
+			semanticStack.push(G.getValue());
 			OP=null;
 			analyseStack.remove(0);
-		}else if(top.name.equals("@COMPARE_OP")){
-			D.value=firstWord.getValue();
-			semanticStack.push(D.value);
+		}else if(top.getName().equals("@COMPARE_OP")){//???
+			D.setValue(firstWord.getValue());
+			semanticStack.push(D.getValue());
 			analyseStack.remove(0);
-		}else if(top.name.equals("@IF_FJ")){
+		}else if(top.getName().equals("@IF_FJ")){
 			OP="FJ";
 			ARG1=semanticStack.pop();
-			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/",RES);
+			FourElement fourElem=new FourElement(++fourElemCount,OP,RES,ARG1,"/");
 			if_fj.push(fourElemCount);
 			fourElemList.add(fourElem);
 			OP=null;
 			analyseStack.remove(0);
-		}else if(top.name.equals("@IF_BACKPATCH_FJ")){
+		}else if(top.getName().equals("@SCANF")){
+			OP="SCANF";
+			ARG1=semanticStack.pop();
+			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/","/");
+			//		if_fj.push(fourElemCount);
+			fourElemList.add(fourElem);
+			OP=null;
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@PRINTF")){
+			OP="PRINTF";
+			ARG1=semanticStack.pop();
+			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/","/");
+			//		if_fj.push(fourElemCount);
+			fourElemList.add(fourElem);
+			OP=null;
+			analyseStack.remove(0);
+		}else if(top.getName().equals("@IF_BACKPATCH_FJ")){
 			backpatch(if_fj.pop(), fourElemCount+2);
 			analyseStack.remove(0);
-		}else if(top.name.equals("@IF_RJ")){
+		}else if(top.getName().equals("@IF_RJ")){
 			OP="RJ";
 			FourElement fourElem=new FourElement(++fourElemCount,OP,"/","/","/");
 			if_rj.push(fourElemCount);
 			fourElemList.add(fourElem);
 			OP=null;
 			analyseStack.remove(0);
-		}else if(top.name.equals("@IF_BACKPATCH_RJ")){
+		}else if(top.getName().equals("@IF_BACKPATCH_RJ")){
 			backpatch(if_rj.pop(), fourElemCount+1);
 			analyseStack.remove(0);
-		}else if(top.name.equals("@WHILE_FJ")){
+		}else if(top.getName().equals("@WHILE_FJ")){
 			OP="FJ";
 			ARG1=semanticStack.pop();
-			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/","/");
+			FourElement fourElem=new FourElement(++fourElemCount,OP,"/",ARG1,"/");
 			while_fj.push(fourElemCount);
 			fourElemList.add(fourElem);
 			OP=null;
 			analyseStack.remove(0);
-		}else if(top.name.equals("@WHILE_RJ")){
+		}else if(top.getName().equals("@WHILE_RJ")){
 			OP="RJ";
 			RES=(while_fj.peek()-1)+"";
-			FourElement fourElem=new FourElement(++fourElemCount,OP,"/","/",RES);
+			FourElement fourElem=new FourElement(++fourElemCount,OP,RES,"/","/");
 			for_rj.push(fourElemCount);
 			fourElemList.add(fourElem);
 			OP=null;
 			analyseStack.remove(0);
-		}else if(top.name.equals("@WHILE_BACKPATCH_FJ")){
+		}else if(top.getName().equals("@WHILE_BACKPATCH_FJ")){
 			backpatch(while_fj.pop(), fourElemCount+1);
 			analyseStack.remove(0);
-		}else if(top.name.equals("@FOR_FJ")){
+		}else if(top.getName().equals("@FOR_FJ")){
 			OP="FJ";
 			ARG1=semanticStack.pop();
-			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,"/","/");
+			FourElement fourElem=new FourElement(++fourElemCount,OP,"/",ARG1,"/");
 			for_fj.push(fourElemCount);
 			fourElemList.add(fourElem);
 			OP=null;
 			analyseStack.remove(0);
-		}else if(top.name.equals("@FOR_RJ")){
+		}else if(top.getName().equals("@FOR_RJ")){
 			OP="RJ";
 			RES=(for_fj.peek()-1)+"";
-			FourElement fourElem=new FourElement(++fourElemCount,OP,"/","/",RES);
+			FourElement fourElem=new FourElement(++fourElemCount,OP,RES,"/","/");
 			for_rj.push(fourElemCount);
 			fourElemList.add(fourElem);
 			OP=null;
 			analyseStack.remove(0);
-		}else if(top.name.equals("@FOR_BACKPATCH_FJ")){
+		}else if(top.getName().equals("@FOR_BACKPATCH_FJ")){
 			backpatch(for_fj.pop(), fourElemCount+1);
 			analyseStack.remove(0);
 		}
@@ -899,12 +976,12 @@ public class Parser {
 	}
 	private void backpatch(int i,int res){
 		FourElement temp=fourElemList.get(i-1);
-		temp.setResult(res+"");
+		temp.setArg1(res+"");
 		fourElemList.set(i-1, temp);
 	}
 	public String outputLL1() throws IOException{
 		//grammerAnalyse();
-		File file=new File("./output/");
+		File file=new File("./result/");
 		if(!file.exists()){
 			file.mkdirs();
 			file.createNewFile();//如果这个文件不存在就创建它
@@ -933,7 +1010,7 @@ public class Parser {
 	}
 	public String outputFourElem() throws IOException{
 
-		File file=new File("./output/");
+		File file=new File("./result/");
 		if(!file.exists()){
 			file.mkdirs();
 			file.createNewFile();//如果这个文件不存在就创建它
@@ -955,7 +1032,6 @@ public class Parser {
 		return path+"/FourElement.txt";
 	}
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
 	}
 

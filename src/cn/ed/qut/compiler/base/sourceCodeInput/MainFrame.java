@@ -9,22 +9,24 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
-import cn.ed.qut.compiler.base.objectCodeGeneration.huibian;
+import cn.ed.qut.compiler.base.objectCodeGeneration.Asm;
 import cn.ed.qut.compiler.base.parsing.LexAnalyse;
 import cn.ed.qut.compiler.base.parsing.Parser;
+import cn.ed.qut.compiler.base.wordSegmenter.Word;
 
 public class MainFrame extends JFrame {
 
-	TextArea sourseFile;//用来显示源文件的文本框
+	JTextArea sourseFile;//用来显示源文件的文本框
 	String soursePath;// 源文件路径
 	String LL1Path;
 	String wordListPath;
 	String fourElementPath;
 	LexAnalyse lexAnalyse;
-	
+
 	Parser parser;
 	public MainFrame() {
 		this.init();
@@ -43,59 +45,73 @@ public class MainFrame extends JFrame {
 	}
 
 	private JPanel createContentPane() {
+		creatMenu();
 		JPanel p = new JPanel(new BorderLayout());
-		p.add(BorderLayout.NORTH, createUpPane());
 		p.add(BorderLayout.CENTER, createcCenterPane());
-		p.add(BorderLayout.SOUTH, creatBottomPane());
 		// p.setBorder(new EmptyBorder(8,8,8,8));
-		return p;
-	}
-
-	private Component createUpPane() {
-		JPanel p = new JPanel(new FlowLayout());
-		final FilePanel fp = new FilePanel("选择待分析文件");
-		//final FilePanel fp1 = new FilePanel("xiang");
-		JButton button = new JButton("确定");
-		button.addActionListener(new ActionListener() {
-		
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String text;
-				try {
-					soursePath = fp.getFileName();
-					text = readFile(soursePath);
-					sourseFile.setText(text);
-
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}            
-
-			}
-		});
-		p.add(fp);
-		//p.add(fp1);
-		p.add(button);
 		return p;
 	}
 
 	private Component createcCenterPane() {
 		JPanel p = new JPanel(new BorderLayout());
 		JLabel label = new JLabel("源文件如下：");
-		sourseFile = new TextArea();
+		sourseFile = new JTextArea();
 		sourseFile.setText("");
 		p.add(BorderLayout.NORTH, label);
 		p.add(BorderLayout.CENTER, sourseFile);
 		return p;
 	}
 
-	private Component creatBottomPane() {
-		JPanel p = new JPanel(new FlowLayout());
-		JButton bt1 = new JButton("词法分析");
-		JButton bt2 = new JButton("语法分析");
-		JButton bt4 = new JButton("中间代码生成");
-		JButton bt5 = new JButton("目标代码生成");
-		bt1.addActionListener(new ActionListener() {
+	private void creatMenu(){
+		JMenuBar menuBar=new JMenuBar();
+		JMenu fileMenu=new JMenu("文件");
+		JMenu editMenu=new JMenu("编辑");
+		JMenu projectMenu=new JMenu("工程");
+		JMenu viewMenu=new JMenu("视图");
+		JMenu helpMenu=new JMenu("帮助");
+		JMenu compileMenu=new JMenu("编译");
+		JMenuItem ananlyseMenuItem=new JMenuItem("词法分析");
+		JMenuItem parserMenuItem=new JMenuItem("语法分析");
+		JMenuItem intermediatCodeMenuItem=new JMenuItem("中间代码生成");
+		JMenuItem assembler8086MenuItem=new JMenuItem("8086汇编生成");
+		JMenuItem assemblerMIPSMenuItem=new JMenuItem("MIPS汇编生成");
+		
+		JMenuItem jmimportItem1=new JMenuItem("创建新项目");
+		JMenuItem jmimportItem2=new JMenuItem("文件另存为");
+		JMenuItem jmimportItem3=new JMenuItem("创建新项目");
+		JMenuItem jmimportItem4=new JMenuItem("文件另存为");
+		JMenuItem jmimportItem5=new JMenuItem("创建新项目");
+		JMenuItem jmimportItem6=new JMenuItem("使用帮助");
+		JMenuItem jmimportItem=new JMenuItem("导入源文件");
+		JMenuItem jmexitItem=new JMenuItem("退出程序");
+		jmimportItem.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+				chooser.setCurrentDirectory(new File("."));
+				int ret = chooser.showOpenDialog(new JPanel());
+				if (ret == JFileChooser.APPROVE_OPTION) {
+					String text;
+					try {
+						soursePath =chooser.getSelectedFile().getPath();
+						text = readFile(soursePath);
+						sourseFile.setText(text);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		jmexitItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(-1);
+			}
+		});
+		ananlyseMenuItem.addActionListener(new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -110,12 +126,12 @@ public class MainFrame extends JFrame {
 				inf.setVisible(true);
 			}
 		});
-		bt2.addActionListener(new ActionListener() {
-
+		parserMenuItem.addActionListener(new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-			lexAnalyse=new LexAnalyse(sourseFile.getText());
-			parser=new Parser(lexAnalyse);
+				lexAnalyse=new LexAnalyse(sourseFile.getText());
+				parser=new Parser(lexAnalyse);
 				try {
 					parser.grammerAnalyse();
 					LL1Path= parser.outputLL1();
@@ -125,11 +141,11 @@ public class MainFrame extends JFrame {
 				}
 				InfoFrame inf = new InfoFrame("语法分析", LL1Path);
 				inf.setVisible(true);
+				
 			}
 		});
-		
-		bt4.addActionListener(new ActionListener() {
-
+		intermediatCodeMenuItem.addActionListener(new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -145,30 +161,72 @@ public class MainFrame extends JFrame {
 				inf.setVisible(true);
 			}
 		});
-		bt5.addActionListener(new ActionListener() {
-
+		assembler8086MenuItem.addActionListener(new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				//获取标识符
+				lexAnalyse = new LexAnalyse(sourseFile.getText());
+				ArrayList<Word> wordList;
+				wordList = lexAnalyse.getWordList();
+				ArrayList<String> id = new ArrayList<String>();
+				for (int i = 0; i < wordList.size(); i++) {
+					if(wordList.get(i).getType().equals(Word.IDENTIFIER)){					
+						if(!id.contains(wordList.get(i).getValue())){
+							id.add(wordList.get(i).getValue());
+							System.out.println(wordList.get(i).getValue());
+						}
+					}
+				}
+
+
+				parser = new Parser(lexAnalyse);
+				parser.grammerAnalyse();
+				Asm asm = new Asm(parser.fourElemList, id, parser.fourElemT);
+
+				InfoFrame inf;
 				try {
-					lexAnalyse=new LexAnalyse(sourseFile.getText());
-					parser=new Parser(lexAnalyse);
-					parser.grammerAnalyse();
-					fourElementPath=parser.outputFourElem();
+					inf = new InfoFrame("8086汇编代码", asm.getAsmFile());
+					inf.setVisible(true);		
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
+					// TODO 自动生成的 catch 块
 					e1.printStackTrace();
 				}
-				huibian inf = new huibian("目标代码生成", fourElementPath);
-				inf.setVisible(true);
+				
+			}
+		});
+		assemblerMIPSMenuItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO 自动生成的方法存根
+				
 			}
 		});
 		
-		p.add(bt1);
-		p.add(bt2);
-		//p.add(bt3);
-		p.add(bt4);
-		p.add(bt5);
-		return p;
+		fileMenu.add(jmimportItem);
+		fileMenu.add(jmexitItem);
+		editMenu.add(jmimportItem1);
+		editMenu.add(jmimportItem2);
+		viewMenu.add(jmimportItem3);
+		viewMenu.add(jmimportItem4);
+		projectMenu.add(jmimportItem5);
+		helpMenu.add(jmimportItem6);
+		
+		compileMenu.add(ananlyseMenuItem);
+		compileMenu.add(parserMenuItem);
+		compileMenu.add(intermediatCodeMenuItem);
+		compileMenu.add(assembler8086MenuItem);
+		compileMenu.add(assemblerMIPSMenuItem);
+		
+		menuBar.add(fileMenu);
+		menuBar.add(editMenu);
+		menuBar.add(projectMenu);
+		menuBar.add(viewMenu);
+		menuBar.add(helpMenu);
+		menuBar.add(compileMenu);
+		this.setJMenuBar(menuBar);
+
 	}
 
 	public static String readFile(String fileName) throws IOException {
@@ -194,40 +252,3 @@ public class MainFrame extends JFrame {
 	}
 }
 
-class FilePanel extends JPanel {
-	FilePanel(String str) {
-		JLabel label = new JLabel(str);
-		JTextField fileText = new JTextField(35);
-		JButton chooseButton = new JButton("浏览...");
-		this.add(label);
-		this.add(fileText);
-		this.add(chooseButton);
-		clickAction ca = new clickAction(this);
-		chooseButton.addActionListener(ca);
-	}
-
-	public String getFileName() {
-		JTextField jtf = (JTextField) this.getComponent(1);
-		return jtf.getText();    
-	}
-
-	// 按钮响应函数
-	private class clickAction implements ActionListener {
-		private Component cmpt;
-
-		clickAction(Component c) {
-			cmpt = c;
-		}
-
-		public void actionPerformed(ActionEvent event) {
-			JFileChooser chooser = new JFileChooser();
-			chooser.setCurrentDirectory(new File("."));
-			int ret = chooser.showOpenDialog(cmpt);
-			if (ret == JFileChooser.APPROVE_OPTION) {
-				JPanel jp = (JPanel) cmpt;
-				JTextField jtf = (JTextField) jp.getComponent(1);//获取zujian
-				jtf.setText(chooser.getSelectedFile().getPath());
-			}
-		}
-	}
-}
