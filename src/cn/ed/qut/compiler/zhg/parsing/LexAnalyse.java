@@ -1,7 +1,5 @@
 package cn.ed.qut.compiler.zhg.parsing;
 
-import cn.ed.qut.compiler.base.wordSegmenter.Word;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -13,20 +11,37 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Stack;
+
+import cn.ed.qut.compiler.base.dataStruct.Typeword;
+import cn.ed.qut.compiler.base.wordSegmenter.Word;
 import cn.ed.qut.compiler.base.sourceCodeInput.Error;
 
 /**
  * 词法分析器
+ * 
+ * @author KB
+ * 
  */
 public class LexAnalyse {
 
-	ArrayList<Word> wordList = new ArrayList<Word>();// 单词表
-	ArrayList<Error> errorList = new ArrayList<Error>();// 错误信息列表
-	int wordCount = 0;// 统计单词个数
-	int errorCount = 0;// 统计错误个数
-	boolean noteFlag = false;// 多行注释标志
-	boolean lexErrorFlag = false;// 词法分析出错标志
+	public ArrayList<Word> wordList = new ArrayList<Word>();// 单词表
+	public ArrayList<Error> errorList = new ArrayList<Error>();// 错误信息列表
+	public static ArrayList<String> intlist = new ArrayList<String>();// int集合
+	public static ArrayList<String> charlist = new ArrayList<String>();// char集合
+	public static ArrayList<Typeword> typelist = new ArrayList<Typeword>();// char集合
+	public int wordCount = 0;// 统计单词个数
+	public int errorCount = 0;// 统计错误个数
+	public boolean noteFlag = false;// 多行注释标志
+	public boolean lexErrorFlag = false;// 词法分析出错标志
+	public Stack<String>  typestack=new Stack<String>();//类型栈
+	public LexAnalyse() {
 
+	}
+
+	public LexAnalyse(String str) {
+		lexAnalyse(str);
+	}
 	/**
 	 * 数字字符判断
 	 * 
@@ -43,10 +58,10 @@ public class LexAnalyse {
 	/**
 	 * 判断单词是否为int常量
 	 * 
-	 * @param word
+	 * @param string
 	 * @return
 	 */
-	private static boolean isDigit(String word) {
+	private static boolean isInteger(String word) {
 		int i;
 		boolean flag = false;
 		for (i = 0; i < word.length(); i++) {
@@ -143,6 +158,7 @@ public class LexAnalyse {
 		int index = 0;
 		int length = str.length();
 		Word word = null;
+		Typeword typeword=null;
 		Error error;
 		// boolean flag=false;
 		char temp;
@@ -173,8 +189,22 @@ public class LexAnalyse {
 					word.setValue(str.substring(beginIndex, endIndex));
 					if (Word.isKey(word.getValue())) {
 						word.setType(Word.KEY);
+						if(word.getValue().equals("int")||word.getValue().equals("char")){
+							typestack.push(word.getValue());
+						}
 					} else if (isID(word.getValue())) {
 						word.setType(Word.IDENTIFIER);
+						if(typestack.size()>0){
+							 word.setAttribute(typestack.lastElement());
+							 if(word.getAttribute().equals("int")||word.getAttribute().equals("char")){
+								 typeword=new Typeword();
+								 typeword.value=word.getValue();
+								 typeword.type=word.getAttribute();
+								 typelist.add(typeword);
+							 }	 
+						}
+						  
+						
 					} else {
 						word.setType(Word.UNIDEF);
 						word.setFlag(false);
@@ -208,7 +238,7 @@ public class LexAnalyse {
 					word.setId(wordCount);
 					word.setLine(line);
 					word.setValue(str.substring(beginIndex, endIndex));
-					if (isDigit(word.getValue())) {
+					if (isInteger(word.getValue())) {
 						word.setType(Word.INT_CONST);
 					} else {
 						word.setType(Word.UNIDEF);
@@ -219,44 +249,107 @@ public class LexAnalyse {
 						lexErrorFlag = true;
 					}
 					index--;
-				} else if (String.valueOf(str.charAt(index)).equals("'")) {// 字符常量
+				} else if (str.charAt(index)=='\'') {// 字符常量
 					// flag=true;
 					beginIndex = index;
 					index++;
 					temp = str.charAt(index);
-					while (index < length && (0 <= temp && temp <= 255)) {
-						if (String.valueOf(str.charAt(index)).equals("'"))
-							break;
+					if(index < length && isLetter(temp)) {
 						index++;
+						if (index < length&&str.charAt(index)=='\''){
+							word = new Word();
+							wordCount++;
+							word.setId(wordCount);
+							word.setLine(line);
+							word.setValue(str.substring(beginIndex, index+1));
+							word.setType(Word.CHAR_CONST);
+						}
+						else {
+							endIndex = index;
+							word = new Word();
+							wordCount++;
+							word.setId(wordCount);
+							word.setLine(line);
+							word.setValue(str.substring(beginIndex, index+1));
+							word.setType(Word.UNIDEF);
+							word.setFlag(false);
+							errorCount++;
+							error = new Error(errorCount, "非法标识符", word.getLine(), word);
+							errorList.add(error);
+							lexErrorFlag = true;
+						}
 						// temp=str.charAt(index);
 					}
-					if (index < length) {
-						endIndex = index;
+					else {
 						word = new Word();
 						wordCount++;
 						word.setId(wordCount);
 						word.setLine(line);
-						word.setValue(str.substring(beginIndex, endIndex));
-						word.setType(Word.CHAR_CONST);
-						// flag=true;
-						// word.flag=flag;
-						index--;
-					} else {
-						endIndex = index;
-						word = new Word();
-						wordCount++;
-						word.setId(wordCount);
-						word.setLine(line);
-						word.setValue(str.substring(beginIndex, endIndex));
+						word.setValue(str.substring(beginIndex, index+1));
 						word.setType(Word.UNIDEF);
 						word.setFlag(false);
 						errorCount++;
 						error = new Error(errorCount, "非法标识符", word.getLine(), word);
 						errorList.add(error);
 						lexErrorFlag = true;
-						index--;
 					}
-				} else if (temp == '=') {
+					
+				} 
+				else if (str.charAt(index)=='"') {// scanf格式判断
+					// flag=true;
+					beginIndex = index;
+					index++;
+					//int fast=index;
+					temp = str.charAt(index);
+					while (index < length) {
+						if(str.charAt(index)=='%'){
+							index++;
+							if(index<length&&str.charAt(index)=='d'|str.charAt(index)=='c'){
+								index++;
+								if(str.charAt(index)=='"'){
+									endIndex = index;
+									word = new Word();
+									wordCount++;
+									word.setId(wordCount);
+									word.setLine(line);
+									word.setValue(str.substring(beginIndex, index+1));
+									word.setType(Word.KEY);
+									break;
+								}
+							}
+							else{
+								word = new Word();
+								wordCount++;
+								word.setId(wordCount);
+								word.setLine(line);
+								word.setValue(str.substring(beginIndex, index));
+								word.setType(Word.UNIDEF);
+								word.setFlag(false);
+								errorCount++;
+								error = new Error(errorCount, "非法标识符", word.getLine(), word);
+								errorList.add(error);
+								lexErrorFlag = true;
+								break;
+							}
+						}
+						else{
+							word = new Word();
+							wordCount++;
+							word.setId(wordCount);
+							word.setLine(line);
+							word.setValue(str.substring(beginIndex, index));
+							word.setType(Word.UNIDEF);
+							word.setFlag(false);
+							errorCount++;
+							error = new Error(errorCount, "非法标识符", word.getLine(), word);
+							errorList.add(error);
+							lexErrorFlag = true;
+							break;
+						}
+						// temp=str.charAt(index);
+					}
+				} 
+				else if (temp == '=') {
 					beginIndex = index;
 					index++;
 					if (index < length && str.charAt(index) == '=') {
@@ -402,7 +495,52 @@ public class LexAnalyse {
 						word.setType(Word.OPERATOR);
 					}
 					index--;
-				} else {// 不是标识符、数字常量、字符串常量
+				} 
+				 else if (temp == '<') {
+						beginIndex = index;
+						index++;
+						if (index < length && str.charAt(index) == '=') {
+							endIndex = index + 1;
+							word = new Word();
+							wordCount++;
+							word.setId(wordCount);
+							word.setLine(line);
+							word.setValue(str.substring(beginIndex, endIndex));
+							word.setType(Word.OPERATOR);
+						} else {
+							// endIndex=index;
+							word = new Word();
+							wordCount++;
+							word.setId(wordCount);
+							word.setLine(line);
+							word.setValue(str.substring(index - 1, index));
+							word.setType(Word.OPERATOR);
+							index--;
+						}
+					}
+				 else if (temp == '>') {
+						beginIndex = index;
+						index++;
+						if (index < length && str.charAt(index) == '=') {
+							endIndex = index + 1;
+							word = new Word();
+							wordCount++;
+							word.setId(wordCount);
+							word.setLine(line);
+							word.setValue(str.substring(beginIndex, endIndex));
+							word.setType(Word.OPERATOR);
+						} else {
+							// endIndex=index;
+							word = new Word();
+							wordCount++;
+							word.setId(wordCount);
+							word.setLine(line);
+							word.setValue(str.substring(index - 1, index));
+							word.setType(Word.OPERATOR);
+							index--;
+						}
+					}
+				else {// 不是标识符、数字常量、字符串常量
 
 					switch (temp) {
 					case ' ':
@@ -411,6 +549,10 @@ public class LexAnalyse {
 					case '\n':
 						word = null;
 						break;// 过滤空白字符
+					case ';':
+						if(typestack.size()>0){
+							typestack.pop();
+						}
 					case '[':
 					case ']':
 					case '(':
@@ -420,14 +562,11 @@ public class LexAnalyse {
 					case ',':
 					case '"':
 					case '.':
-					case ';':
 						// case '+':
 						// case '-':
 					case '*':
 						// case '/':
 					case '%':
-					case '>':
-					case '<':
 					case '?':
 					case '#':
 						word = new Word();
@@ -476,6 +615,13 @@ public class LexAnalyse {
 
 	public ArrayList<Word> lexAnalyse(String str) {
 		String buffer[];
+		if(str==null){
+			if (!wordList.get(wordList.size() - 1).getType().equals(Word.END)) {
+				Word word = new Word(++wordCount, "#", Word.END, 1);
+				wordList.add(word);
+			}
+			return wordList;
+		}
 		buffer = str.split("\n");
 		int line = 1;
 		for (int i = 0; i < buffer.length; i++) {
@@ -510,7 +656,8 @@ public class LexAnalyse {
 	}
 
 	public String outputWordList() throws IOException {
-		File file = new File("./output/");
+		System.out.println(typelist);
+		File file = new File("./result/");
 		if (!file.exists()) {
 			file.mkdirs();
 			file.createNewFile();// 如果这个文件不存在就创建它
@@ -520,12 +667,12 @@ public class LexAnalyse {
 		BufferedOutputStream bos = new BufferedOutputStream(fos);
 		OutputStreamWriter osw1 = new OutputStreamWriter(bos, "utf-8");
 		PrintWriter pw1 = new PrintWriter(osw1);
-		pw1.println("单词序号\t单词的值\t\t单词类型\t\t单词所在行 \t单词是否合法");
+		pw1.println("单词序号\t单词的值\t单词类型\t单词所在行 \t单词是否合法\t单词属性");
 		Word word;
 		for (int i = 0; i < wordList.size(); i++) {
 			word = wordList.get(i);
-			pw1.println(word.getId() + "\t" + word.getValue() + "\t\t" + word.getType() + "\t"
-					+ "\t" + word.getLine() + "\t" + word.isFlag());
+			pw1.println(word.getId() + "\t\t" + word.getValue() + "\t\t" + word.getType() + "\t\t"
+					+ "\t" + word.getLine() + "\t" + word.isFlag()+"\t\t\t"+word.getAttribute());
 		}
 		if (lexErrorFlag) {
 			Error error;
@@ -534,7 +681,7 @@ public class LexAnalyse {
 			pw1.println("错误序号\t错误信息\t错误所在行 \t错误单词");
 			for (int i = 0; i < errorList.size(); i++) {
 				error = errorList.get(i);
-				pw1.println(error.getId() + "\t" + error.getInfo() + "\t\t" + error.getLine()
+				pw1.println(error.getId() + "\t\t" + error.getInfo() + "\t\t" + error.getLine()
 						+ "\t" + error.getWord().getValue());
 			}
 		} else {
@@ -543,18 +690,33 @@ public class LexAnalyse {
 		pw1.close();
 		return path + "/wordList.txt";
 	}
-
-	public LexAnalyse() {
-
+	public static ArrayList<String> getTypelist(){
+		ArrayList<String> list = new ArrayList<String>();
+		
+		for(Typeword x : typelist ){
+			list.add(x.getValue());
+		}
+		System.out.println(list.toString());
+		return list;
+		
 	}
-
-	public LexAnalyse(String str) {
-		lexAnalyse(str);
+	public static ArrayList<String> getCharlist(){
+		
+		return charlist;
+		
 	}
+	
+
+	
 
 	public static void main(String[] args) throws IOException {
 		LexAnalyse lex = new LexAnalyse();
 		lex.lexAnalyse1("D:\\My Documents\\Workspace\\tinyCompiler\\b.c");
 		lex.outputWordList();
+	}
+
+	public ArrayList<Word> getWordList() {
+		// TODO Auto-generated method stub
+		return wordList;
 	}
 }

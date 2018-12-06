@@ -1,8 +1,7 @@
 package cn.ed.qut.compiler.base.parsing;
 
-import java.io.*;import java.util.ArrayList;
-import cn.ed.qut.compiler.base.wordSegmenter.Word;
-import cn.ed.qut.compiler.base.sourceCodeInput.Error;;
+import java.util.ArrayList;
+import cn.ed.qut.compiler.base.wordSegmenter.Word;;
 
 /**
  * 分析栈节点类
@@ -64,14 +63,14 @@ public class AnalyseNode {
 	String name;//节点名
 	String value;//节点值
 	
-	public static boolean isNonterm(cn.ed.qut.compiler.base.parsing.AnalyseNode node){
+	public static boolean isNonterm(AnalyseNode node){
 		return nonterminal.contains(node.name);
 	}
-	public static boolean isTerm(cn.ed.qut.compiler.base.parsing.AnalyseNode node){
+	public static boolean isTerm(AnalyseNode node){
 		return Word.isKey(node.name)||Word.isOperator(node.name)||Word.isBoundarySign(node.name)
 		||node.name.equals("id")||node.name.equals("num")||node.name.equals("ch");
 	}
-	public static boolean isActionSign(cn.ed.qut.compiler.base.parsing.AnalyseNode node){
+	public static boolean isActionSign(AnalyseNode node){
 		return actionSign.contains(node.name);
 	}
 	public AnalyseNode(){
