@@ -14,10 +14,13 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 
+import cn.ed.qut.compiler.base.dataStruct.symbolTable.GlobalSymbolTable;
+import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolTableItem;
 import cn.ed.qut.compiler.base.objectCodeGeneration.Asm;
 import cn.ed.qut.compiler.base.parsing.LexAnalyse;
 import cn.ed.qut.compiler.base.parsing.Parser;
 import cn.ed.qut.compiler.base.wordSegmenter.Word;
+import cn.ed.qut.compiler.zhg.objectCodeGeneration.concrete.risc.mips.MIPSGenerator;
 
 public class MainFrame extends JFrame {
 
@@ -185,7 +188,6 @@ public class MainFrame extends JFrame {
 					if(wordList.get(i).getType().equals(Word.IDENTIFIER)){					
 						if(!id.contains(wordList.get(i).getValue())){
 							id.add(wordList.get(i).getValue());
-							System.out.println(wordList.get(i).getValue());
 						}
 					}
 				}
@@ -210,7 +212,46 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO 自动生成的方法存根
+				//获取标识符
+				lexAnalyse = new LexAnalyse(sourseFile.getText());
+				ArrayList<Word> wordList;
+				wordList = lexAnalyse.getWordList();
+				ArrayList<String> id = new ArrayList<String>();
+				for (Word word : wordList) {
+					if(word.getType().equals(Word.IDENTIFIER)){
+						if(!id.contains(word.getValue())){
+							id.add(word.getValue());
+						}
+					}
+				}
+				for (String string : id) {
+					GlobalSymbolTable.getSymbolTable().insert(SymbolTableItem.getIntVar(string));
+				}
+
+
+
+				parser = new Parser(lexAnalyse);
+				parser.grammerAnalyse();
+				//获取文件名
+				File file=new File(soursePath);
+				String fileName=file.getName();
+				//删除文件名后缀
+				
+				fileName=fileName.substring(0, fileName.lastIndexOf('.'));
+				
+				MIPSGenerator generator = new MIPSGenerator("target.txt",parser.fourElemList);
+				
+				InfoFrame inf;
+				try {
+					file=generator.generator();
+					inf = new InfoFrame("MIPS汇编代码", file.getPath());
+					inf.setVisible(true);
+				} catch (Exception e1) {
+					// TODO 自动生成的 catch 块
+					javax.swing.JOptionPane.showMessageDialog(null, "异常！");
+					e1.printStackTrace();
+				}
+				
 				
 			}
 		});

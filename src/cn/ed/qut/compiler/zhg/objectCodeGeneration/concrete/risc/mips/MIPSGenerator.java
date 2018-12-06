@@ -198,6 +198,45 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 				//mflo $R
 				codes.add(new MIPSCode("MFLO",null,null,resultRegister.getName()));
 			}
+			else if(fourElement.getOp().equals("<")){
+				if(isImmediateNum(arg1)
+						||isImmediateNum(arg2)
+						||symbolTable.isConst(fourElement.getArg1())
+						||symbolTable.isConst(fourElement.getArg2())){//当两个操作数有一个是常数时，该操作是立即数加
+					op="SLTI";
+					if(isImmediateNum(arg1)){
+						arg2=arg2Register.getName();
+					}
+					if(isImmediateNum(arg2)){
+						arg1=arg1Register.getName();
+					}
+				}
+				else{//否则是寄存器加
+					op="SLT";
+					arg1=arg1Register.getName();
+					arg2=arg2Register.getName();
+				}
+				//如果是常变量，获取常变量的值
+				if(symbolTable.isConst(fourElement.getArg1())){
+					arg2=(String)symbolTable.getSymbolTableItem(fourElement.getArg1()).getValue();
+					arg1=fourElement.getArg2();
+				}
+				if(symbolTable.isConst(fourElement.getArg2())){
+					arg1=fourElement.getArg1();
+					arg2=(String)symbolTable.getSymbolTableItem(fourElement.getArg2()).getValue();
+				}
+				//OP $t8,$s1,$s2
+				codes.add(new MIPSCode(op,arg1,arg2,resultRegister.getName()));
+				if(SymbolTableStack.getItem(fourElement.getResult())!=null){
+					codes.add(new MIPSCode("SW",fourElement.getResult(),arg2,resultRegister.getName()));
+				}
+			}
+			else if(fourElement.getOp().equals("++")){
+				codes.add(new MIPSCode("ADDI",resultRegister.getName(),"1",resultRegister.getName()));
+			}
+			else if(fourElement.getOp().equals("--")){
+				codes.add(new MIPSCode("SUBI",resultRegister.getName(),"1",resultRegister.getName()));
+			}
 			else if(fourElement.getOp().equals("JA")||fourElement.getOp().equals("JB")){
 
 				if(isImmediateNum(arg1)
@@ -293,6 +332,7 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 				op="BEQ";	
 				codes.add(new MIPSCode(op,arg1,arg2,result));
 			}
+
 			else if(fourElement.getOp().equals("MINUS")){
 
 			}
@@ -303,7 +343,19 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 				arg2=null;
 				codes.add(new MIPSCode(op,arg1,arg2,result));
 			}
-			else if(fourElement.getOp().equals("ASSIGN")){
+			else if(fourElement.getOp().equals("RJ")){
+				op="J";
+				result="?"+fourElement.getArg1();
+				arg1=null;
+				arg2=null;
+				codes.add(new MIPSCode(op,arg1,arg2,result));
+			}
+			else if(fourElement.getOp().equals("FJ")){
+				op="BEQ";
+				result="?"+fourElement.getArg1();
+				codes.add(new MIPSCode(op,arg2Register.getName(),"$Zero",result));
+			}
+			else if(fourElement.getOp().equals("ASSIGN")||fourElement.getOp().equals("=")){
 				result=resultRegister.getName();
 				arg2=null;
 				if(isImmediateNum(arg1)){
