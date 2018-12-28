@@ -10,11 +10,12 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 import cn.ed.qut.compiler.base.intermediateCodeGeneration.FourElement;
+import cn.ed.qut.compiler.base.wordSegmenter.LexAnalyse;
 import cn.ed.qut.compiler.base.wordSegmenter.Word;
 import cn.ed.qut.compiler.base.sourceCodeInput.Error;
 /**
  * 语法分析器
- * @author KB
+ * @author ABC
  *
  */
 public class Parser {
@@ -179,6 +180,7 @@ public class Parser {
 		
 	}
 	private void termOP(String term) {
+		//System.out.println("现在的值："+firstWord.getValue()+" "+firstWord.getType()+" "+fourElemList+" "+firstWord.toString());
 		if (
 				(firstWord.getType().equals(Word.INT_CONST)||firstWord.getType().equals(Word.CHAR_CONST))
 				||(firstWord.getType().equals(Word.OPERATOR)&&term.equals(firstWord.getValue()))
@@ -186,6 +188,7 @@ public class Parser {
 				||(firstWord.getType().equals(Word.KEY)&&term.equals(firstWord.getValue()))
 				|| (term.equals("id") && firstWord.getType().equals(Word.IDENTIFIER))
 				||(term.equals("\"%d\"")&&firstWord.getType().equals(Word.IDENTIFIER))
+				//||firstWord.getType().equals(Word.OPERATOR)
 				){
 			analyseStack.remove(0);
 			wordList.remove(0);
@@ -998,7 +1001,7 @@ public class Parser {
 			pw1.println("错误序号\t错误信息\t错误所在行 \t错误单词");
 			for(int i=0;i<errorList.size();i++){
 				error=errorList.get(i);
-				pw1.println(error.getId()+"\t"+error.getInfo()+"\t\t"+error.getLine()+"\t"+error.getWord().getValue());
+				pw1.println(error.getId()+"\t"+error.getInfo()+"\t"+error.getLine()+"\t"+error.getWord().getValue());
 			}
 		}else {
 			pw1.println("语法分析通过：");

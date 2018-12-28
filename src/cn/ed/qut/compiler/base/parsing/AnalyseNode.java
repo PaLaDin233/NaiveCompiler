@@ -6,7 +6,7 @@ import cn.ed.qut.compiler.base.wordSegmenter.Word;
 
 /**
  * 分析栈节点类
- * @author KB
+ * @author ABC
  *	String type;//节点类型
 	String name;//节点名
 	Object value;//节点值
