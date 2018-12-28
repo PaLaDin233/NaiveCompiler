@@ -17,7 +17,7 @@ import javax.swing.text.BadLocationException;
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.GlobalSymbolTable;
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolTableItem;
 import cn.ed.qut.compiler.base.objectCodeGeneration.Asm;
-import cn.ed.qut.compiler.base.parsing.LexAnalyse;
+import cn.ed.qut.compiler.base.wordSegmenter.LexAnalyse;
 import cn.ed.qut.compiler.base.parsing.Parser;
 import cn.ed.qut.compiler.base.wordSegmenter.Word;
 import cn.ed.qut.compiler.zhg.objectCodeGeneration.concrete.risc.mips.MIPSGenerator;
@@ -248,7 +248,7 @@ public class MainFrame extends JFrame {
 					inf.setVisible(true);
 				} catch (Exception e1) {
 					// TODO 自动生成的 catch 块
-					javax.swing.JOptionPane.showMessageDialog(null, "异常！");
+					JOptionPane.showMessageDialog(null, "异常！");
 					e1.printStackTrace();
 				}
 				
