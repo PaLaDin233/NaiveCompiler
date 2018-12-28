@@ -3,23 +3,23 @@ package cn.ed.qut.compiler.base.wordSegmenter;
 import java.util.ArrayList;
 
 /**
- * µ¥´ÊÀà
- * 
- * @author Administrator 1¡¢µ¥´ÊĞòºÅ 2¡¢µ¥´ÊµÄÖµ 3¡¢µ¥´ÊÀàĞÍ 4¡¢µ¥´ÊËùÔÚĞĞ 5¡¢µ¥´ÊÊÇ·ñºÏ·¨
+ * å•è¯ç±»
+ *
+ * @author Administrator 1ã€å•è¯åºå· 2ã€å•è¯çš„å€¼ 3ã€å•è¯ç±»å‹ 4ã€å•è¯æ‰€åœ¨è¡Œ 5ã€å•è¯æ˜¯å¦åˆæ³•
  */
 public class Word {
-	public final static String KEY = "¹Ø¼ü×Ö";
-	public final static String OPERATOR = "ÔËËã·û";
-	public final static String INT_CONST = "ÕûĞÎ³£Á¿";
-	public final static String CHAR_CONST = "×Ö·û³£Á¿";
-	public final static String BOOL_CONST = "²¼¶û³£Á¿";
-	public final static String IDENTIFIER = "±êÖ¾·û";
-	public final static String BOUNDARYSIGN = "½ç·û";
-	public final static String END = "½áÊø·û";
-	public final static String UNIDEF = "Î´ÖªÀàĞÍ";
-	public static ArrayList<String> key = new ArrayList<String>();// ¹Ø¼ü×Ö¼¯ºÏ
-	public static ArrayList<String> boundarySign = new ArrayList<String>();// ½ç·û¼¯ºÏ
-	public static ArrayList<String> operator = new ArrayList<String>();// ÔËËã·û¼¯ºÏ
+	public final static String KEY = "å…³é”®å­—";
+	public final static String OPERATOR = "è¿ç®—ç¬¦";
+	public final static String INT_CONST = "æ•´å½¢å¸¸é‡";
+	public final static String CHAR_CONST = "å­—ç¬¦å¸¸é‡";
+	public final static String BOOL_CONST = "å¸ƒå°”å¸¸é‡";
+	public final static String IDENTIFIER = "æ ‡å¿—ç¬¦";
+	public final static String BOUNDARYSIGN = "ç•Œç¬¦";
+	public final static String END = "ç»“æŸç¬¦";
+	public final static String UNIDEF = "æœªçŸ¥ç±»å‹";
+	public static ArrayList<String> key = new ArrayList<String>();// å…³é”®å­—é›†åˆ
+	public static ArrayList<String> boundarySign = new ArrayList<String>();// ç•Œç¬¦é›†åˆ
+	public static ArrayList<String> operator = new ArrayList<String>();// è¿ç®—ç¬¦é›†åˆ
 	static {
 		Word.operator.add("+");
 		Word.operator.add("-");
@@ -60,7 +60,7 @@ public class Word {
 		Word.key.add("printf");
 		Word.key.add("scanf");
 	}
-	private int id;// µ¥´ÊĞòºÅ
+	private int id;// å•è¯åºå·
 	public int getId() {
 		return id;
 	}
@@ -109,11 +109,11 @@ public class Word {
 		this.flag = flag;
 	}
 
-	private String value;// µ¥´ÊµÄÖµ
-	private String type;// µ¥´ÊÀàĞÍ
-	private String attribute;//µ¥´ÊµÄÊôĞÔ
-	private int line;// µ¥´ÊËùÔÚĞĞ
-	private boolean flag = true;//µ¥´ÊÊÇ·ñºÏ·¨
+	private String value;// å•è¯çš„å€¼
+	private String type;// å•è¯ç±»å‹
+	private String attribute;//å•è¯çš„å±æ€§
+	private int line;// å•è¯æ‰€åœ¨è¡Œ
+	private boolean flag = true;//å•è¯æ˜¯å¦åˆæ³•
 
 	public Word() {
 
@@ -135,7 +135,7 @@ public class Word {
 	}
 
 	/**
-	 * ÅĞ¶ÏÊÇ²»ÊÇ½ç·û
+	 * åˆ¤æ–­æ˜¯ä¸æ˜¯ç•Œç¬¦
 	 * @param word
 	 * @return
 	 */
@@ -144,7 +144,7 @@ public class Word {
 	}
 
 	/**
-	 * ÅĞ¶Ïµ¥´ÊÊÇ·ñÎªËãÊõÔËËã·û
+	 * åˆ¤æ–­å•è¯æ˜¯å¦ä¸ºç®—æœ¯è¿ç®—ç¬¦
 	 * @param word
 	 * @return
 	 */
@@ -157,7 +157,7 @@ public class Word {
 	}
 
 	/**
-	 *  ÅĞ¶Ïµ¥´ÊÊÇ·ñÎª²¼¶ûÔËËã·û
+	 *  åˆ¤æ–­å•è¯æ˜¯å¦ä¸ºå¸ƒå°”è¿ç®—ç¬¦
 	 * @param word
 	 * @return
 	 */
