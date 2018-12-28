@@ -1,0 +1,1 @@
+.datai: .word 0sum: .word 0n: .word 0.textLI $s0, 0SW $s0, iLW $s2, nSLTI $s3, $s2, 1LW $s5, T1BEQ $s5, $Zero, 0LI $s6, 0SW $s6, sumJ 0LI $s6, 1SW $s6, sumSLT $s0, $s0, $s2LW $t3, T2BEQ $t3, $Zero, 0LW $t3, iADDI $t3, $t3, $t1LW $t3, T3SW $t3, iMULT $s6, $t3MFHI $s6SW $s6, T4MFLO $s6LW $t3, T4SW $t3, sumJ 11LW $t3, sum

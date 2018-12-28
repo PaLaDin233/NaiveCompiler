@@ -27,7 +27,7 @@ import cn.ed.qut.compiler.zhg.objectCodeGeneration.SymbolTableStack;
 public class MIPSGenerator extends ObjectCodeGenerater{
 
 	//生成的目标代码文件后缀名
-	private static final String ASSEMBLER_EXTENSION_NAME=".asm";
+	private static final String ASSEMBLER_EXTENSION_NAME=".mips";
 	protected List<MIPSData> mipsDatas=new ArrayList<>();
 
 	@Override

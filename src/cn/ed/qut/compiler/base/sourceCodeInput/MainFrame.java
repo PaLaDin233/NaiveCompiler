@@ -239,7 +239,7 @@ public class MainFrame extends JFrame {
 				
 				fileName=fileName.substring(0, fileName.lastIndexOf('.'));
 				
-				MIPSGenerator generator = new MIPSGenerator("target.txt",parser.fourElemList);
+				MIPSGenerator generator = new MIPSGenerator(fileName,parser.fourElemList);
 				
 				InfoFrame inf;
 				try {

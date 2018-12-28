@@ -208,8 +208,8 @@ public abstract class ObjectCodeGenerater {
 		}
 		File file;
 		if(fileName!=null)
-			file=new File(fileName+getExtensionName());
-		else file=new File("output/target.txt"+getExtensionName());
+			file=new File("result/"+fileName+getObjectCodeExtensionName());
+		else file=new File("result/target.txt"+getObjectCodeExtensionName());
 		//将生成的指令写入文件
 		
 		if(!file.exists())file.createNewFile();
