@@ -73,7 +73,7 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 
 
 
-	
+
 
 	@Override
 	protected void baseBlockToObjectCode(BaseBlock baseBlock) {
@@ -95,7 +95,7 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 			//为三个参数分配寄存器
 			if(result!=null){
 				resultRegister=getRegisterAllocator().getRegister(result,fourElement,resultRegister);
-				
+
 			}
 
 			if(!symbolTable.exist(arg1)){//result不存在基本块符号表时，表示他是一个字面值，将字面值获取到寄存器$t0中,设置寄存器为
@@ -363,10 +363,10 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 					codes.add(new MIPSCode(op,arg1,arg2,result));
 				}
 				else{
-					
+
 					result=arg1Register.getName();
 				}
-				
+
 				codes.add(new MIPSCode("SW",fourElement.getResult(),arg2,result));
 			}
 			else if(fourElement.getOp().equals("PARA")){
@@ -395,7 +395,7 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 
 		}
 		backFill();
-		
+
 	}
 
 
@@ -404,14 +404,14 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 		for (Code code:codes) {
 			if(code.getRes()!=null&&code.getRes().startsWith("?")){//当是需要回填的代码时
 				int fourElementId=Integer.parseInt(code.getRes().substring(1, code.getRes().length()));
-
-				int objectCodeId=fourElements.get(fourElementId-1).getObjectCodeId();
-
-				code.setRes(Integer.toString(objectCodeId));
+				if(fourElementId>0&&fourElementId<fourElements.size()){
+					int objectCodeId=fourElements.get(fourElementId-1).getObjectCodeId();
+					code.setRes(Integer.toString(objectCodeId));
+				}
 			}
 		}
 	}
-	
+
 	/**
 	 * 生成mips汇编的头部
 	 */
@@ -420,7 +420,7 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 		if(num<=0)return ;
 		objectCodeList.add(".data");
 		List<String> list=GlobalSymbolTable.getSymbolTable().getStaticVarNameList();
-		
+
 		for (String string : list) {
 			Object value=GlobalSymbolTable.getSymbolTable().getSymbolTableItem(string).getValue();
 			value=(value==null?0:value);
@@ -498,7 +498,7 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 					return register;
 				}
 			}
-			
+
 			//TODO element:(i:A=B op C)
 			//(2)如果B的现行值在寄存器R中，且该寄存器只包含B的值，
 			//   或者B和A是同一标识符，或者B在四元式之后不再被引用，则选取Ri为所需寄存器，转（4）
@@ -546,7 +546,7 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 					return registerC;
 				}
 			}
-			
+
 
 			//(3)从已分配的寄存器中选取一个Ri作为所需的寄存器R，选取原则为，占用Ri的变量的值也同时存放在主存中
 			//	或者在基本块中要在最远的位置才会引用到。这样，对寄存器Ri所含变量做如下调整

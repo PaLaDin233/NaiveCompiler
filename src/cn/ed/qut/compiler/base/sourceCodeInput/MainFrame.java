@@ -166,6 +166,10 @@ public class MainFrame extends JFrame {
 					lexAnalyse=new LexAnalyse(sourseFile.getText());
 					parser=new Parser(lexAnalyse);
 					parser.grammerAnalyse();
+					if(parser.graErrorFlag){
+						   int i=parser.errorList.get(0).getLine();
+						   setErrorLine(i);
+						}
 					fourElementPath=parser.outputFourElem();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -195,6 +199,10 @@ public class MainFrame extends JFrame {
 
 				parser = new Parser(lexAnalyse);
 				parser.grammerAnalyse();
+				if(parser.graErrorFlag){
+					   int i=parser.errorList.get(0).getLine();
+					   setErrorLine(i);
+					}
 				Asm asm = new Asm(parser.fourElemList, id, parser.fourElemT);
 
 				InfoFrame inf;
@@ -232,6 +240,11 @@ public class MainFrame extends JFrame {
 
 				parser = new Parser(lexAnalyse);
 				parser.grammerAnalyse();
+				if(parser.graErrorFlag){
+					   int i=parser.errorList.get(0).getLine();
+					   setErrorLine(i);
+					   return;
+					}
 				//获取文件名
 				File file=new File(soursePath);
 				String fileName=file.getName();
@@ -248,7 +261,7 @@ public class MainFrame extends JFrame {
 					inf.setVisible(true);
 				} catch (Exception e1) {
 					// TODO 自动生成的 catch 块
-					JOptionPane.showMessageDialog(null, "异常！");
+					JOptionPane.showMessageDialog(null, "目标代码生成暂时不支持该语法！");
 					e1.printStackTrace();
 				}
 				
