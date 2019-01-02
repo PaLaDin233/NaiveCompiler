@@ -50,8 +50,8 @@ public class SymbolTableStack {
 	public static SymbolTableItem getItem(String name){
 		for(int i=tableStack.size()-1;i>=0;i--){//从栈顶向下找,当存在满足要求的标识符时，返回改符号表项，否则继续往上层符号表找
 			SymbolTableItem tem=tableStack.get(i).getSymbolTableItem(name);
-			if(tem!=null&&tem.getSymbolType()==SymbolType.VAR){
-				return tableStack.get(i).getSymbolTableItem(name);
+			if(tem!=null&&tem.getSymbolType().equals(SymbolType.VAR)){
+				return tem;
 			}
 		}
 		return null;

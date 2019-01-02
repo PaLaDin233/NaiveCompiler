@@ -16,6 +16,7 @@ import javax.swing.text.BadLocationException;
 
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.GlobalSymbolTable;
 import cn.ed.qut.compiler.base.dataStruct.symbolTable.module.SymbolTableItem;
+import cn.ed.qut.compiler.base.intermediateCodeGeneration.FourElement;
 import cn.ed.qut.compiler.base.objectCodeGeneration.Asm;
 import cn.ed.qut.compiler.base.wordSegmenter.LexAnalyse;
 import cn.ed.qut.compiler.base.parsing.Parser;

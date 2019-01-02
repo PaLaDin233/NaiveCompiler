@@ -1,14 +1,18 @@
 datasg segment
 tem db 6,7 dup  (0)
-i dw 0
 sum dw 0
-n dw 0
+a dw 0
+b dw 0
+c dw 0
+i dw 0
+j dw 0
 T1 dw 0
 T2 dw 0
 T3 dw 0
 T4 dw 0
-scanf_n2 db 'input n:$'
-printf_sum15 db 'sum:$'
+T5 dw 0
+T6 dw 0
+T7 dw 0
 datasg ends
 codesg segment
 assume cs:codesg,ds:datasg
@@ -16,113 +20,60 @@ start:
 MOV AX,datasg
 MOV DS,AX
 L1: mov AX, 0
-mov i, AX
-L2:
-
-
-;SCANF
-lea dx,scanf_n2
-mov ah,9
-int 21h
-;输入中断
-mov al,0h;
-mov tem[1],al;
-lea dx,tem;
- mov ah,0ah
-int 21h
-;处理输入的数据，并赋值给变量
-mov cl,0000h;
-mov al,tem[1];
-sub al,1;
-mov cl,al;
-mov ax,0000h;
-mov bx,0000h;
-mov al,tem[2];
-sub al,30h;
-mov n,ax;
-mov ax,cx
-sub ax,1
-jc inputEnd2
-;
-MOV SI,0003H;
-ln2:mov bx,10;
-mov ax,n;
-mul bx;
-mov n,ax;
-mov ax,0000h;
-mov al,tem[si]
-sub al,30h;
-add ax,n;
-mov n,ax
-INC SI
-loop ln2
-inputEnd2: nop
-
-
-;换行
-mov dl,0dh
-mov ah,2
-int 21h
-mov dl,0ah
-mov ah,2
-int 21h
-
-
-L3: mov AX, n
-sub AX, 1
-L4: jnc L7
-L5: mov AX, 0
 mov sum, AX
-L6: jmp L8
-L7: mov AX, 1
-mov sum, AX
-L8: mov AX, i
-sub AX, n
-L9: jnc TheEnd
-L10: mov AX, i
-add AX, 1
-mov T3, AX
-L11: mov AX, T3
+L2: mov AX, 5
+mov a, AX
+L3: mov AX, 4
+mov b, AX
+L4: mov AX, 1
 mov i, AX
-L12: mov AX, sum
-mov BX,i
-mul BX
+L5: mov AX, i
+sub AX, 11
+L6: jnc L19
+L7: mov AX, sum
+add AX, i
+mov T2, AX
+L8: mov AX, T2
+mov sum, AX
+L9: mov AX, 1
+mov j, AX
+L10: mov AX, j
+sub AX, 11
+L11: jnc L17
+L12: mov AX, 1
+add AX, 2
 mov T4, AX
 L13: mov AX, T4
-mov sum, AX
-L14: jmp L8
+mov BX,3
+mul BX
+mov T5, AX
+L14: mov AX, T5
+mov a, AX
+L15: mov AX, j
+add AX, 1
+mov j, AX
+L16: jmp L10
+L17: mov AX, i
+add AX, 1
+mov i, AX
+L18: jmp L5
+L19: mov AX, b
+sub AX, a
+L20: jnc L28
+L21: mov AX, 0
+mov c, AX
+L22: mov AX, c
+sub AX, a
+L23: jnc L26
+L24: mov AX, 0
+mov c, AX
+L25: jmp L27
+L26: mov AX, 1
+mov c, AX
+L27: jmp TheEnd
+L28: mov AX, 1
+mov c, AX
 TheEnd:nop
-
-
-;PRINTF
-L15:
-lea dx,printf_sum15
-mov ah,9
-int 21h
-mov ax,sum
-xor cx,cx
-mov bx,10
-PT015:xor dx,dx
-div bx
-or dx,0e30h;0e:显示字符
-push dx
-inc cx
-cmp ax,0;ZF=1则AX=0,ZF=0则AX！=0
-jnz PT015;相等时跳转
-PT115:pop ax
-int 10h;显示一个字符
-loop PT115
-mov ah,0 
-;int 16h ;键盘中断
-;换行
-mov dl,0dh
-mov ah,2
-int 21h
-mov dl,0ah
-mov ah,2
-int 21h
-
-
 mov ax,4c00h; int 21h的4ch号中断，安全退出程序。
 int 21h;调用系统中断
 codesg ends

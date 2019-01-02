@@ -161,7 +161,6 @@ public class Parser {
 				nonTermOP(top.getName());	
 			}else if(top.getType().equals(AnalyseNode.ACTIONSIGN)){//栈顶是动作符号时的处理
 				actionSignOP();
-				blockNum++;
 			}
 
 			bf.append("当前分析栈:");
@@ -886,7 +885,7 @@ public class Parser {
 			ARG1=semanticStack.pop();
 			RES=newTemp();
 			//fourElemCount++;
-			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,ARG2,RES,blockNum);
+			FourElement fourElem=new FourElement(++fourElemCount,OP,ARG1,ARG2,RES,++blockNum);
 			fourElemList.add(fourElem);
 			G.setValue(RES);
 			semanticStack.push(G.getValue());

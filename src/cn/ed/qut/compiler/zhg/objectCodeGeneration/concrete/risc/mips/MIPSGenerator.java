@@ -79,9 +79,11 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 	protected void baseBlockToObjectCode(BaseBlock baseBlock) {
 		List<FourElement> arrayList=baseBlock.getElements();
 		BaseBlockSymbolTable symbolTable=baseBlock.getBaseBlockSymbolTable();//当前基本块的符号表
+		//SymbolTableStack.push(symbolTable);
 		for (FourElement fourElement : arrayList) {
 			//设置该条四元式对应的第一条目标代码编号
 			fourElement.setObjectCodeId(codes.size());
+			System.out.println(fourElement.getObjectCodeId());
 
 			String op=fourElement.getOp();
 			String arg1=fourElement.getArg1();
@@ -95,17 +97,17 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 			//为三个参数分配寄存器
 			if(result!=null){
 				resultRegister=getRegisterAllocator().getRegister(result,fourElement,resultRegister);
-
+				
 			}
 
-			if(!symbolTable.exist(arg1)){//result不存在基本块符号表时，表示他是一个字面值，将字面值获取到寄存器$t0中,设置寄存器为
+			if(!symbolTable.exist(arg1)){//arg1不存在基本块符号表时，表示他是一个字面值，将字面值获取到寄存器$t0中,设置寄存器为
 				arg1Register=getRegisterAllocator().getRegisterList().get(8);
 			}else{
 				arg1Register=getRegisterAllocator().getRegister(arg1, fourElement,resultRegister);
 			}
 
 
-			if(!symbolTable.exist(arg2)){//result不存在基本块符号表时，表示他是一个字面值，将字面值获取到寄存器$t1中,设置寄存器为t9
+			if(!symbolTable.exist(arg2)){//arg2不存在基本块符号表时，表示他是一个字面值，将字面值获取到寄存器$t1中,设置寄存器为t9
 				arg2Register=getRegisterAllocator().getRegisterList().get(9);
 			}
 			else{
@@ -132,7 +134,7 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 				if(resultRegister!=null)result=resultRegister.getName();
 				codes.add(new MIPSCode(op, arg1, arg2, result));
 
-				if(SymbolTableStack.getItem(fourElement.getResult())!=null){
+				if(SymbolTableStack.getItem(fourElement.getResult())!=null&&!fourElement.getResult().startsWith("T")){
 					codes.add(new MIPSCode("SW", fourElement.getResult(), null, result));
 				}
 			}
@@ -157,7 +159,7 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 				if(resultRegister!=null)result=resultRegister.getName();
 				codes.add(new MIPSCode(op, arg1, arg2, result));
 
-				if(SymbolTableStack.getItem(fourElement.getResult())!=null){
+				if(SymbolTableStack.getItem(fourElement.getResult())!=null&&!fourElement.getResult().startsWith("T")){
 					codes.add(new MIPSCode("SW", fourElement.getArg1(), null, result));
 				}
 			}
@@ -189,7 +191,7 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 					//当是乘除时，取出高位结果
 					//mfhi $R
 					codes.add(new MIPSCode("MFHI",null,null,resultRegister.getName()));
-					if(!result.equals(resultRegister)){//当结果不是临时变量，将高位保存在内存中
+					if(!result.equals(resultRegister)&&!fourElement.getResult().startsWith("T")){//当结果不是临时变量，将高位保存在内存中
 						//SW $R result
 						codes.add(new MIPSCode("SW",result,null,resultRegister.getName()));
 					}
@@ -227,9 +229,38 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 				}
 				//OP $t8,$s1,$s2
 				codes.add(new MIPSCode(op,arg1,arg2,resultRegister.getName()));
-				if(SymbolTableStack.getItem(fourElement.getResult())!=null){
-					codes.add(new MIPSCode("SW",fourElement.getResult(),arg2,resultRegister.getName()));
+				
+			}
+			else if(fourElement.getOp().equals(">")){
+				if(isImmediateNum(arg1)
+						||isImmediateNum(arg2)
+						||symbolTable.isConst(fourElement.getArg1())
+						||symbolTable.isConst(fourElement.getArg2())){//当两个操作数有一个是常数时，该操作是立即数加
+					op="SLTI";
+					if(isImmediateNum(arg1)){
+						arg2=arg2Register.getName();
+					}
+					if(isImmediateNum(arg2)){
+						arg1=arg1Register.getName();
+					}
 				}
+				else{//否则是寄存器加
+					op="SLT";
+					arg1=arg1Register.getName();
+					arg2=arg2Register.getName();
+				}
+				//如果是常变量，获取常变量的值
+				if(symbolTable.isConst(fourElement.getArg1())){
+					arg2=(String)symbolTable.getSymbolTableItem(fourElement.getArg1()).getValue();
+					arg1=fourElement.getArg2();
+				}
+				if(symbolTable.isConst(fourElement.getArg2())){
+					arg1=fourElement.getArg1();
+					arg2=(String)symbolTable.getSymbolTableItem(fourElement.getArg2()).getValue();
+				}
+				//OP $t8,$s1,$s2
+				codes.add(new MIPSCode(op,arg2,arg1,resultRegister.getName()));
+				
 			}
 			else if(fourElement.getOp().equals("++")){
 				codes.add(new MIPSCode("ADDI",resultRegister.getName(),"1",resultRegister.getName()));
@@ -276,7 +307,7 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 				}
 				arg1="$Zero";
 				arg2="$t8";
-				result="?"+result;
+				result=result;
 				codes.add(new MIPSCode(op,arg1,arg2,result));
 			}
 
@@ -344,6 +375,7 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 				codes.add(new MIPSCode(op,arg1,arg2,result));
 			}
 			else if(fourElement.getOp().equals("RJ")){
+				System.out.println("fiyt:"+fourElement);
 				op="J";
 				result="?"+fourElement.getArg1();
 				arg1=null;
@@ -366,7 +398,7 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 
 					result=arg1Register.getName();
 				}
-
+				if(!fourElement.getResult().startsWith("T"))
 				codes.add(new MIPSCode("SW",fourElement.getResult(),arg2,result));
 			}
 			else if(fourElement.getOp().equals("PARA")){
@@ -394,19 +426,20 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 			}
 
 		}
-		backFill();
-
+		
+		//SymbolTableStack.pop();
 	}
 
 
-
-	private void backFill(){
+	@Override
+	protected void backFill(){
 		for (Code code:codes) {
 			if(code.getRes()!=null&&code.getRes().startsWith("?")){//当是需要回填的代码时
 				int fourElementId=Integer.parseInt(code.getRes().substring(1, code.getRes().length()));
-				if(fourElementId>0&&fourElementId<fourElements.size()){
+				if(fourElementId>0&&fourElementId<=fourElements.size()){
 					int objectCodeId=fourElements.get(fourElementId-1).getObjectCodeId();
-					code.setRes(Integer.toString(objectCodeId));
+					code.setRes(objectCodeId+"");
+					
 				}
 			}
 		}
@@ -567,7 +600,7 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 			Register returnRegister=null;
 
 			SymbolTableItem targetItem=SymbolTableStack.getItem(target);
-			if(targetItem==null){
+			if(targetItem==null){//目标项不在符号表栈中
 				targetItem=baseBlocks.get(fourElement.getCodeBlockNum())
 						.getBaseBlockSymbolTable()
 						.getSymbolTableItem(target);
@@ -657,9 +690,10 @@ public class MIPSGenerator extends ObjectCodeGenerater{
 
 					for (Variate variate : reg.getAllocatVar()) {
 						if(!variate.getLocation().contains(-1)
-								&&!variate.getName().equals(fourElement.getResult())){
+								&&!variate.getName().equals(fourElement.getResult())&&!fourElement.getResult().startsWith("T")){
 							//M不在内存中,同时M不是结果
 							//  1.生成目标代码ST Ri，M（将寄存器Ri的内容取到M）
+							
 							codes.add(new MIPSCode("SW",variate.getName() , "$sp", reg.getName()));
 
 							//  2.如果M是B，则令AVALUE[M]={M,Ri}否则令AVALUE[M]={M}

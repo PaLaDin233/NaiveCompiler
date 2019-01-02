@@ -130,5 +130,10 @@ public class Variate {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	@Override
+	public String toString() {
+		return "Variate [name=" + name + ", location=" + location + ", waitUseInfo=" + waitUseInfo + ", activeInfo="
+				+ activeInfo + "]";
+	}
+	
 }

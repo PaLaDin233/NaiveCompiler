@@ -140,6 +140,9 @@ public abstract class ObjectCodeGenerater {
 			if(fourElement.getArg2().equals("/")){
 				fourElement.setArg2(null);
 			}
+			if(fourElement.getResult().equals("/")){
+				fourElement.setResult(null);
+			}
 			//当四元式的初步基本块id与当前基本块号不相等时，生成新的基本块，将新的基本块加入基本块列表中
 			if(fourElement.getCodeBlockNum()!=id){
 				if(b!=null)b.setBaseBlockSymbolTable();
@@ -151,7 +154,10 @@ public abstract class ObjectCodeGenerater {
 			b.addFourElement(fourElement);
 			
 			//将四元式的几个符号添加进基本块符号表
-			if(b.getBaseBlockSymbolTable()==null)b.setBaseBlockSymbolTable();
+			if(b.getBaseBlockSymbolTable()==null){
+				b.setBaseBlockSymbolTable();
+			}
+			SymbolTableStack.push(b.getBaseBlockSymbolTable());
 			BaseBlockSymbolTable baseBlockSymbolTable=b.getBaseBlockSymbolTable();
 			
 			if(fourElement.getArg1()!=null
@@ -175,6 +181,7 @@ public abstract class ObjectCodeGenerater {
 				SymbolTableItem item=SymbolTableStack.getItem(fourElement.getArg1());
 				if(item==null){
 					item=SymbolTableItem.getIntVar(fourElement.getResult());
+					System.out.println(item);
 				}
 				baseBlockSymbolTable.insert(item);
 			}
@@ -203,6 +210,7 @@ public abstract class ObjectCodeGenerater {
 		for (BaseBlock baseBlock : getBaseBlocks()) {
 			baseBlockToObjectCode(baseBlock);
 		}
+		backFill();
 		for (Code code : codes) {
 			objectCodeList.add(code.toString());
 		}
@@ -226,6 +234,7 @@ public abstract class ObjectCodeGenerater {
 		return file;
 	}
 
+	protected abstract void backFill();
 	protected abstract void baseBlockToObjectCode(BaseBlock baseBlock);
 	
 	
